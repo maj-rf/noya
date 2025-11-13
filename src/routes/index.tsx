@@ -4,6 +4,7 @@ import characters from '../character.json'
 import type { SSCharacter, Trekkers } from '@/types'
 import { SSAvatar } from '@/components/ss-avatar'
 import { ResponsiveModal } from '@/components/responsive-modal'
+import { SSPotentials } from '@/components/ss-potentials'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -62,6 +63,16 @@ function App() {
           </ResponsiveModal>
         ))}
       </div>
+
+      {trekkers.main?.potential && (
+        <SSPotentials potentials={trekkers.main.potential} />
+      )}
+      {trekkers.sub1?.potential && (
+        <SSPotentials potentials={trekkers.sub1.potential} />
+      )}
+      {trekkers.sub2?.potential && (
+        <SSPotentials potentials={trekkers.sub2.potential} />
+      )}
     </div>
   )
 }
