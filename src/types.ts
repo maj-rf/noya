@@ -17,3 +17,11 @@ export type SSCharacter = {
   tag: Array<string>
   potential: Array<SSPotential>
 }
+
+export type TAvatar = Omit<SSCharacter, 'potential'>
+
+export type Trekkers = {
+  main: null | SSCharacter
+  sub1: null | SSCharacter
+  sub2: null | SSCharacter
+}

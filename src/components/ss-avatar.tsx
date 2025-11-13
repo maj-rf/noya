@@ -1,9 +1,9 @@
-import type { SSCharacter } from '@/types'
+import type { TAvatar } from '@/types'
 import { cn } from '@/lib/utils'
 
-export const SSAvatar = ({ char }: { char: SSCharacter }) => {
+export const SSAvatar = ({ char }: { char: TAvatar }) => {
   return (
-    <div className="bg-gray-400 border-none padding-0 outline-offset-4 rounded-sm transition-all hover:-translate-y-1">
+    <div className="bg-gray-400 border-none padding-0 outline-offset-4 rounded-sm">
       <div
         className={cn(
           'rare-border rounded-sm avatar-border relative -translate-y-0.5',
