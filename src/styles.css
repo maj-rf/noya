@@ -54,6 +54,16 @@ body {
   .left-slant-l {
     clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 20% 100%);
   }
+
+  .fluid-xs {
+    font-size: clamp(0.5rem, 0.5rem + 0.175vw, 0.75rem);
+  }
+  .fluid-sm {
+    font-size: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+  }
+  .fluid-base {
+    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  }
 }
 
 @theme inline {

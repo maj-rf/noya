@@ -32,8 +32,8 @@ function App() {
   }
 
   return (
-    <div className="p-4">
-      <div className="grid grid-cols-3 max-w-md mx-auto gap-2 mt-8">
+    <div className="p-1">
+      <div className="grid grid-cols-3 max-w-lg w-full mx-auto gap-2 mt-8">
         {Object.entries(trekkers).map(([key, value]) => (
           <ResponsiveModal
             key={key}
@@ -65,13 +65,13 @@ function App() {
       </div>
 
       {trekkers.main?.potential && (
-        <SSPotentials potentials={trekkers.main.potential} />
+        <SSPotentials potentials={trekkers.main.potential} type={'main'} />
       )}
       {trekkers.sub1?.potential && (
-        <SSPotentials potentials={trekkers.sub1.potential} />
+        <SSPotentials potentials={trekkers.sub1.potential} type={'support'} />
       )}
       {trekkers.sub2?.potential && (
-        <SSPotentials potentials={trekkers.sub2.potential} />
+        <SSPotentials potentials={trekkers.sub2.potential} type={'support'} />
       )}
     </div>
   )
