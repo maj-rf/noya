@@ -1,10 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import characters from '../character.json'
 import type { SSCharacter, Trekkers } from '@/types'
-import { SSAvatar } from '@/components/ss-avatar'
 import { ResponsiveModal } from '@/components/responsive-modal'
 import { SSPotentials } from '@/components/ss-potentials'
+import { AvatarSelection } from '@/components/avatar-selection'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -32,8 +31,8 @@ function App() {
   }
 
   return (
-    <div className="p-1">
-      <div className="grid grid-cols-3 max-w-lg w-full mx-auto gap-2 mt-8">
+    <main className="p-1">
+      <div className="flex gap-2 justify-around max-w-md mx-auto mt-8">
         {Object.entries(trekkers).map(([key, value]) => (
           <ResponsiveModal
             key={key}
@@ -43,36 +42,17 @@ function App() {
             }
             desc={`Add the ${key.charAt(0).toUpperCase() + key.slice(1)} Trekker to your team`}
           >
-            <div className="grid grid-cols-4 md:grid-cols-5 w-full gap-1.5 mt-2">
-              {Object.entries(characters).map(([id, char]) => {
-                const { potential, ...avatar } = char
-                return (
-                  <div
-                    key={id}
-                    onClick={() => updateTrekkers(key, char as SSCharacter)}
-                    data-disabled={Object.values(trekkers).some(
-                      (t) => t?.id === char.id,
-                    )}
-                    className="data-[disabled=true]:opacity-40"
-                  >
-                    <SSAvatar char={avatar} />
-                  </div>
-                )
-              })}
-            </div>
+            <AvatarSelection
+              k={key}
+              trekkers={trekkers}
+              updateTrekkers={updateTrekkers}
+            />
           </ResponsiveModal>
         ))}
       </div>
-
-      {trekkers.main?.potential && (
-        <SSPotentials potentials={trekkers.main.potential} type={'main'} />
-      )}
-      {trekkers.sub1?.potential && (
-        <SSPotentials potentials={trekkers.sub1.potential} type={'support'} />
-      )}
-      {trekkers.sub2?.potential && (
-        <SSPotentials potentials={trekkers.sub2.potential} type={'support'} />
-      )}
-    </div>
+      <SSPotentials potentials={trekkers.main?.potential} type={'main'} />
+      <SSPotentials potentials={trekkers.sub1?.potential} type={'support'} />
+      <SSPotentials potentials={trekkers.sub2?.potential} type={'support'} />
+    </main>
   )
 }

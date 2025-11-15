@@ -44,7 +44,7 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger className="h-full min-h-[143px] bg-accent border rounded-xl shadow-sm flex items-center justify-center active:scale-[0.98] active:shadow-inner duration-150 ease-in-out ">
+        <DialogTrigger className="h-[161px] w-[116px] bg-accent border rounded-xl shadow-sm flex items-center justify-center active:scale-[0.98] active:shadow-inner duration-150 ease-in-out ">
           {props.triggerTitle && isTrekker(props.triggerTitle) ? (
             <SSAvatar char={props.triggerTitle} />
           ) : (
@@ -64,7 +64,7 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger className="h-full min-h-[143px] bg-accent border rounded-xl shadow-sm flex items-center justify-center ">
+      <DrawerTrigger className="h-[161px] w-[116px] bg-accent border rounded-xl shadow-sm flex items-center justify-center ">
         {props.triggerTitle && isTrekker(props.triggerTitle) ? (
           <SSAvatar char={props.triggerTitle} />
         ) : (
