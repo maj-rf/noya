@@ -6,7 +6,7 @@ interface Props {
   name: string
 }
 
-export default function ResponsiveIcon({
+export default function ResponsivePotential({
   size = 'w-24',
   className = '',
   bgSrc,
@@ -15,7 +15,7 @@ export default function ResponsiveIcon({
 }: Props) {
   return (
     <div
-      className={`relative ${size} aspect-[0.7851] bg-contain bg-center bg-no-repeat ${className} border rounded-sm`}
+      className={`relative ${size} h-fit aspect-[0.7851] bg-contain bg-center bg-no-repeat ${className} border rounded-sm`}
       style={{ backgroundImage: `url(${bgSrc})` }}
     >
       <img
