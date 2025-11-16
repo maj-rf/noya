@@ -83,6 +83,7 @@ export const SSPotentials = ({
             }}
             data-disabled={coreExceed}
             className={`rarity-${p.rarity}`}
+            key={p.id}
           >
             <ResponsivePotential
               key={p.imgId + p.id}

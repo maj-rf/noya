@@ -1,8 +1,6 @@
 import type { TAvatar } from '@/types'
 import { cn } from '@/lib/utils'
 
-// TODO: rethink image sizing
-
 export const SSAvatar = ({ char }: { char: TAvatar }) => {
   return (
     <div className="bg-gray-400 border-none padding-0 outline-offset-4 rounded-sm">
@@ -16,7 +14,7 @@ export const SSAvatar = ({ char }: { char: TAvatar }) => {
         )}
       >
         <img
-          className="block h-[150px] w-full object-contain object-top"
+          className="block h-[150px] max-w-none object-contain"
           src={`https://res.cloudinary.com/dafqr01it/image/upload/v1762945238/ss/avatar/head_${char.id}01_XL.png`}
         />
         <img
