@@ -1,10 +1,6 @@
 import { useState } from 'react'
 import ResponsivePotential from './responsive-potential'
-import type { SSPotential } from '@/types'
-
-type SelectedPotential =
-  | (SSPotential & { rarity: 0; level?: never })
-  | (SSPotential & { rarity: 1 | 2; level: number })
+import type { SSPotential, SelectedPotential } from '@/types'
 
 export const SSPotentials = ({
   potentials,

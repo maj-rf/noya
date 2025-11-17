@@ -33,22 +33,23 @@ function App() {
   return (
     <main className="p-1">
       <div className="flex gap-2 justify-around max-w-md mx-auto mt-8">
-        {Object.entries(trekkers).map(([key, value]) => (
-          <ResponsiveModal
-            key={key}
-            title="Released Trekkers"
-            triggerTitle={
-              value ? value : key.charAt(0).toUpperCase() + key.slice(1)
-            }
-            desc={`Add the ${key.charAt(0).toUpperCase() + key.slice(1)} Trekker to your team`}
-          >
-            <AvatarSelection
-              k={key}
-              trekkers={trekkers}
-              updateTrekkers={updateTrekkers}
-            />
-          </ResponsiveModal>
-        ))}
+        {Object.entries(trekkers).map(([key, value]) => {
+          const label = key === 'main' ? 'Main' : 'Support'
+          return (
+            <ResponsiveModal
+              key={key}
+              title="Released Trekkers"
+              triggerTitle={value ? value : label}
+              desc={`Add the ${label} Trekker to your team`}
+            >
+              <AvatarSelection
+                k={key}
+                trekkers={trekkers}
+                updateTrekkers={updateTrekkers}
+              />
+            </ResponsiveModal>
+          )
+        })}
       </div>
       <SSPotentials potentials={trekkers.main?.potential} type={'main'} />
       <SSPotentials potentials={trekkers.sub1?.potential} type={'support'} />

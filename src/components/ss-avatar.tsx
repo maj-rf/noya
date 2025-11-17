@@ -3,10 +3,10 @@ import { cn } from '@/lib/utils'
 
 export const SSAvatar = ({ char }: { char: TAvatar }) => {
   return (
-    <div className="bg-gray-400 border-none padding-0 outline-offset-4 rounded-sm">
+    <div className="group-data-[disabled=true]:opacity-40 bg-gray-400 border-none padding-0 outline-offset-4 rounded-sm w-full h-full">
       <div
         className={cn(
-          'rare-border rounded-xs avatar-border relative -translate-y-0.5',
+          'rare-border rounded-xs avatar-border relative -translate-y-0.5 w-full h-full',
           {
             'avatar-common-bg': char.star === 4,
             'avatar-rare-bg': char.star === 5,
@@ -14,7 +14,7 @@ export const SSAvatar = ({ char }: { char: TAvatar }) => {
         )}
       >
         <img
-          className="block h-[150px] max-w-none object-contain"
+          className="block w-full h-full object-cover"
           src={`https://res.cloudinary.com/dafqr01it/image/upload/v1762945238/ss/avatar/head_${char.id}01_XL.png`}
         />
         <img

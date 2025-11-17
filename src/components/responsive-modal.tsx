@@ -35,8 +35,6 @@ function isTrekker(char: any): char is TAvatar {
   return 'star' in char
 }
 
-// TODO: set height to Trigger
-
 export function ResponsiveModal(props: ResponsiveModalProps) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
@@ -44,11 +42,17 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger className="h-[161px] w-[116px] bg-accent border rounded-xl shadow-sm flex items-center justify-center active:scale-[0.98] active:shadow-inner duration-150 ease-in-out ">
+        <DialogTrigger className="h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8] bg-accent border rounded-sm shadow-sm flex items-center justify-center active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
           {props.triggerTitle && isTrekker(props.triggerTitle) ? (
             <SSAvatar char={props.triggerTitle} />
           ) : (
-            props.triggerTitle
+            <span
+              className={
+                props.triggerTitle === 'Main' ? 'text-red-400' : 'text-blue-400'
+              }
+            >
+              {props.triggerTitle}
+            </span>
           )}
         </DialogTrigger>
         <DialogContent className="min-w-2xl">
@@ -64,11 +68,17 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger className="h-[161px] w-[116px] bg-accent border rounded-xl shadow-sm flex items-center justify-center ">
+      <DrawerTrigger className="h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8] bg-accent border rounded-sm shadow-sm flex items-center justify-center ">
         {props.triggerTitle && isTrekker(props.triggerTitle) ? (
           <SSAvatar char={props.triggerTitle} />
         ) : (
-          props.triggerTitle
+          <span
+            className={
+              props.triggerTitle === 'Main' ? 'text-red-400' : 'text-blue-400'
+            }
+          >
+            {props.triggerTitle}
+          </span>
         )}
       </DrawerTrigger>
       <DrawerContent>

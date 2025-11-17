@@ -12,7 +12,7 @@ export const AvatarSelection = ({
   updateTrekkers: (key: string, char: SSCharacter) => void
 }) => {
   return (
-    <section className="flex flex-wrap justify-center gap-1 mt-2">
+    <section className="flex flex-wrap justify-center gap-2 mt-2">
       {Object.entries(characters).map(([id, char]) => {
         const { potential, ...avatar } = char
         return (
@@ -22,7 +22,8 @@ export const AvatarSelection = ({
             data-disabled={Object.values(trekkers).some(
               (t) => t?.id === char.id,
             )}
-            className="data-[disabled=true]:opacity-40"
+            data-selected={trekkers[k as keyof Trekkers]?.id === char.id}
+            className="group outline-blue-600 rounded-xs data-[selected=true]:outline-2 h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8]"
           >
             <SSAvatar char={avatar} />
           </div>

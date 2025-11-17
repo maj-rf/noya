@@ -25,3 +25,7 @@ export type Trekkers = {
   sub1: null | SSCharacter
   sub2: null | SSCharacter
 }
+
+export type SelectedPotential =
+  | (SSPotential & { rarity: 0; level?: never })
+  | (SSPotential & { rarity: 1 | 2; level: number })
