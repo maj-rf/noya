@@ -34,7 +34,7 @@ export const SSPotentials = ({
       setSelected(copy.concat({ ...potential, rarity: 0 }))
     } else
       setSelected(
-        copy.concat({ ...potential, rarity: potential.rarity, level: 0 }),
+        copy.concat({ ...potential, rarity: potential.rarity, level: 1 }),
       )
   }
 
@@ -51,8 +51,8 @@ export const SSPotentials = ({
   }
 
   return (
-    <div>
-      <ItemGroup className="flex-row overflow-x-scroll gap-1 p-2 mt-4 max-w-xl w-full mx-auto">
+    <div className="bg-indigo-500">
+      <ItemGroup className="flex-row overflow-x-scroll md:min-h-[200px] min-h-[170px] gap-1 p-2 max-w-5/6 w-full mx-auto">
         {selected.map((s) => (
           <Item key={'selected' + s.id} className="flex flex-col p-0">
             <div onClick={() => removePotential(s.id)} className="relative">
@@ -72,8 +72,9 @@ export const SSPotentials = ({
             {s.rarity !== 0 && (
               <Slider
                 className="w-full"
-                defaultValue={[0]}
+                defaultValue={[1]}
                 step={1}
+                min={1}
                 max={6}
                 onValueChange={(newValue: Array<number>) =>
                   updateLevel(newValue[0], s.id)
@@ -83,7 +84,7 @@ export const SSPotentials = ({
           </Item>
         ))}
       </ItemGroup>
-      <ItemGroup className="flex-row overflow-x-scroll gap-1 mt-4 p-2 max-w-xl mx-auto">
+      <ItemGroup className="flex-row overflow-x-scroll gap-1 mt-4 p-2 max-w-5/6 w-full mx-auto">
         {filteredPotentials.map((p) => (
           <Item
             onClick={() => {

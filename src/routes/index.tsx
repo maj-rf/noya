@@ -34,8 +34,8 @@ function App() {
   }
 
   return (
-    <main className="p-1">
-      <div className="flex gap-2 justify-around max-w-md mx-auto mt-8">
+    <main>
+      <div className="flex gap-2 justify-around max-w-md mx-auto my-8">
         {Object.entries(trekkers).map(([key, value]) => {
           const label = key === 'main' ? 'Main' : 'Support'
           return (
