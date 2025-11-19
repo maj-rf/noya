@@ -4,9 +4,12 @@ import type { SSCharacter, Trekkers } from '@/types'
 import { ResponsiveModal } from '@/components/responsive-modal'
 import { SSPotentials } from '@/components/ss-potentials'
 import { AvatarSelection } from '@/components/avatar-selection'
+import { fetchCharacters } from '@/lib/utils'
 
 export const Route = createFileRoute('/')({
   component: App,
+  loader: fetchCharacters,
+  pendingComponent: () => <div>Loading...</div>,
 })
 
 function App() {

@@ -20,12 +20,13 @@ export type SSCharacter = {
 
 export type TAvatar = Omit<SSCharacter, 'potential'>
 
-export type Trekkers = {
-  main: null | SSCharacter
-  sub1: null | SSCharacter
-  sub2: null | SSCharacter
-}
+export type Trekkers = Record<'main' | 'sub1' | 'sub2', null | SSCharacter>
 
 export type SelectedPotential =
   | (SSPotential & { rarity: 0; level?: never })
   | (SSPotential & { rarity: 1 | 2; level: number })
+
+export type TrekkerPotentials = Record<
+  'main' | 'sub1' | 'sub2',
+  null | Array<SelectedPotential>
+>

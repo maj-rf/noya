@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import ResponsivePotential from './responsive-potential'
+import { Slider } from './ui/slider'
 import type { SSPotential, SelectedPotential } from '@/types'
+import { Item, ItemGroup } from '@/components/ui/item'
 
 export const SSPotentials = ({
   potentials,
@@ -9,10 +11,13 @@ export const SSPotentials = ({
   potentials: Array<SSPotential> | undefined
   type: 'main' | 'support'
 }) => {
-  if (!potentials) return
   const [selected, setSelected] = useState<Array<SelectedPotential>>([])
+  if (!potentials) return
+  const selectedIds = new Set(selected.map((s) => s.id))
   const filteredPotentials = potentials
-    .filter((p) => p.type === type || p.type === 'common')
+    .filter(
+      (p) => (p.type === type || p.type === 'common') && !selectedIds.has(p.id),
+    )
     .sort((a, b) => a.rarity - b.rarity)
 
   const coreExceed =
@@ -25,10 +30,12 @@ export const SSPotentials = ({
   function addPotential(potential: SSPotential) {
     if (coreExceed && potential.rarity === 0) return
     const copy = [...selected]
-    if (potential.rarity !== 0) {
-      if (selected.some((s) => s.id === potential.id)) return
-      setSelected(copy.concat({ ...potential, level: 0 } as SelectedPotential))
-    } else setSelected(copy.concat(potential as SelectedPotential))
+    if (potential.rarity === 0) {
+      setSelected(copy.concat({ ...potential, rarity: 0 }))
+    } else
+      setSelected(
+        copy.concat({ ...potential, rarity: potential.rarity, level: 0 }),
+      )
   }
 
   function removePotential(id: number) {
@@ -45,10 +52,9 @@ export const SSPotentials = ({
 
   return (
     <div>
-      Chosen:
-      <div className="flex gap-1 overflow-x-scroll w-full max-w-lg mx-auto">
+      <ItemGroup className="flex-row overflow-x-scroll gap-1 p-2 mt-4 max-w-xl w-full mx-auto">
         {selected.map((s) => (
-          <div key={'selected' + s.id} className="flex flex-col">
+          <Item key={'selected' + s.id} className="flex flex-col p-0">
             <div onClick={() => removePotential(s.id)} className="relative">
               <ResponsivePotential
                 key={'selected' + s.imgId + s.id}
@@ -58,27 +64,33 @@ export const SSPotentials = ({
                 name={s.name}
               />
               {s.rarity !== 0 && (
-                <div className="absolute top-0 left-2 text-xs">{s.level}</div>
+                <div className="absolute top-0 left-4 text-sm font-semibold text-indigo-500">
+                  {s.level}
+                </div>
               )}
             </div>
             {s.rarity !== 0 && (
-              <input
-                className="md:w-30 w-25"
-                value={s.level}
-                onChange={(e) => updateLevel(Number(e.target.value), s.id)}
-              ></input>
+              <Slider
+                className="w-full"
+                defaultValue={[0]}
+                step={1}
+                max={6}
+                onValueChange={(newValue: Array<number>) =>
+                  updateLevel(newValue[0], s.id)
+                }
+              ></Slider>
             )}
-          </div>
+          </Item>
         ))}
-      </div>
-      <div className="flex p-1 gap-1 overflow-x-scroll mt-4 max-w-lg mx-auto">
+      </ItemGroup>
+      <ItemGroup className="flex-row overflow-x-scroll gap-1 mt-4 p-2 max-w-xl mx-auto">
         {filteredPotentials.map((p) => (
-          <div
+          <Item
             onClick={() => {
               addPotential(p)
             }}
             data-disabled={coreExceed}
-            className={`rarity-${p.rarity}`}
+            className={`rarity-${p.rarity} p-0`}
             key={p.id}
           >
             <ResponsivePotential
@@ -88,9 +100,9 @@ export const SSPotentials = ({
               iconSrc={`https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/${p.imgId}_A.png`}
               name={p.name}
             />
-          </div>
+          </Item>
         ))}
-      </div>
+      </ItemGroup>
     </div>
   )
 }
