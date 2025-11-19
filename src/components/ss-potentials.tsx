@@ -1,27 +1,33 @@
-import { useState } from 'react'
+import { memo } from 'react'
 import ResponsivePotential from './responsive-potential'
 import { Slider } from './ui/slider'
 import type { SSPotential, SelectedPotential } from '@/types'
 import { Item, ItemGroup } from '@/components/ui/item'
 
-export const SSPotentials = ({
+function SSPotentials({
   potentials,
   type,
+  selected,
+  k,
+  setSelected,
 }: {
   potentials: Array<SSPotential> | undefined
   type: 'main' | 'support'
-}) => {
-  const [selected, setSelected] = useState<Array<SelectedPotential>>([])
+  selected: Array<SelectedPotential> | null
+  k: string
+  setSelected: (k: string, potentials: Array<SelectedPotential>) => void
+}) {
   if (!potentials) return
-  const selectedIds = new Set(selected.map((s) => s.id))
+  const selectedIds = selected && new Set(selected.map((s) => s.id))
   const filteredPotentials = potentials
     .filter(
-      (p) => (p.type === type || p.type === 'common') && !selectedIds.has(p.id),
+      (p) =>
+        (p.type === type || p.type === 'common') && !selectedIds?.has(p.id),
     )
     .sort((a, b) => a.rarity - b.rarity)
 
   const coreExceed =
-    selected.length >= 2
+    selected && selected.length >= 2
       ? selected.reduce((a, b) => {
           return b.rarity === 0 ? a + 1 : a
         }, 0) === 2
@@ -29,31 +35,34 @@ export const SSPotentials = ({
 
   function addPotential(potential: SSPotential) {
     if (coreExceed && potential.rarity === 0) return
-    const copy = [...selected]
+    const copy = selected ? [...selected] : []
     if (potential.rarity === 0) {
-      setSelected(copy.concat({ ...potential, rarity: 0 }))
+      setSelected(k, copy.concat({ ...potential, rarity: 0 }))
     } else
       setSelected(
+        k,
         copy.concat({ ...potential, rarity: potential.rarity, level: 1 }),
       )
   }
 
   function removePotential(id: number) {
-    const updated = selected.filter((s) => s.id !== id)
-    setSelected(updated)
+    const updated = selected?.filter((s) => s.id !== id)
+    if (!updated) return
+    setSelected(k, updated)
   }
 
   function updateLevel(level: number, id: number) {
-    const updated = selected.map((s) => {
+    const updated = selected?.map((s) => {
       return s.rarity && s.id === id ? { ...s, level } : s
     })
-    setSelected(updated)
+    if (!updated) return
+    setSelected(k, updated)
   }
 
   return (
-    <div className="bg-indigo-500">
-      <ItemGroup className="flex-row overflow-x-scroll md:min-h-[200px] min-h-[170px] gap-1 p-2 max-w-5/6 w-full mx-auto">
-        {selected.map((s) => (
+    <div className="bg-indigo-500 py-2">
+      <ItemGroup className="flex-row overflow-x-scroll md:min-h-[200px] min-h-[170px] gap-1 p-2 sm:max-w-5/6 w-full mx-auto">
+        {selected?.map((s) => (
           <Item key={'selected' + s.id} className="flex flex-col p-0">
             <div onClick={() => removePotential(s.id)} className="relative">
               <ResponsivePotential
@@ -84,7 +93,7 @@ export const SSPotentials = ({
           </Item>
         ))}
       </ItemGroup>
-      <ItemGroup className="flex-row overflow-x-scroll gap-1 mt-4 p-2 max-w-5/6 w-full mx-auto">
+      <ItemGroup className="flex-row overflow-x-scroll gap-1 p-2 sm:max-w-5/6 w-full mx-auto">
         {filteredPotentials.map((p) => (
           <Item
             onClick={() => {
@@ -107,3 +116,5 @@ export const SSPotentials = ({
     </div>
   )
 }
+
+export default memo(SSPotentials)
