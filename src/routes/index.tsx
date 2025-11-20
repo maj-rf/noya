@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import type {
   SSCharacter,
   SelectedPotential,
@@ -9,7 +9,13 @@ import type {
 import { ResponsiveModal } from '@/components/responsive-modal'
 import SSPotentials from '@/components/ss-potentials'
 import { AvatarSelection } from '@/components/avatar-selection'
-import { fetchCharacters } from '@/lib/utils'
+import {
+  downloadImage,
+  fetchCharacters,
+  getTrekkersWithoutPotentials,
+} from '@/lib/utils'
+import { Preview } from '@/components/preview'
+import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -18,10 +24,12 @@ export const Route = createFileRoute('/')({
 })
 
 function App() {
+  const character = Route.useLoaderData()
+  const previewRef = useRef<HTMLElement>(null)
   const [trekkers, setTrekkers] = useState<Trekkers>({
-    main: null,
-    sub1: null,
-    sub2: null,
+    main: character[103],
+    sub1: character[112],
+    sub2: character[111],
   })
 
   const [selectedPotentials, setSelectedPotentials] =
@@ -60,6 +68,9 @@ function App() {
 
   return (
     <main>
+      <Button onClick={async () => downloadImage(previewRef.current)}>
+        Export as Image
+      </Button>
       <div className="flex gap-2 justify-around max-w-md mx-auto my-8">
         {Object.entries(trekkers).map(([key, value]) => {
           const label = key === 'main' ? 'Main' : 'Support'
@@ -99,6 +110,12 @@ function App() {
         selected={selectedPotentials.sub2}
         setSelected={setSelected}
         k="sub2"
+      />
+
+      <Preview
+        avatar={getTrekkersWithoutPotentials(trekkers)}
+        potentials={selectedPotentials}
+        ref={previewRef}
       />
     </main>
   )
