@@ -38,6 +38,10 @@ export function getTrekkersWithoutPotentials(trekkers: Trekkers) {
 
 export async function downloadImage(element: HTMLElement | null) {
   if (!element) return
-  const result = await snapdom(element)
+  const result = await snapdom(element, {
+    width: 1600,
+    embedFonts: true,
+    quality: 1,
+  })
   await result.download({ filename: 'my-ss-build' })
 }

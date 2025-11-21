@@ -61,7 +61,7 @@ function SSPotentials({
 
   return (
     <div className="bg-indigo-500 py-2">
-      <ItemGroup className="flex-row overflow-x-scroll md:min-h-[200px] min-h-[170px] gap-1 p-2 sm:max-w-5/6 w-full mx-auto">
+      <ItemGroup className="flex-row overflow-x-scroll min-h-[170px] gap-1 p-2 sm:max-w-5/6 w-full mx-auto">
         {selected
           ?.sort((a, b) => a.rarity - b.rarity)
           .map((s) => (
@@ -69,13 +69,12 @@ function SSPotentials({
               <div onClick={() => removePotential(s.id)} className="relative">
                 <ResponsivePotential
                   key={'selected' + s.imgId + s.id}
-                  size="md:w-30 w-25"
                   bgSrc={`./ss-vestige/vestige_${s.rarity}.png`}
                   iconSrc={`https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/${s.imgId}_A.png`}
                   name={s.name}
                 />
                 {s.rarity !== 0 && (
-                  <div className="absolute top-0 left-4 text-sm font-semibold text-indigo-500">
+                  <div className="absolute -top-0.5 left-3 text-sm font-semibold text-indigo-500">
                     {s.level}
                   </div>
                 )}
@@ -107,7 +106,6 @@ function SSPotentials({
           >
             <ResponsivePotential
               key={p.imgId + p.id}
-              size="md:w-30 w-25"
               bgSrc={`./ss-vestige/vestige_${p.rarity}.png`}
               iconSrc={`https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/${p.imgId}_A.png`}
               name={p.name}

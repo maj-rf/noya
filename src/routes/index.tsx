@@ -51,6 +51,7 @@ function App() {
       return
     } else {
       newObj[key as keyof Trekkers] = char
+      potentialCopy[key as keyof TrekkerPotentials] = null
     }
     setTrekkers(newObj)
     setSelectedPotentials(potentialCopy)
