@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import { SSAvatar } from './ss-avatar'
 import ResponsivePotential from './responsive-potential'
 import type { SelectedPotential, TAvatar, TrekkerPotentials } from '@/types'
@@ -7,19 +6,24 @@ import type { RefObject } from 'react'
 const PreviewRow = ({
   avatar,
   potentials,
-  className,
+  k,
 }: {
   avatar: TAvatar | null
   potentials: Array<SelectedPotential> | null
-  className?: string
+  k: 'Main' | 'Support'
 }) => {
   return (
-    <article className={clsx('w-full', className)}>
-      <div className="flex items-center gap-2 p-4 sm:max-w-5/6 mx-auto w-full">
-        <div className="w-26">{avatar && <SSAvatar char={avatar} />}</div>
+    <article className="w-full">
+      <div className="w-full bg-blue-900">
+        <h1 className="sm:max-w-5/6 mx-auto px-4 text-left text-white">{k}</h1>
+      </div>
+      <div className="flex items-center gap-2 px-2 py-4 sm:max-w-5/6 mx-auto w-full">
+        <div className="h-[125px] w-[100px]">
+          {avatar && <SSAvatar char={avatar} />}
+        </div>
         <ul className="gap-2 flex-1">
           {!potentials || potentials.length === 0 ? (
-            <div className="text-center">No Chosen potential</div>
+            <div className="text-center text-white">No Chosen potential</div>
           ) : (
             potentials.map((p) => {
               return (
@@ -54,21 +58,17 @@ export const Preview = ({
   ref: RefObject<HTMLElement | null>
 }) => {
   return (
-    <section ref={ref}>
-      <PreviewRow
-        avatar={avatar.main}
-        potentials={potentials.main}
-        className="bg-blue-500"
-      />
+    <section ref={ref} className="bg-slate-600">
+      <PreviewRow avatar={avatar.main} potentials={potentials.main} k="Main" />
       <PreviewRow
         avatar={avatar.sub1}
         potentials={potentials.sub1}
-        className="bg-blue-300"
+        k="Support"
       />
       <PreviewRow
         avatar={avatar.sub2}
         potentials={potentials.sub2}
-        className="bg-blue-100"
+        k="Support"
       />
     </section>
   )

@@ -18,7 +18,7 @@ export const SSAvatar = ({ char }: { char: TAvatar }) => {
           src={`https://res.cloudinary.com/dafqr01it/image/upload/v1762945238/ss/avatar/head_${char.id}01_XL.png`}
         />
         <img
-          className="size-6 absolute -top-0.5 left-0"
+          className="size-6 absolute -top-1 -left-1 z-100"
           src={`./ss-element/${char.element}.webp`}
         />
         <div

@@ -60,8 +60,11 @@ function SSPotentials({
   }
 
   return (
-    <div className="bg-indigo-500 py-2">
-      <ItemGroup className="flex-row overflow-x-scroll min-h-[170px] gap-1 p-2 sm:max-w-5/6 w-full mx-auto">
+    <div className="pb-2">
+      <h1 className="sm:max-w-5/6 w-full mx-auto px-4">
+        {k === 'main' ? 'Main' : 'Support'}
+      </h1>
+      <ItemGroup className="flex-row overflow-x-scroll min-h-[170px] gap-1 p-2 sm:max-w-5/6 w-full mx-auto bg-blue-200">
         {selected
           ?.sort((a, b) => a.rarity - b.rarity)
           .map((s) => (
