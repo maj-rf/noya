@@ -13,11 +13,11 @@ const PreviewRow = ({
   k: 'Main' | 'Support'
 }) => {
   return (
-    <article className="w-full">
+    <article className="min-w-7xl">
       <div className="w-full bg-blue-900">
-        <h1 className="sm:max-w-5/6 mx-auto px-4 text-left text-white">{k}</h1>
+        <h1 className="px-4 text-left text-white">{k}</h1>
       </div>
-      <div className="flex items-center gap-2 px-2 py-4 sm:max-w-5/6 mx-auto w-full">
+      <div className="flex items-center gap-2 px-2 py-4 min-w-7xl">
         <div className="h-[125px] w-[100px]">
           {avatar && <SSAvatar char={avatar} />}
         </div>
@@ -58,18 +58,24 @@ export const Preview = ({
   ref: RefObject<HTMLElement | null>
 }) => {
   return (
-    <section ref={ref} className="bg-slate-600">
-      <PreviewRow avatar={avatar.main} potentials={potentials.main} k="Main" />
-      <PreviewRow
-        avatar={avatar.sub1}
-        potentials={potentials.sub1}
-        k="Support"
-      />
-      <PreviewRow
-        avatar={avatar.sub2}
-        potentials={potentials.sub2}
-        k="Support"
-      />
-    </section>
+    <div className="h-0 overflow-hidden">
+      <section ref={ref} className="bg-slate-600 w-7xl" id="preview">
+        <PreviewRow
+          avatar={avatar.main}
+          potentials={potentials.main}
+          k="Main"
+        />
+        <PreviewRow
+          avatar={avatar.sub1}
+          potentials={potentials.sub1}
+          k="Support"
+        />
+        <PreviewRow
+          avatar={avatar.sub2}
+          potentials={potentials.sub2}
+          k="Support"
+        />
+      </section>
+    </div>
   )
 }

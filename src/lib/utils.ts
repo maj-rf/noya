@@ -1,6 +1,7 @@
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { snapdom } from '@zumer/snapdom'
+import type { SnapdomPlugin } from '@zumer/snapdom'
 import type { ClassValue } from 'clsx'
 import type { SSCharacter, TAvatar, Trekkers } from '@/types'
 
@@ -36,12 +37,29 @@ export function getTrekkersWithoutPotentials(trekkers: Trekkers) {
   return obj
 }
 
+export function forceDisplayPlugin(): SnapdomPlugin {
+  return {
+    name: 'force-display-plugin',
+
+    afterClone(context) {
+      const clone = context.clone
+      if (!clone) return
+      const target = clone.querySelector<HTMLElement>('#preview')
+      if (target) {
+        // target.style.setProperty('display', 'block', 'important')
+        target.style.width = 1920 + 'px'
+      }
+    },
+  }
+}
+
 export async function downloadImage(element: HTMLElement | null) {
   if (!element) return
   const result = await snapdom(element, {
-    width: 1600,
+    plugins: [forceDisplayPlugin],
+    width: 1920,
     embedFonts: true,
-    quality: 1,
+    quality: 2,
   })
   await result.download({ filename: 'my-ss-build' })
 }

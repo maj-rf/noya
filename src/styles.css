@@ -55,14 +55,8 @@ body {
     clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 20% 100%);
   }
 
-  .fluid-xs {
-    font-size: clamp(0.5rem, 0.4rem + 0.13vw, 0.6rem);
-  }
-  .fluid-sm {
-    font-size: clamp(0.625rem, 0.625rem + 0.125vw, 0.875rem);
-  }
-  .fluid-base {
-    font-size: clamp(0.75rem, 0.75rem + 0.125vw, 1rem);
+  .text-xxs {
+    font-size: 0.5rem;
   }
 
   .rarity-0[data-disabled='true'] {

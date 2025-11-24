@@ -23,7 +23,7 @@ export const SSAvatar = ({ char }: { char: TAvatar }) => {
         />
         <div
           className={cn(
-            'absolute top-0 right-0 fluid-sm text-white pl-2 left-slant flex items-center justify-center gap-0.5',
+            'absolute top-0 right-0 text-xs text-white pl-2 left-slant flex items-center justify-center gap-0.5',
             {
               'bg-pink-500': char.class === 'Vanguard',
               'bg-teal-500': char.class === 'Support',
@@ -40,7 +40,7 @@ export const SSAvatar = ({ char }: { char: TAvatar }) => {
           </div>
         </div>
 
-        <h1 className="px-1 pt-4 absolute right-0 bottom-0 fluid-base font-medium text-right text-blue-900  bg-linear-0 from-white w-full">
+        <h1 className="px-1 pt-4 text-sm absolute right-0 bottom-0 font-medium text-right text-blue-900  bg-linear-0 from-white w-full">
           {char.name}
         </h1>
       </div>

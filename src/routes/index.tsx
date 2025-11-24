@@ -68,11 +68,14 @@ function App() {
   )
 
   return (
-    <main>
-      <Button onClick={async () => downloadImage(previewRef.current)}>
-        Export as Image
+    <main className="relative">
+      <Button
+        onClick={async () => downloadImage(previewRef.current)}
+        className="fixed bottom-1 left-1 z-100"
+      >
+        Export
       </Button>
-      <div className="flex gap-2 justify-around max-w-md mx-auto my-8">
+      <div className="flex gap-2 justify-center max-w-md mx-auto my-8">
         {Object.entries(trekkers).map(([key, value]) => {
           const label = key === 'main' ? 'Main' : 'Support'
           return (

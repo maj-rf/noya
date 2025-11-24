@@ -23,7 +23,7 @@ export default function ResponsivePotential({
         alt="Icon"
         className="absolute inset-0 -top-5 w-full h-auto m-auto"
       />
-      <div className="absolute bottom-1 px-1 left-1/2 -translate-x-1/2 fluid-xs drop-shadow-md w-full text-black text-center">
+      <div className="absolute bottom-1 px-1 left-1/2 -translate-x-1/2 text-xxs drop-shadow-md w-full text-black text-center">
         {name}
       </div>
     </div>
