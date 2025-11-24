@@ -47,7 +47,7 @@ export function forceDisplayPlugin(): SnapdomPlugin {
       const target = clone.querySelector<HTMLElement>('#preview')
       if (target) {
         // target.style.setProperty('display', 'block', 'important')
-        target.style.width = 1920 + 'px'
+        target.style.width = 1280 + 'px'
       }
     },
   }
@@ -57,9 +57,10 @@ export async function downloadImage(element: HTMLElement | null) {
   if (!element) return
   const result = await snapdom(element, {
     plugins: [forceDisplayPlugin],
-    width: 1920,
+    width: 1280,
     embedFonts: true,
     quality: 2,
+    outerShadows: true,
   })
   await result.download({ filename: 'my-ss-build' })
 }

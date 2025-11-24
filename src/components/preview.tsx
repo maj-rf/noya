@@ -13,11 +13,11 @@ const PreviewRow = ({
   k: 'Main' | 'Support'
 }) => {
   return (
-    <article className="min-w-7xl">
-      <div className="w-full bg-blue-900">
+    <article>
+      <div className="bg-blue-900">
         <h1 className="px-4 text-left text-white">{k}</h1>
       </div>
-      <div className="flex items-center gap-2 px-2 py-4 min-w-7xl">
+      <div className="flex items-center gap-2 px-2 py-4">
         <div className="h-[125px] w-[100px]">
           {avatar && <SSAvatar char={avatar} />}
         </div>
@@ -34,7 +34,7 @@ const PreviewRow = ({
                     name={p.name}
                   />
                   {p.rarity !== 0 && (
-                    <div className="absolute -top-0.5 left-3 text-sm font-semibold text-indigo-500">
+                    <div className="absolute -top-0.5 left-3 text-sm text-center font-semibold text-indigo-500">
                       {p.level}
                     </div>
                   )}
@@ -59,7 +59,7 @@ export const Preview = ({
 }) => {
   return (
     <div className="h-0 overflow-hidden">
-      <section ref={ref} className="bg-slate-600 w-7xl" id="preview">
+      <section ref={ref} className="bg-slate-600 w-4xl" id="preview">
         <PreviewRow
           avatar={avatar.main}
           potentials={potentials.main}
