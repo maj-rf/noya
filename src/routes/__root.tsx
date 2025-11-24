@@ -7,8 +7,8 @@ import Header from '../components/Header'
 export const Route = createRootRoute({
   head: () => ({
     meta: [
-      { name: 'description', content: 'Stella Sore Potential Builder' },
-      { title: 'Noya' },
+      { name: 'description', content: 'Create your Stella Sora Team Build' },
+      { title: 'Stella Sora Team Builder' },
     ],
   }),
   component: () => (

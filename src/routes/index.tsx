@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState, useTransition } from 'react'
 import type {
   SSCharacter,
   SelectedPotential,
@@ -39,6 +39,8 @@ function App() {
       sub2: null,
     })
 
+  const [isPending, startTransition] = useTransition()
+
   const updateTrekkers = (key: string, char: SSCharacter) => {
     const newObj = { ...trekkers }
     const potentialCopy = { ...selectedPotentials }
@@ -67,13 +69,20 @@ function App() {
     [],
   )
 
+  const handleDownload = () => {
+    startTransition(async () => {
+      await downloadImage(previewRef.current)
+    })
+  }
+
   return (
-    <main className="relative">
+    <main className="relative pb-8">
       <Button
-        onClick={async () => downloadImage(previewRef.current)}
+        onClick={handleDownload}
         className="fixed bottom-1 left-1 z-100"
+        disabled={isPending}
       >
-        Export
+        {isPending ? 'Converting...' : 'Export'}
       </Button>
       <div className="flex gap-2 justify-center max-w-md mx-auto my-8">
         {Object.entries(trekkers).map(([key, value]) => {
