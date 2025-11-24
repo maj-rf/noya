@@ -34,7 +34,7 @@ const PreviewRow = ({
                     name={p.name}
                   />
                   {p.rarity !== 0 && (
-                    <div className="absolute top-0 left-4 text-sm font-semibold text-indigo-500">
+                    <div className="absolute -top-0.5 left-3 text-sm font-semibold text-indigo-500">
                       {p.level}
                     </div>
                   )}
