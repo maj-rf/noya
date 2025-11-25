@@ -21,7 +21,7 @@ const PreviewRow = ({
         <div className="h-[125px] w-[100px]">
           {avatar && <SSAvatar char={avatar} />}
         </div>
-        <ul className="gap-2 flex-1">
+        <ul className="gap-2 flex-1 flex w-full flex-wrap">
           {!potentials || potentials.length === 0 ? (
             <div className="text-center text-white">No Chosen potential</div>
           ) : (
@@ -59,7 +59,7 @@ export const Preview = ({
 }) => {
   return (
     <div className="h-0 overflow-hidden">
-      <section ref={ref} className="bg-slate-600 w-4xl" id="preview">
+      <section ref={ref} className="bg-slate-600 w-2xl" id="preview">
         <PreviewRow
           avatar={avatar.main}
           potentials={potentials.main}

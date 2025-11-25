@@ -67,46 +67,51 @@ function SSPotentials({
         {k === 'main' ? 'Main' : 'Support'}
       </h1>
       <ItemGroup className="flex-row overflow-x-scroll min-h-[170px] gap-1 p-2 sm:max-w-5/6 w-full mx-auto bg-blue-200">
-        {selected
-          ?.sort((a, b) => a.rarity - b.rarity)
-          .map((s) => (
-            <Item key={'selected' + s.id} className="flex flex-col p-0">
-              <div className="relative">
-                <ResponsivePotential
-                  key={'selected' + s.imgId + s.id}
-                  bgSrc={`./ss-vestige/vestige_${s.rarity}.png`}
-                  iconSrc={`https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/${s.imgId}_A.png`}
-                  name={s.name}
-                  desc={s.briefDesc}
-                />
+        {!selected || selected.length === 0 ? (
+          <div className="self-center justify-self-center w-full">
+            Please choose potentials below
+          </div>
+        ) : (
+          selected
+            .sort((a, b) => a.rarity - b.rarity)
+            .map((s) => (
+              <Item key={'selected' + s.id} className="flex flex-col p-0">
+                <div className="relative">
+                  <ResponsivePotential
+                    key={'selected' + s.imgId + s.id}
+                    bgSrc={`./ss-vestige/vestige_${s.rarity}.png`}
+                    iconSrc={`https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/${s.imgId}_A.png`}
+                    name={s.name}
+                  />
+                  {s.rarity !== 0 && (
+                    <div className="absolute -top-0.5 left-3 text-sm font-semibold text-indigo-500">
+                      {s.level}
+                    </div>
+                  )}
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    className="absolute -top-1 -right-1 rounded-full size-5 border"
+                    onClick={() => removePotential(s.id)}
+                  >
+                    <X />
+                  </Button>
+                </div>
                 {s.rarity !== 0 && (
-                  <div className="absolute -top-0.5 left-3 text-sm font-semibold text-indigo-500">
-                    {s.level}
-                  </div>
+                  <Slider
+                    className="w-full"
+                    defaultValue={[1]}
+                    step={1}
+                    min={1}
+                    max={6}
+                    onValueChange={(newValue: Array<number>) =>
+                      updateLevel(newValue[0], s.id)
+                    }
+                  ></Slider>
                 )}
-                <Button
-                  variant="destructive"
-                  size="icon"
-                  className="absolute -top-1 -right-1 rounded-full size-5 border"
-                  onClick={() => removePotential(s.id)}
-                >
-                  <X />
-                </Button>
-              </div>
-              {s.rarity !== 0 && (
-                <Slider
-                  className="w-full"
-                  defaultValue={[1]}
-                  step={1}
-                  min={1}
-                  max={6}
-                  onValueChange={(newValue: Array<number>) =>
-                    updateLevel(newValue[0], s.id)
-                  }
-                ></Slider>
-              )}
-            </Item>
-          ))}
+              </Item>
+            ))
+        )}
       </ItemGroup>
       <ItemGroup className="flex-row overflow-x-scroll gap-1 p-2 sm:max-w-5/6 w-full mx-auto">
         {filteredPotentials.map((p) => (
@@ -123,7 +128,6 @@ function SSPotentials({
               bgSrc={`./ss-vestige/vestige_${p.rarity}.png`}
               iconSrc={`https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/${p.imgId}_A.png`}
               name={p.name}
-              desc={p.briefDesc}
             />
           </Item>
         ))}
