@@ -16,11 +16,12 @@ import {
 } from '@/lib/utils'
 import { Preview } from '@/components/preview'
 import { Button } from '@/components/ui/button'
+import { Loading } from '@/components/loading'
 
 export const Route = createFileRoute('/')({
   component: App,
   loader: fetchCharacters,
-  pendingComponent: () => <div>Loading...</div>,
+  pendingComponent: Loading,
 })
 
 function App() {

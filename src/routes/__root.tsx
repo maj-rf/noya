@@ -14,8 +14,12 @@ export const Route = createRootRoute({
   component: () => (
     <>
       <HeadContent />
-      <Header />
-      <Outlet />
+      <div className="flex flex-col h-svh">
+        <Header />
+        <main className="flex-1">
+          <Outlet />
+        </main>
+      </div>
       <TanStackDevtools
         config={{
           position: 'bottom-right',
