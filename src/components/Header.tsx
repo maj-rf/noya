@@ -4,7 +4,10 @@ export default function Header() {
       <header className="p-2 px-6 flex items-center bg-gray-800 text-white shadow-lg">
         <h1 className="text-xl font-semibold">noya</h1>
         <div className="ml-auto">
-          <a href="https://github.com/maj-rf/ss-build">
+          <a
+            href="https://github.com/maj-rf/ss-build"
+            aria-label="find me on github"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="1.03em"

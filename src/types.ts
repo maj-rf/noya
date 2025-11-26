@@ -5,6 +5,7 @@ export type SSPotential = {
   rarity: 0 | 1 | 2
   imgId: string
   id: number
+  subIcon?: 'Diamond' | 'Common' | 'Round'
 }
 
 export type SSCharacter = {
