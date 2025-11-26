@@ -23,15 +23,16 @@ const PreviewRow = ({
         </div>
         <ul className="gap-2 flex-1 flex w-full flex-wrap">
           {!potentials || potentials.length === 0 ? (
-            <div className="text-center text-white">No Chosen potential</div>
+            <li className="text-center text-white">No Chosen potential</li>
           ) : (
             potentials.map((p) => {
               return (
                 <li key={'preview' + p.id} className="relative inline-block">
                   <ResponsivePotential
-                    bgSrc={`./ss-vestige/vestige_${p.rarity}.png`}
-                    iconSrc={`https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/${p.imgId}_A.png`}
+                    rarity={p.rarity}
+                    imgId={p.imgId}
                     name={p.name}
+                    subIcon={p.subIcon}
                   />
                   {p.rarity !== 0 && (
                     <div className="absolute -top-0.5 left-3 text-sm text-center font-semibold text-indigo-500">

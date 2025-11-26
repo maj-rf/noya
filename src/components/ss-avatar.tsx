@@ -14,10 +14,12 @@ export const SSAvatar = ({ char }: { char: TAvatar }) => {
         )}
       >
         <img
+          alt={char.name + ' portrait'}
           className="block w-full h-full object-cover"
           src={`https://res.cloudinary.com/dafqr01it/image/upload/v1762945238/ss/avatar/head_${char.id}01_XL.png`}
         />
         <img
+          alt={char.name + 'element'}
           className="size-6 absolute -top-1 -left-1 z-100"
           src={`./ss-element/${char.element}.webp`}
         />
@@ -34,6 +36,7 @@ export const SSAvatar = ({ char }: { char: TAvatar }) => {
           <span>{char.class}</span>
           <div className="size-4 bg-blue-900 left-slant-l p-[3px]">
             <img
+              alt={char.name + 'attack type'}
               className="block object-contain"
               src={`./ss-class/${char.attackType}.png`}
             />

@@ -69,14 +69,14 @@ function SSPotentials({
   return (
     <div className="w-full max-w-11/12 mx-auto mb-2">
       <Popover>
-        <PopoverTrigger>
-          <Button variant="outline" className="mb-2">
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="mb-2" size="sm">
             Add {k === 'main' ? 'Main' : 'Support'} Potentials
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-md md:w-2xl" side="top" align="start">
           <ScrollArea className="w-full">
-            <div className="flex w-max my-2">
+            <div className="flex w-max my-2 gap-1">
               {filteredPotentials.map((p) => (
                 <div
                   onClick={() => {
@@ -88,9 +88,10 @@ function SSPotentials({
                 >
                   <ResponsivePotential
                     key={p.imgId + p.id}
-                    bgSrc={`./ss-vestige/vestige_${p.rarity}.png`}
-                    iconSrc={`https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/${p.imgId}_A.png`}
+                    rarity={p.rarity}
+                    imgId={p.imgId}
                     name={p.name}
+                    subIcon={p.subIcon}
                   />
                 </div>
               ))}
@@ -100,8 +101,8 @@ function SSPotentials({
         </PopoverContent>
       </Popover>
 
-      <ScrollArea className="w-full">
-        <div className="flex min-h-[170px] gap-1 bg-slate-300/90 p-2 rounded-sm">
+      <ScrollArea className="w-full rounded-sm">
+        <div className="flex min-h-[170px] gap-1 bg-slate-300/90 p-2">
           {!selected || selected.length === 0 ? (
             <div className="text-center self-center w-full">
               Please choose potentials
@@ -117,9 +118,10 @@ function SSPotentials({
                   <div className="relative">
                     <ResponsivePotential
                       key={'selected' + s.imgId + s.id}
-                      bgSrc={`./ss-vestige/vestige_${s.rarity}.png`}
-                      iconSrc={`https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/${s.imgId}_A.png`}
+                      rarity={s.rarity}
+                      imgId={s.imgId}
                       name={s.name}
+                      subIcon={s.subIcon}
                     />
                     {s.rarity !== 0 && (
                       <div className="absolute -top-0.5 left-3 text-sm font-semibold text-indigo-500">
