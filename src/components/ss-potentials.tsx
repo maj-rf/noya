@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { X } from 'lucide-react'
+import { PlusIcon, X } from 'lucide-react'
 import ResponsivePotential from './responsive-potential'
 import { Slider } from './ui/slider'
 import { Button } from './ui/button'
@@ -11,19 +11,21 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 
+type SSPotentialsProps = {
+  potentials: Array<SSPotential> | undefined
+  type: 'main' | 'support'
+  selected: Array<SelectedPotential> | null
+  k: string
+  setSelected: (k: string, potentials: Array<SelectedPotential>) => void
+}
+
 function SSPotentials({
   potentials,
   type,
   selected,
   k,
   setSelected,
-}: {
-  potentials: Array<SSPotential> | undefined
-  type: 'main' | 'support'
-  selected: Array<SelectedPotential> | null
-  k: string
-  setSelected: (k: string, potentials: Array<SelectedPotential>) => void
-}) {
+}: SSPotentialsProps) {
   if (!potentials) return
   const selectedIds = selected && new Set(selected.map((s) => s.id))
   const filteredPotentials = potentials
@@ -71,11 +73,11 @@ function SSPotentials({
       <Popover>
         <PopoverTrigger asChild>
           <Button variant="outline" className="mb-2" size="sm">
-            Add {k === 'main' ? 'Main' : 'Support'} Potentials
+            <PlusIcon /> {k === 'main' ? 'Main' : 'Support'} Potentials
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-md md:w-2xl" side="top" align="start">
-          <ScrollArea className="w-full">
+        <PopoverContent side="top" align="start" asChild>
+          <ScrollArea className="w-screen sm:w-3xl">
             <div className="flex w-max my-2 gap-1">
               {filteredPotentials.map((p) => (
                 <div
@@ -105,6 +107,12 @@ function SSPotentials({
         <div className="flex min-h-[170px] gap-1 bg-slate-300/90 p-2">
           {!selected || selected.length === 0 ? (
             <div className="text-center self-center w-full">
+              <div className="h-20 w-full">
+                <img
+                  src="./shy.png"
+                  className="block w-full h-full object-contain"
+                />
+              </div>
               Please choose potentials
             </div>
           ) : (
