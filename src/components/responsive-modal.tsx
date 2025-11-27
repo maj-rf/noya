@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { PlusIcon } from 'lucide-react'
 import { ScrollArea } from './ui/scroll-area'
 import { SSAvatar } from './ss-avatar'
 import type { TAvatar } from '@/types'
@@ -46,13 +47,10 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
           {props.triggerTitle && isTrekker(props.triggerTitle) ? (
             <SSAvatar char={props.triggerTitle} />
           ) : (
-            <span
-              className={
-                props.triggerTitle === 'Main' ? 'text-red-400' : 'text-blue-400'
-              }
-            >
-              {props.triggerTitle}
-            </span>
+            <>
+              <PlusIcon size={16} />
+              <span>{props.triggerTitle}</span>
+            </>
           )}
         </DialogTrigger>
         <DialogContent className="min-w-2xl">
@@ -72,13 +70,10 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
         {props.triggerTitle && isTrekker(props.triggerTitle) ? (
           <SSAvatar char={props.triggerTitle} />
         ) : (
-          <span
-            className={
-              props.triggerTitle === 'Main' ? 'text-red-400' : 'text-blue-400'
-            }
-          >
-            {props.triggerTitle}
-          </span>
+          <>
+            <PlusIcon size={16} />
+            <span>{props.triggerTitle}</span>
+          </>
         )}
       </DrawerTrigger>
       <DrawerContent>

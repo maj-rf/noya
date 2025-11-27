@@ -103,8 +103,8 @@ function SSPotentials({
         </PopoverContent>
       </Popover>
 
-      <ScrollArea className="w-full rounded-sm">
-        <div className="flex min-h-[170px] gap-1 bg-slate-300/90 p-2">
+      <ScrollArea className="w-full rounded-sm bg-popover border">
+        <div className="flex min-h-[170px] gap-1 p-2">
           {!selected || selected.length === 0 ? (
             <div className="text-center self-center w-full">
               <div className="h-20 w-full">
@@ -139,7 +139,7 @@ function SSPotentials({
                     <Button
                       variant="destructive"
                       size="icon"
-                      className="absolute -top-1 -right-1 rounded-full size-5 border"
+                      className="absolute -top-1 -right-1 rounded-full size-5 border border-white"
                       onClick={() => removePotential(s.id)}
                     >
                       <X />

@@ -20,7 +20,7 @@ export default function ResponsivePotential({
 
   return (
     <div
-      className={`relative ${size} h-fit aspect-[0.7851] bg-contain bg-center bg-no-repeat ${className} border rounded-sm`}
+      className={`relative ${size} h-fit aspect-[0.7851] bg-contain bg-center bg-no-repeat ${className} rounded-sm`}
       style={{ backgroundImage: `url(${bgSrc})` }}
     >
       <img
