@@ -80,7 +80,7 @@ function App() {
     <main className="relative pb-8">
       <Button
         onClick={handleDownload}
-        className="fixed bottom-1 left-1 z-100"
+        className="fixed bottom-1 left-1 z-2"
         disabled={isPending}
       >
         {isPending ? 'Converting...' : 'Export'}

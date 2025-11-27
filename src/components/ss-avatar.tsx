@@ -6,7 +6,7 @@ export const SSAvatar = ({ char }: { char: TAvatar }) => {
     <div className="group-data-[disabled=true]:opacity-40 bg-gray-400 border-none padding-0 outline-offset-4 rounded-sm w-full h-full">
       <div
         className={cn(
-          'rare-border rounded-xs avatar-border relative -translate-y-0.5 w-full h-full',
+          'rounded-xs avatar-border relative -translate-y-0.5 w-full h-full',
           {
             'avatar-common-bg': char.star === 4,
             'avatar-rare-bg': char.star === 5,
