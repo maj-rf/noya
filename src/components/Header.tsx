@@ -1,9 +1,12 @@
+import { ModeToggle } from './mode-toggle'
+
 export default function Header() {
   return (
     <>
-      <header className="p-2 px-6 flex items-center bg-gray-800 text-white shadow-lg">
+      <header className="p-2 px-6 flex items-center bg-gray-800 dark:bg-gray-900 text-white shadow-lg">
         <h1 className="text-xl font-semibold">noya</h1>
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-2">
+          <ModeToggle />
           <a
             href="https://github.com/maj-rf/ss-build"
             aria-label="find me on github"
@@ -13,7 +16,7 @@ export default function Header() {
               width="1.03em"
               height="1em"
               viewBox="0 0 256 250"
-              className="text-background size-5"
+              className=" size-5"
             >
               <path
                 fill="currentColor"
