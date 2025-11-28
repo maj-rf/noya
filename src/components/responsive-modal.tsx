@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { PlusIcon } from 'lucide-react'
-import { ScrollArea } from './ui/scroll-area'
 import { SSAvatar } from './ss-avatar'
 import type { TAvatar } from '@/types'
 import useMediaQuery from '@/lib/useMediaQuery'
@@ -58,7 +57,7 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
             <DialogTitle>{props.title}</DialogTitle>
             <DialogDescription>{props.desc}</DialogDescription>
           </DialogHeader>
-          <ScrollArea className="h-100 px-2">{props.children}</ScrollArea>
+          {props.children}
         </DialogContent>
       </Dialog>
     )
@@ -81,7 +80,7 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
           <DrawerTitle>{props.title}</DrawerTitle>
           <DrawerDescription>{props.desc}</DrawerDescription>
         </DrawerHeader>
-        <ScrollArea className="h-100 px-2">{props.children}</ScrollArea>
+        {props.children}
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
