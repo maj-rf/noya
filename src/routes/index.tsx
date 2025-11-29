@@ -77,7 +77,7 @@ function App() {
   }
 
   return (
-    <main className="relative pb-8">
+    <div className="relative pb-8">
       <Button
         onClick={handleDownload}
         className="fixed bottom-1 left-1 z-2"
@@ -131,6 +131,6 @@ function App() {
         potentials={selectedPotentials}
         ref={previewRef}
       />
-    </main>
+    </div>
   )
 }

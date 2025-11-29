@@ -9,7 +9,7 @@ export function cn(...inputs: Array<ClassValue>) {
   return twMerge(clsx(inputs))
 }
 
-export async function fetchCharacters(): Promise<Array<SSCharacter>> {
+export async function fetchCharacters(): Promise<Record<string, SSCharacter>> {
   const response = await fetch(
     'https://raw.githubusercontent.com/maj-rf/StellaSoraData/refs/heads/main/character.json',
   )

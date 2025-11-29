@@ -77,7 +77,7 @@ function SSPotentials({
           </Button>
         </PopoverTrigger>
         <PopoverContent side="top" align="start" asChild>
-          <ScrollArea className="w-screen sm:w-3xl">
+          <ScrollArea className="w-screen sm:w-xl md:w-3xl">
             <div className="flex w-max my-2 gap-1">
               {filteredPotentials.map((p) => (
                 <div

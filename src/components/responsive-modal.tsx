@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { PlusIcon } from 'lucide-react'
-import { ScrollArea } from './ui/scroll-area'
 import { SSAvatar } from './ss-avatar'
 import type { TAvatar } from '@/types'
 import useMediaQuery from '@/lib/useMediaQuery'
@@ -58,14 +57,14 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
             <DialogTitle>{props.title}</DialogTitle>
             <DialogDescription>{props.desc}</DialogDescription>
           </DialogHeader>
-          <ScrollArea className="h-100 px-2">{props.children}</ScrollArea>
+          {props.children}
         </DialogContent>
       </Dialog>
     )
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer open={open} onOpenChange={setOpen} repositionInputs={false}>
       <DrawerTrigger className="h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8] bg-accent border rounded-sm shadow-sm flex items-center justify-center ">
         {props.triggerTitle && isTrekker(props.triggerTitle) ? (
           <SSAvatar char={props.triggerTitle} />
@@ -81,7 +80,7 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
           <DrawerTitle>{props.title}</DrawerTitle>
           <DrawerDescription>{props.desc}</DrawerDescription>
         </DrawerHeader>
-        <ScrollArea className="h-100 px-2">{props.children}</ScrollArea>
+        {props.children}
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
