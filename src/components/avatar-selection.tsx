@@ -1,6 +1,15 @@
 import { getRouteApi } from '@tanstack/react-router'
 import { Search } from 'lucide-react'
 import { useState } from 'react'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select'
 import type { SSCharacter, Trekkers } from '@/types'
 import { SSAvatar } from '@/components/ss-avatar'
 import {
@@ -9,6 +18,30 @@ import {
   InputGroupInput,
 } from '@/components/ui/input-group'
 import { ScrollArea } from '@/components/ui/scroll-area'
+
+function getSearchedAndFilteredCharacters(
+  characters: Array<SSCharacter>,
+  search?: string,
+  filter?: string,
+) {
+  return characters.filter((c) => {
+    // Check search condition
+    if (search && !c.name.toLowerCase().includes(search.toLowerCase())) {
+      return false
+    }
+
+    // Check filter condition
+    if (filter) {
+      const [type, value] = filter.split(':')
+      if (type == 'all') return true
+      if (c[type as keyof SSCharacter] !== value) {
+        return false
+      }
+    }
+
+    return true
+  })
+}
 
 export const AvatarSelection = ({
   k,
@@ -22,31 +55,58 @@ export const AvatarSelection = ({
   const routeApi = getRouteApi('/')
   const fetchedCharacters = routeApi.useLoaderData()
   const [search, setSearch] = useState('')
+  const [filter, setFilter] = useState('')
   const characters = Object.entries(fetchedCharacters).map(([_, char]) => char)
-  const filteredChars = search
-    ? characters.filter((c) =>
-        c.name.toLowerCase().includes(search.toLowerCase()),
-      )
-    : characters
+  const filteredChars = getSearchedAndFilteredCharacters(
+    characters,
+    search,
+    filter,
+  )
 
   return (
     <section>
-      <div className="w-full max-w-2xl mb-2 px-4">
+      <div className="w-full max-w-2xl grid grid-cols-[1fr_0.5fr] gap-2 mb-2 px-2">
         <InputGroup>
           <InputGroupInput
-            placeholder="Search..."
+            placeholder="Search Name..."
             onChange={(e) => setSearch(e.target.value)}
           />
           <InputGroupAddon>
             <Search />
           </InputGroupAddon>
-          {search && (
-            <InputGroupAddon align="inline-end">
-              {filteredChars.length +
-                `${filteredChars.length === 1 ? ' result' : ' results'}`}
-            </InputGroupAddon>
-          )}
+          <InputGroupAddon align="inline-end">
+            {filteredChars.length +
+              `${filteredChars.length === 1 ? ' result' : ' results'}`}
+          </InputGroupAddon>
         </InputGroup>
+        <Select value={filter} onValueChange={setFilter}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Filter" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={'all:all'}>All</SelectItem>
+            <SelectGroup>
+              <SelectLabel>By Element</SelectLabel>
+              <SelectItem value="element:Ignis">Ignis</SelectItem>
+              <SelectItem value="element:Ventus">Ventus</SelectItem>
+              <SelectItem value="element:Terra">Terra</SelectItem>
+              <SelectItem value="element:Aqua">Aqua</SelectItem>
+              <SelectItem value="element:Lux">Lux</SelectItem>
+              <SelectItem value="element:Umbra">Umbra</SelectItem>
+            </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>By Attack Type</SelectLabel>
+              <SelectItem value="attackType:Ranged">Ranged</SelectItem>
+              <SelectItem value="attackType:Melee">Melee</SelectItem>
+            </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>By Class</SelectLabel>
+              <SelectItem value="class:Vanguard">Vanguard</SelectItem>
+              <SelectItem value="class:Versatile">Versatile</SelectItem>
+            </SelectGroup>
+            <SelectItem value="class:Support">Support</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <ScrollArea className="h-100 px-2">
         <div className="flex flex-wrap justify-center gap-2 mt-2">
