@@ -68,7 +68,7 @@ export const AvatarSelection = ({
       <div className="w-full max-w-2xl grid grid-cols-[1fr_0.5fr] gap-2 mb-2 px-2">
         <InputGroup>
           <InputGroupInput
-            placeholder="Search Name..."
+            placeholder="Search..."
             onChange={(e) => setSearch(e.target.value)}
           />
           <InputGroupAddon>
