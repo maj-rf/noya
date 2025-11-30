@@ -1,6 +1,5 @@
 import { memo } from 'react'
 import { InfoIcon, PlusIcon, X } from 'lucide-react'
-import { PopoverArrow } from '@radix-ui/react-popover'
 import ResponsivePotential from './responsive-potential'
 import { Slider } from './ui/slider'
 import { Button } from './ui/button'
