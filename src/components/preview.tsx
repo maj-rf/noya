@@ -14,6 +14,12 @@ const PreviewRow = ({
 }) => {
   const selectedMap = useTrekkerStore((state) => state.potentials[slot])
   const potentials = useMemo(() => Object.values(selectedMap), [selectedMap])
+
+  const sortedPotentials = potentials.sort((a, b) => {
+    const order = ['Core', 'Medium', 'Optional'] as const
+    return order.indexOf(a.priority) - order.indexOf(b.priority)
+  })
+
   return (
     <article>
       <div className="bg-blue-900">
@@ -29,7 +35,7 @@ const PreviewRow = ({
           {potentials.length === 0 ? (
             <li className="text-center text-white">No Chosen potential</li>
           ) : (
-            potentials.map((p) => {
+            sortedPotentials.map((p) => {
               return (
                 <li key={'preview' + p.id} className="relative inline-block">
                   <ResponsivePotential
@@ -57,7 +63,7 @@ export const Preview = ({
   avatar,
   ref,
 }: {
-  avatar: Record<'main' | 'sub1' | 'sub2', TAvatar | null>
+  avatar: Record<Slot, TAvatar | null>
   ref: RefObject<HTMLElement | null>
 }) => {
   return (

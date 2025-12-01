@@ -10,7 +10,14 @@ import {
   HybridTooltipProvider,
   HybridTooltipTrigger,
 } from './ui/hybrid-tooltip'
-import type { Slot } from '@/types'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select'
+import type { PotentialPriority, Slot } from '@/types'
 import {
   Popover,
   PopoverContent,
@@ -27,8 +34,9 @@ function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
   const s = useTrekkerStore((state) => state.potentials[slot][id])
   const updateLevel = useTrekkerStore((sel) => sel.updateLevel)
   const removePotential = useTrekkerStore((sel) => sel.removePotential)
+  const updatePriority = useTrekkerStore((sel) => sel.updatePriority)
   return (
-    <div className="flex flex-wrap shrink-0 py-2">
+    <div className="flex flex-col gap-2">
       <HybridTooltip>
         <HybridTooltipTrigger asChild>
           <div className="relative">
@@ -60,18 +68,34 @@ function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
         </HybridTooltipContent>
       </HybridTooltip>
 
-      {s.rarity !== 0 && (
+      <>
         <Slider
-          className="w-full"
           defaultValue={[1]}
           step={1}
+          disabled={s.rarity === 0}
           min={1}
           max={6}
           onValueChange={(newValue: Array<number>) =>
             updateLevel(slot, s.id, newValue[0])
           }
         ></Slider>
-      )}
+        <Select
+          disabled={s.rarity === 0}
+          value={s.priority}
+          onValueChange={(value) =>
+            updatePriority(slot, id, value as PotentialPriority)
+          }
+        >
+          <SelectTrigger className="text-xs p-2 w-full">
+            <SelectValue placeholder="PotentialPriority" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Core">Core</SelectItem>
+            <SelectItem value="Medium">Medium</SelectItem>
+            <SelectItem value="Optional">Optional</SelectItem>
+          </SelectContent>
+        </Select>
+      </>
     </div>
   )
 }
@@ -107,7 +131,8 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="mb-2" size="sm">
-              <PlusIcon /> {slot === 'main' ? 'Main' : 'Support'} Potentials
+              <PlusIcon /> {trekker.name} Potentials |{' '}
+              {slot === 'main' ? 'Main' : 'Support'}
             </Button>
           </PopoverTrigger>
           <PopoverContent side="top" align="start" asChild>
@@ -158,7 +183,7 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
         </Popover>
 
         <ScrollArea className="w-full rounded-sm bg-popover border">
-          <div className="flex min-h-[170px] gap-1 p-2">
+          <div className="flex min-h-[196.27px] gap-1 p-2">
             {selected.length === 0 ? (
               <div className="text-center self-center w-full">
                 <div className="h-20 w-full">

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type {
+  PotentialPriority,
   SSCharacter,
   SSPotential,
   SelectedPotentialMap,
@@ -21,6 +22,7 @@ interface TrekkerState {
   setTrekker: (slot: Slot, char: SSCharacter | null) => void
   addPotential: (slot: Slot, p: SSPotential) => void
   updateLevel: (slot: Slot, id: number, level: number) => void
+  updatePriority: (slot: Slot, id: number, value: PotentialPriority) => void
   removePotential: (slot: Slot, id: number) => void
   clearPotentials: (slot: Slot) => void
 }
@@ -44,8 +46,8 @@ export const useTrekkerStore = create<TrekkerState>()((set) => ({
           ...state.potentials[slot],
           [p.id]:
             p.rarity === 0
-              ? { ...p, rarity: 0 }
-              : { ...p, rarity: p.rarity, level: 1 },
+              ? { ...p, rarity: 0, priority: 'Core' }
+              : { ...p, rarity: p.rarity, level: 1, priority: 'Medium' },
         },
       },
     })),
@@ -56,6 +58,16 @@ export const useTrekkerStore = create<TrekkerState>()((set) => ({
         [slot]: {
           ...state.potentials[slot],
           [id]: { ...state.potentials[slot][id], level },
+        },
+      },
+    })),
+  updatePriority: (slot, id, value) =>
+    set((state) => ({
+      potentials: {
+        ...state.potentials,
+        [slot]: {
+          ...state.potentials[slot],
+          [id]: { ...state.potentials[slot][id], priority: value },
         },
       },
     })),
