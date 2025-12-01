@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select'
-import type { SSCharacter, Trekkers } from '@/types'
+import type { SSCharacter, Slot, Trekkers } from '@/types'
 import { SSAvatar } from '@/components/ss-avatar'
 import {
   InputGroup,
@@ -44,13 +44,13 @@ function getSearchedAndFilteredCharacters(
 }
 
 export const AvatarSelection = ({
-  k,
+  slot,
   trekkers,
   updateTrekkers,
 }: {
-  k: string
+  slot: Slot
   trekkers: Trekkers
-  updateTrekkers: (key: string, char: SSCharacter) => void
+  updateTrekkers: (slot: Slot, char: SSCharacter) => void
 }) => {
   const routeApi = getRouteApi('/')
   const fetchedCharacters = routeApi.useLoaderData()
@@ -115,11 +115,11 @@ export const AvatarSelection = ({
             return (
               <div
                 key={char.id}
-                onClick={() => updateTrekkers(k, char)}
+                onClick={() => updateTrekkers(slot, char)}
                 data-disabled={Object.values(trekkers).some(
                   (t) => t?.id === char.id,
                 )}
-                data-selected={trekkers[k as keyof Trekkers]?.id === char.id}
+                data-selected={trekkers[slot]?.id === char.id}
                 className="group outline-blue-600 rounded-xs data-[selected=true]:outline-2 h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8]"
               >
                 <SSAvatar char={avatar} />

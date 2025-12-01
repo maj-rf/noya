@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 import { InfoIcon, PlusIcon, X } from 'lucide-react'
 import ResponsivePotential from './responsive-potential'
 import { Slider } from './ui/slider'
@@ -10,69 +10,96 @@ import {
   HybridTooltipProvider,
   HybridTooltipTrigger,
 } from './ui/hybrid-tooltip'
-import type { SSPotential, SelectedPotential } from '@/types'
+import type { Slot } from '@/types'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { useTrekkerStore } from '@/lib/trekker-store'
 
 type SSPotentialsProps = {
-  potentials: Array<SSPotential> | undefined
+  slot: Slot
   type: 'main' | 'support'
-  selected: Array<SelectedPotential> | null
-  k: string
-  setSelected: (k: string, potentials: Array<SelectedPotential>) => void
 }
 
-function SSPotentials({
-  potentials,
-  type,
-  selected,
-  k,
-  setSelected,
-}: SSPotentialsProps) {
-  if (!potentials) return
-  const selectedIds = selected && new Set(selected.map((s) => s.id))
-  const filteredPotentials = potentials
-    .filter(
-      (p) =>
-        (p.type === type || p.type === 'common') && !selectedIds?.has(p.id),
-    )
-    .sort((a, b) => a.rarity - b.rarity)
+function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
+  const s = useTrekkerStore((state) => state.potentials[slot][id])
+  const updateLevel = useTrekkerStore((sel) => sel.updateLevel)
+  const removePotential = useTrekkerStore((sel) => sel.removePotential)
+  return (
+    <div className="flex flex-wrap shrink-0 py-2">
+      <HybridTooltip>
+        <HybridTooltipTrigger asChild>
+          <div className="relative">
+            <ResponsivePotential
+              key={'selected' + s.imgId + s.id}
+              rarity={s.rarity}
+              imgId={s.imgId}
+              name={s.name}
+              subIcon={s.subIcon}
+            />
+            {s.rarity !== 0 && (
+              <div className="absolute -top-0.5 left-3 text-sm font-semibold text-indigo-500">
+                {s.level}
+              </div>
+            )}
+
+            <Button
+              variant="destructive"
+              size="icon"
+              className="absolute -top-1 -right-1 rounded-full size-5 border border-white"
+              onClick={() => removePotential(slot, s.id)}
+            >
+              <X />
+            </Button>
+          </div>
+        </HybridTooltipTrigger>
+        <HybridTooltipContent>
+          <p>{s.briefDesc}</p>
+        </HybridTooltipContent>
+      </HybridTooltip>
+
+      {s.rarity !== 0 && (
+        <Slider
+          className="w-full"
+          defaultValue={[1]}
+          step={1}
+          min={1}
+          max={6}
+          onValueChange={(newValue: Array<number>) =>
+            updateLevel(slot, s.id, newValue[0])
+          }
+        ></Slider>
+      )}
+    </div>
+  )
+}
+
+function SSPotentials({ slot, type }: SSPotentialsProps) {
+  const trekker = useTrekkerStore((s) => s.trekkers[slot])
+  const selectedMap = useTrekkerStore((s) => s.potentials[slot])
+  const addPotential = useTrekkerStore((s) => s.addPotential)
+  const selected = useMemo(() => Object.values(selectedMap), [selectedMap])
+  const potentials = trekker ? trekker.potential : []
+  const filteredPotentials = useMemo(() => {
+    const selectedIds = new Set(Object.keys(selectedMap).map(Number))
+    return potentials
+      .filter(
+        (p) =>
+          (p.type === type || p.type === 'common') && !selectedIds.has(p.id),
+      )
+      .sort((a, b) => a.rarity - b.rarity)
+  }, [potentials, selectedMap, type])
 
   const coreExceed =
-    selected && selected.length >= 2
+    selected.length >= 2
       ? selected.reduce((a, b) => {
           return b.rarity === 0 ? a + 1 : a
         }, 0) === 2
       : false
 
-  function addPotential(potential: SSPotential) {
-    if (coreExceed && potential.rarity === 0) return
-    const copy = selected ? [...selected] : []
-    if (potential.rarity === 0) {
-      setSelected(k, copy.concat({ ...potential, rarity: 0 }))
-    } else
-      setSelected(
-        k,
-        copy.concat({ ...potential, rarity: potential.rarity, level: 1 }),
-      )
-  }
-
-  function removePotential(id: number) {
-    const updated = selected?.filter((s) => s.id !== id)
-    if (!updated) return
-    setSelected(k, updated)
-  }
-
-  function updateLevel(level: number, id: number) {
-    const updated = selected?.map((s) => {
-      return s.rarity && s.id === id ? { ...s, level } : s
-    })
-    if (!updated) return
-    setSelected(k, updated)
-  }
+  if (!trekker) return
 
   return (
     <HybridTooltipProvider>
@@ -80,7 +107,7 @@ function SSPotentials({
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="mb-2" size="sm">
-              <PlusIcon /> {k === 'main' ? 'Main' : 'Support'} Potentials
+              <PlusIcon /> {slot === 'main' ? 'Main' : 'Support'} Potentials
             </Button>
           </PopoverTrigger>
           <PopoverContent side="top" align="start" asChild>
@@ -95,7 +122,8 @@ function SSPotentials({
                   <div key={p.id} className="relative">
                     <div
                       onClick={() => {
-                        addPotential(p)
+                        if (coreExceed && p.rarity === 0) return
+                        addPotential(slot, p)
                       }}
                       data-disabled={coreExceed}
                       className={`rarity-${p.rarity}`}
@@ -131,7 +159,7 @@ function SSPotentials({
 
         <ScrollArea className="w-full rounded-sm bg-popover border">
           <div className="flex min-h-[170px] gap-1 p-2">
-            {!selected || selected.length === 0 ? (
+            {selected.length === 0 ? (
               <div className="text-center self-center w-full">
                 <div className="h-20 w-full">
                   <img
@@ -145,54 +173,11 @@ function SSPotentials({
               selected
                 .sort((a, b) => a.rarity - b.rarity)
                 .map((s) => (
-                  <div
+                  <SingleSelected
                     key={'selected' + s.id}
-                    className="flex flex-wrap shrink-0 py-2"
-                  >
-                    <HybridTooltip>
-                      <HybridTooltipTrigger asChild>
-                        <div className="relative">
-                          <ResponsivePotential
-                            key={'selected' + s.imgId + s.id}
-                            rarity={s.rarity}
-                            imgId={s.imgId}
-                            name={s.name}
-                            subIcon={s.subIcon}
-                          />
-                          {s.rarity !== 0 && (
-                            <div className="absolute -top-0.5 left-3 text-sm font-semibold text-indigo-500">
-                              {s.level}
-                            </div>
-                          )}
-
-                          <Button
-                            variant="destructive"
-                            size="icon"
-                            className="absolute -top-1 -right-1 rounded-full size-5 border border-white"
-                            onClick={() => removePotential(s.id)}
-                          >
-                            <X />
-                          </Button>
-                        </div>
-                      </HybridTooltipTrigger>
-                      <HybridTooltipContent>
-                        <p>{s.briefDesc}</p>
-                      </HybridTooltipContent>
-                    </HybridTooltip>
-
-                    {s.rarity !== 0 && (
-                      <Slider
-                        className="w-full"
-                        defaultValue={[1]}
-                        step={1}
-                        min={1}
-                        max={6}
-                        onValueChange={(newValue: Array<number>) =>
-                          updateLevel(newValue[0], s.id)
-                        }
-                      ></Slider>
-                    )}
-                  </div>
+                    slot={slot}
+                    id={s.id}
+                  />
                 ))
             )}
           </div>

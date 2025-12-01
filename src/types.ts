@@ -21,13 +21,12 @@ export type SSCharacter = {
 
 export type TAvatar = Omit<SSCharacter, 'potential'>
 
-export type Trekkers = Record<'main' | 'sub1' | 'sub2', null | SSCharacter>
+export type Slot = 'main' | 'sub1' | 'sub2'
+
+export type Trekkers = Record<Slot, null | SSCharacter>
 
 export type SelectedPotential =
   | (SSPotential & { rarity: 0; level?: never })
   | (SSPotential & { rarity: 1 | 2; level: number })
 
-export type TrekkerPotentials = Record<
-  'main' | 'sub1' | 'sub2',
-  null | Array<SelectedPotential>
->
+export type SelectedPotentialMap = Record<string, SelectedPotential>

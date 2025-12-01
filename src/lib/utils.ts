@@ -1,6 +1,7 @@
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { snapdom } from '@zumer/snapdom'
+import { useTrekkerStore } from './trekker-store'
 import type { SnapdomPlugin } from '@zumer/snapdom'
 import type { ClassValue } from 'clsx'
 import type { SSCharacter, TAvatar, Trekkers } from '@/types'
@@ -17,6 +18,14 @@ export async function fetchCharacters(): Promise<Record<string, SSCharacter>> {
     throw new Error('Failed to fetch characters')
   }
   const characters = await response.json()
+
+  useTrekkerStore.setState({
+    trekkers: {
+      main: characters[103],
+      sub1: characters[112],
+      sub2: characters[111],
+    },
+  })
   return characters
 }
 

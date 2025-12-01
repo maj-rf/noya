@@ -1,28 +1,32 @@
+import { useMemo } from 'react'
 import { SSAvatar } from './ss-avatar'
 import ResponsivePotential from './responsive-potential'
-import type { SelectedPotential, TAvatar, TrekkerPotentials } from '@/types'
 import type { RefObject } from 'react'
+import type { Slot, TAvatar } from '@/types'
+import { useTrekkerStore } from '@/lib/trekker-store'
 
 const PreviewRow = ({
   avatar,
-  potentials,
-  k,
+  slot,
 }: {
   avatar: TAvatar | null
-  potentials: Array<SelectedPotential> | null
-  k: 'Main' | 'Support'
+  slot: Slot
 }) => {
+  const selectedMap = useTrekkerStore((state) => state.potentials[slot])
+  const potentials = useMemo(() => Object.values(selectedMap), [selectedMap])
   return (
     <article>
       <div className="bg-blue-900">
-        <h1 className="px-4 text-left text-white">{k}</h1>
+        <h1 className="px-4 text-left text-white">
+          {slot === 'main' ? 'Main' : 'Support'}
+        </h1>
       </div>
       <div className="flex items-center gap-2 px-2 py-4">
         <div className="h-[125px] w-[100px]">
           {avatar && <SSAvatar char={avatar} />}
         </div>
         <ul className="gap-2 flex-1 flex w-full flex-wrap">
-          {!potentials || potentials.length === 0 ? (
+          {potentials.length === 0 ? (
             <li className="text-center text-white">No Chosen potential</li>
           ) : (
             potentials.map((p) => {
@@ -51,31 +55,17 @@ const PreviewRow = ({
 
 export const Preview = ({
   avatar,
-  potentials,
   ref,
 }: {
   avatar: Record<'main' | 'sub1' | 'sub2', TAvatar | null>
-  potentials: TrekkerPotentials
   ref: RefObject<HTMLElement | null>
 }) => {
   return (
     <div className="h-0 overflow-hidden">
       <section ref={ref} className="bg-slate-600 w-2xl" id="preview">
-        <PreviewRow
-          avatar={avatar.main}
-          potentials={potentials.main}
-          k="Main"
-        />
-        <PreviewRow
-          avatar={avatar.sub1}
-          potentials={potentials.sub1}
-          k="Support"
-        />
-        <PreviewRow
-          avatar={avatar.sub2}
-          potentials={potentials.sub2}
-          k="Support"
-        />
+        <PreviewRow avatar={avatar.main} slot="main" />
+        <PreviewRow avatar={avatar.sub1} slot="sub1" />
+        <PreviewRow avatar={avatar.sub2} slot="sub2" />
       </section>
     </div>
   )

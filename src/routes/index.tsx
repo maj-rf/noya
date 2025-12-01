@@ -1,11 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useCallback, useRef, useState, useTransition } from 'react'
-import type {
-  SSCharacter,
-  SelectedPotential,
-  TrekkerPotentials,
-  Trekkers,
-} from '@/types'
+import { useRef, useTransition } from 'react'
+import type { SSCharacter, Slot } from '@/types'
 import { ResponsiveModal } from '@/components/responsive-modal'
 import SSPotentials from '@/components/ss-potentials'
 import { AvatarSelection } from '@/components/avatar-selection'
@@ -17,6 +12,7 @@ import {
 import { Preview } from '@/components/preview'
 import { Button } from '@/components/ui/button'
 import { Loading } from '@/components/loading'
+import { useTrekkerStore } from '@/lib/trekker-store'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -25,50 +21,25 @@ export const Route = createFileRoute('/')({
 })
 
 function App() {
-  const character = Route.useLoaderData()
   const previewRef = useRef<HTMLElement>(null)
-  const [trekkers, setTrekkers] = useState<Trekkers>({
-    main: character[103],
-    sub1: character[112],
-    sub2: character[111],
-  })
-
-  const [selectedPotentials, setSelectedPotentials] =
-    useState<TrekkerPotentials>({
-      main: null,
-      sub1: null,
-      sub2: null,
-    })
-
+  const setTrekker = useTrekkerStore((s) => s.setTrekker)
+  const clearPotentials = useTrekkerStore((s) => s.clearPotentials)
   const [isPending, startTransition] = useTransition()
+  const trekkers = useTrekkerStore((s) => s.trekkers)
 
-  const updateTrekkers = (key: string, char: SSCharacter) => {
-    const newObj = { ...trekkers }
-    const potentialCopy = { ...selectedPotentials }
-    const alreadyExists = Object.values(newObj).some((t) => t?.id === char.id)
-    const removable = newObj[key as keyof Trekkers]?.id === char.id
-    if (removable) {
-      newObj[key as keyof Trekkers] = null
-      potentialCopy[key as keyof TrekkerPotentials] = null
+  const updateTrekkers = (slot: Slot, char: SSCharacter) => {
+    const alreadyExists = Object.values(trekkers).some((t) => t?.id === char.id)
+    const isSameSlot = trekkers[slot]?.id === char.id
+    if (isSameSlot) {
+      setTrekker(slot, null)
+      clearPotentials(slot)
     } else if (alreadyExists) {
       return
     } else {
-      newObj[key as keyof Trekkers] = char
-      potentialCopy[key as keyof TrekkerPotentials] = null
+      setTrekker(slot, char)
+      clearPotentials(slot)
     }
-    setTrekkers(newObj)
-    setSelectedPotentials(potentialCopy)
   }
-
-  const setSelected = useCallback(
-    (k: string, potentials: Array<SelectedPotential>) => {
-      setSelectedPotentials((prev) => ({
-        ...prev,
-        [k as keyof TrekkerPotentials]: potentials,
-      }))
-    },
-    [],
-  )
 
   const handleDownload = () => {
     startTransition(async () => {
@@ -96,7 +67,7 @@ function App() {
               desc={`Add the ${label} Trekker to your team`}
             >
               <AvatarSelection
-                k={key}
+                slot={key as Slot}
                 trekkers={trekkers}
                 updateTrekkers={updateTrekkers}
               />
@@ -104,31 +75,11 @@ function App() {
           )
         })}
       </div>
-      <SSPotentials
-        potentials={trekkers.main?.potential}
-        type={'main'}
-        selected={selectedPotentials.main}
-        setSelected={setSelected}
-        k="main"
-      />
-      <SSPotentials
-        potentials={trekkers.sub1?.potential}
-        type={'support'}
-        selected={selectedPotentials.sub1}
-        setSelected={setSelected}
-        k="sub1"
-      />
-      <SSPotentials
-        potentials={trekkers.sub2?.potential}
-        type={'support'}
-        selected={selectedPotentials.sub2}
-        setSelected={setSelected}
-        k="sub2"
-      />
-
+      <SSPotentials slot="main" type="main" />
+      <SSPotentials slot="sub1" type="support" />
+      <SSPotentials slot="sub2" type="support" />
       <Preview
         avatar={getTrekkersWithoutPotentials(trekkers)}
-        potentials={selectedPotentials}
         ref={previewRef}
       />
     </div>
