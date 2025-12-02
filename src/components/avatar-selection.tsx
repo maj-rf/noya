@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select'
-import type { SSCharacter, Trekkers } from '@/types'
+import type { SSCharacter, Slot, Trekkers } from '@/types'
 import { SSAvatar } from '@/components/ss-avatar'
 import {
   InputGroup,
@@ -18,6 +18,7 @@ import {
   InputGroupInput,
 } from '@/components/ui/input-group'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { useTrekkerStore } from '@/lib/trekker-store'
 
 function getSearchedAndFilteredCharacters(
   characters: Array<SSCharacter>,
@@ -34,6 +35,12 @@ function getSearchedAndFilteredCharacters(
     if (filter) {
       const [type, value] = filter.split(':')
       if (type == 'all') return true
+      if (
+        type === 'star' &&
+        Number(c[type as keyof SSCharacter]) === Number(value)
+      ) {
+        return true
+      }
       if (c[type as keyof SSCharacter] !== value) {
         return false
       }
@@ -44,13 +51,11 @@ function getSearchedAndFilteredCharacters(
 }
 
 export const AvatarSelection = ({
-  k,
+  slot,
   trekkers,
-  updateTrekkers,
 }: {
-  k: string
+  slot: Slot
   trekkers: Trekkers
-  updateTrekkers: (key: string, char: SSCharacter) => void
 }) => {
   const routeApi = getRouteApi('/')
   const fetchedCharacters = routeApi.useLoaderData()
@@ -62,6 +67,22 @@ export const AvatarSelection = ({
     search,
     filter,
   )
+  const setTrekker = useTrekkerStore((s) => s.setTrekker)
+  const clearPotentials = useTrekkerStore((s) => s.clearPotentials)
+
+  const updateTrekkers = (s: Slot, char: SSCharacter) => {
+    const alreadyExists = Object.values(trekkers).some((t) => t?.id === char.id)
+    const isSameSlot = trekkers[s]?.id === char.id
+    if (isSameSlot) {
+      setTrekker(s, null)
+      clearPotentials(s)
+    } else if (alreadyExists) {
+      return
+    } else {
+      setTrekker(s, char)
+      clearPotentials(s)
+    }
+  }
 
   return (
     <section>
@@ -100,7 +121,12 @@ export const AvatarSelection = ({
               <SelectItem value="attackType:Melee">Melee</SelectItem>
             </SelectGroup>
             <SelectGroup>
-              <SelectLabel>By Class</SelectLabel>
+              <SelectLabel>By Rarity</SelectLabel>
+              <SelectItem value="star:4">4⭐️</SelectItem>
+              <SelectItem value="star:5">5⭐️</SelectItem>
+            </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>By Tag</SelectLabel>
               <SelectItem value="class:Vanguard">Vanguard</SelectItem>
               <SelectItem value="class:Versatile">Versatile</SelectItem>
             </SelectGroup>
@@ -115,11 +141,11 @@ export const AvatarSelection = ({
             return (
               <div
                 key={char.id}
-                onClick={() => updateTrekkers(k, char)}
+                onClick={() => updateTrekkers(slot, char)}
                 data-disabled={Object.values(trekkers).some(
                   (t) => t?.id === char.id,
                 )}
-                data-selected={trekkers[k as keyof Trekkers]?.id === char.id}
+                data-selected={trekkers[slot]?.id === char.id}
                 className="group outline-blue-600 rounded-xs data-[selected=true]:outline-2 h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8]"
               >
                 <SSAvatar char={avatar} />

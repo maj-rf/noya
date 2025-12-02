@@ -1,22 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useCallback, useRef, useState, useTransition } from 'react'
-import type {
-  SSCharacter,
-  SelectedPotential,
-  TrekkerPotentials,
-  Trekkers,
-} from '@/types'
+import { useRef, useTransition } from 'react'
+import type { Slot } from '@/types'
 import { ResponsiveModal } from '@/components/responsive-modal'
 import SSPotentials from '@/components/ss-potentials'
 import { AvatarSelection } from '@/components/avatar-selection'
-import {
-  downloadImage,
-  fetchCharacters,
-  getTrekkersWithoutPotentials,
-} from '@/lib/utils'
+import { downloadImage, fetchCharacters } from '@/lib/utils'
 import { Preview } from '@/components/preview'
 import { Button } from '@/components/ui/button'
 import { Loading } from '@/components/loading'
+import { useTrekkerStore } from '@/lib/trekker-store'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -25,50 +17,9 @@ export const Route = createFileRoute('/')({
 })
 
 function App() {
-  const character = Route.useLoaderData()
   const previewRef = useRef<HTMLElement>(null)
-  const [trekkers, setTrekkers] = useState<Trekkers>({
-    main: character[103],
-    sub1: character[112],
-    sub2: character[111],
-  })
-
-  const [selectedPotentials, setSelectedPotentials] =
-    useState<TrekkerPotentials>({
-      main: null,
-      sub1: null,
-      sub2: null,
-    })
-
   const [isPending, startTransition] = useTransition()
-
-  const updateTrekkers = (key: string, char: SSCharacter) => {
-    const newObj = { ...trekkers }
-    const potentialCopy = { ...selectedPotentials }
-    const alreadyExists = Object.values(newObj).some((t) => t?.id === char.id)
-    const removable = newObj[key as keyof Trekkers]?.id === char.id
-    if (removable) {
-      newObj[key as keyof Trekkers] = null
-      potentialCopy[key as keyof TrekkerPotentials] = null
-    } else if (alreadyExists) {
-      return
-    } else {
-      newObj[key as keyof Trekkers] = char
-      potentialCopy[key as keyof TrekkerPotentials] = null
-    }
-    setTrekkers(newObj)
-    setSelectedPotentials(potentialCopy)
-  }
-
-  const setSelected = useCallback(
-    (k: string, potentials: Array<SelectedPotential>) => {
-      setSelectedPotentials((prev) => ({
-        ...prev,
-        [k as keyof TrekkerPotentials]: potentials,
-      }))
-    },
-    [],
-  )
+  const trekkers = useTrekkerStore((s) => s.trekkers)
 
   const handleDownload = () => {
     startTransition(async () => {
@@ -95,42 +46,15 @@ function App() {
               triggerTitle={value ? value : label}
               desc={`Add the ${label} Trekker to your team`}
             >
-              <AvatarSelection
-                k={key}
-                trekkers={trekkers}
-                updateTrekkers={updateTrekkers}
-              />
+              <AvatarSelection slot={key as Slot} trekkers={trekkers} />
             </ResponsiveModal>
           )
         })}
       </div>
-      <SSPotentials
-        potentials={trekkers.main?.potential}
-        type={'main'}
-        selected={selectedPotentials.main}
-        setSelected={setSelected}
-        k="main"
-      />
-      <SSPotentials
-        potentials={trekkers.sub1?.potential}
-        type={'support'}
-        selected={selectedPotentials.sub1}
-        setSelected={setSelected}
-        k="sub1"
-      />
-      <SSPotentials
-        potentials={trekkers.sub2?.potential}
-        type={'support'}
-        selected={selectedPotentials.sub2}
-        setSelected={setSelected}
-        k="sub2"
-      />
-
-      <Preview
-        avatar={getTrekkersWithoutPotentials(trekkers)}
-        potentials={selectedPotentials}
-        ref={previewRef}
-      />
+      <SSPotentials slot="main" type="main" />
+      <SSPotentials slot="sub1" type="support" />
+      <SSPotentials slot="sub2" type="support" />
+      <Preview ref={previewRef} />
     </div>
   )
 }
