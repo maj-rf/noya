@@ -22,7 +22,7 @@ const ListContainer = ({
             subIcon={p.subIcon}
           />
           {p.rarity !== 0 && (
-            <div className="absolute -top-px left-3 text-xs font-semibold text-indigo-500">
+            <div className="absolute top-0 left-3 text-xs font-semibold text-indigo-500">
               {p.level}
             </div>
           )}
@@ -78,7 +78,7 @@ export const Preview = ({ ref }: { ref: RefObject<HTMLElement | null> }) => {
   const trekkers = useTrekkerStore((state) => state.trekkers)
   const avatar = getTrekkersWithoutPotentials(trekkers)
   return (
-    <div className="h-0 overflow-hidden">
+    <div className="">
       <section ref={ref} className="w-4xl rounded" id="preview">
         <table className="w-full bg-slate-800 shadow-lg rounded-lg table-auto border-collapse">
           <thead className="bg-blue-900 text-white">
