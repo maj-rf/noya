@@ -1,3 +1,4 @@
+import { AutoFitText } from './auto-fit-text'
 import type { SSPotential } from '@/types'
 import { cn } from '@/lib/utils'
 
@@ -7,7 +8,7 @@ type Props = Pick<SSPotential, 'rarity' | 'name' | 'imgId' | 'subIcon'> & {
 }
 
 export default function ResponsivePotential({
-  size = 'w-24',
+  size = 'w-20',
   className = '',
   rarity,
   imgId,
@@ -43,8 +44,8 @@ export default function ResponsivePotential({
         />
       )}
 
-      <div className="absolute bottom-1 px-1 left-1/2 -translate-x-1/2 text-xxs drop-shadow-md w-full text-black text-center">
-        {name}
+      <div className="absolute bottom-0 left-0 right-0 px-0.5 pb-1 text-black">
+        <AutoFitText text={name} />
       </div>
     </div>
   )

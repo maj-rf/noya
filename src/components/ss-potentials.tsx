@@ -48,7 +48,7 @@ function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
               subIcon={s.subIcon}
             />
             {s.rarity !== 0 && (
-              <div className="absolute -top-0.5 left-3 text-sm font-semibold text-indigo-500">
+              <div className="absolute -top-px left-3 text-xs font-semibold text-indigo-500">
                 {s.level}
               </div>
             )}
@@ -56,10 +56,10 @@ function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
             <Button
               variant="destructive"
               size="icon"
-              className="absolute -top-1 -right-1 rounded-full size-5 border border-white"
+              className="absolute -top-1 -right-1 rounded-full size-4 border border-white"
               onClick={() => removePotential(slot, s.id)}
             >
-              <X />
+              <X className="size-3" />
             </Button>
           </div>
         </HybridTooltipTrigger>
@@ -68,7 +68,7 @@ function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
         </HybridTooltipContent>
       </HybridTooltip>
 
-      <>
+      <div className="w-20 space-y-2">
         <Slider
           defaultValue={[1]}
           step={1}
@@ -86,16 +86,22 @@ function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
             updatePriority(slot, id, value as PotentialPriority)
           }
         >
-          <SelectTrigger className="text-xs p-2 w-full">
+          <SelectTrigger className="text-[10px] w-full px-2" size="sm">
             <SelectValue placeholder="PotentialPriority" />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Core">Core</SelectItem>
-            <SelectItem value="Medium">Medium</SelectItem>
-            <SelectItem value="Optional">Optional</SelectItem>
+          <SelectContent align="start">
+            <SelectItem className="text-[10px]" value="Core">
+              Core
+            </SelectItem>
+            <SelectItem className="text-[10px]" value="Medium">
+              Medium
+            </SelectItem>
+            <SelectItem className="text-[10px]" value="Optional">
+              Optional
+            </SelectItem>
           </SelectContent>
         </Select>
-      </>
+      </div>
     </div>
   )
 }
@@ -131,8 +137,7 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="mb-2" size="sm">
-              <PlusIcon /> {trekker.name} Potentials |{' '}
-              {slot === 'main' ? 'Main' : 'Support'}
+              <PlusIcon /> {trekker.name} Potentials
             </Button>
           </PopoverTrigger>
           <PopoverContent side="top" align="start" asChild>
@@ -164,8 +169,9 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
                     <HybridTooltip>
                       <HybridTooltipTrigger asChild>
                         <Button
-                          size="icon-sm"
-                          className="absolute -top-0.5 -right-0.5 rounded-full size-5 border-2 border-background"
+                          aria-label={p.name + 'description'}
+                          size="icon"
+                          className="absolute -top-1.5 -right-1 rounded-full size-5 border border-background"
                         >
                           <InfoIcon />
                         </Button>
@@ -183,7 +189,7 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
         </Popover>
 
         <ScrollArea className="w-full rounded-sm bg-popover border">
-          <div className="flex min-h-[196.27px] gap-1 p-2">
+          <div className="flex min-h-[180.267px] gap-1 p-2">
             {selected.length === 0 ? (
               <div className="text-center self-center w-full">
                 <div className="h-20 w-full">
