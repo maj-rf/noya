@@ -78,7 +78,7 @@ export const Preview = ({ ref }: { ref: RefObject<HTMLElement | null> }) => {
   const trekkers = useTrekkerStore((state) => state.trekkers)
   const avatar = getTrekkersWithoutPotentials(trekkers)
   return (
-    <div className="">
+    <div className="h-0 overflow-hidden">
       <section ref={ref} className="w-4xl rounded" id="preview">
         <table className="w-full bg-slate-800 shadow-lg rounded-lg table-auto border-collapse">
           <thead className="bg-blue-900 text-white">
