@@ -46,7 +46,7 @@ const HybridTooltipTrigger = (
   const isMobile = useTouch()
 
   return isMobile ? (
-    <PopoverTrigger {...props} />
+    <PopoverTrigger {...props} onClick={(e) => e.stopPropagation()} />
   ) : (
     <TooltipTrigger {...props} />
   )

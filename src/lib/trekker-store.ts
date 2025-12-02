@@ -47,7 +47,7 @@ export const useTrekkerStore = create<TrekkerState>()((set) => ({
           [p.id]:
             p.rarity === 0
               ? { ...p, rarity: 0, priority: 'Core' }
-              : { ...p, rarity: p.rarity, level: 1, priority: 'Medium' },
+              : { ...p, level: 1, priority: 'Medium' },
         },
       },
     })),

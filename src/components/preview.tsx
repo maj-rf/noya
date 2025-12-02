@@ -4,6 +4,7 @@ import ResponsivePotential from './responsive-potential'
 import type { RefObject } from 'react'
 import type { SelectedPotential, Slot, TAvatar } from '@/types'
 import { useTrekkerStore } from '@/lib/trekker-store'
+import { getTrekkersWithoutPotentials } from '@/lib/utils'
 
 const ListContainer = ({
   potentials,
@@ -73,13 +74,9 @@ const PreviewRow = ({
   )
 }
 
-export const Preview = ({
-  avatar,
-  ref,
-}: {
-  avatar: Record<Slot, TAvatar | null>
-  ref: RefObject<HTMLElement | null>
-}) => {
+export const Preview = ({ ref }: { ref: RefObject<HTMLElement | null> }) => {
+  const trekkers = useTrekkerStore((state) => state.trekkers)
+  const avatar = getTrekkersWithoutPotentials(trekkers)
   return (
     <div className="h-0 overflow-hidden">
       <section ref={ref} className="w-4xl rounded" id="preview">

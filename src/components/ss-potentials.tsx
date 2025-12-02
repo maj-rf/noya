@@ -1,5 +1,6 @@
-import { memo, useMemo } from 'react'
+import { memo } from 'react'
 import { InfoIcon, PlusIcon, X } from 'lucide-react'
+import { useShallow } from 'zustand/shallow'
 import ResponsivePotential from './responsive-potential'
 import { Slider } from './ui/slider'
 import { Button } from './ui/button'
@@ -36,7 +37,7 @@ function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
   const removePotential = useTrekkerStore((sel) => sel.removePotential)
   const updatePriority = useTrekkerStore((sel) => sel.updatePriority)
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 justify-center">
       <HybridTooltip>
         <HybridTooltipTrigger asChild>
           <div className="relative">
@@ -107,29 +108,34 @@ function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
 }
 
 function SSPotentials({ slot, type }: SSPotentialsProps) {
-  const trekker = useTrekkerStore((s) => s.trekkers[slot])
-  const selectedMap = useTrekkerStore((s) => s.potentials[slot])
+  const potentials = useTrekkerStore((s) => s.trekkers[slot]?.potential)
+  const selected = useTrekkerStore(
+    useShallow((s) =>
+      Object.values(s.potentials[slot])
+        .sort((a, b) => a.rarity - b.rarity)
+        .map((p) => p.id),
+    ),
+  )
+  const coreExceed = useTrekkerStore((s) => {
+    const entries = Object.values(s.potentials[slot])
+    let count = 0
+    for (const pot of entries) {
+      if (pot.rarity === 0) count++
+      if (count === 2) return true
+    }
+    return false
+  })
+
   const addPotential = useTrekkerStore((s) => s.addPotential)
-  const selected = useMemo(() => Object.values(selectedMap), [selectedMap])
-  const potentials = trekker ? trekker.potential : []
-  const filteredPotentials = useMemo(() => {
-    const selectedIds = new Set(Object.keys(selectedMap).map(Number))
-    return potentials
-      .filter(
-        (p) =>
-          (p.type === type || p.type === 'common') && !selectedIds.has(p.id),
-      )
-      .sort((a, b) => a.rarity - b.rarity)
-  }, [potentials, selectedMap, type])
 
-  const coreExceed =
-    selected.length >= 2
-      ? selected.reduce((a, b) => {
-          return b.rarity === 0 ? a + 1 : a
-        }, 0) === 2
-      : false
+  if (!potentials) return
 
-  if (!trekker) return
+  const filteredPotentials = potentials
+    .filter(
+      (p) =>
+        (p.type === type || p.type === 'common') && !selected.includes(p.id),
+    )
+    .sort((a, b) => a.rarity - b.rarity)
 
   return (
     <HybridTooltipProvider>
@@ -137,7 +143,7 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="mb-2" size="sm">
-              <PlusIcon /> {trekker.name} Potentials
+              <PlusIcon /> {slot === 'main' ? 'Main' : 'Support'} Potentials
             </Button>
           </PopoverTrigger>
           <PopoverContent side="top" align="start" asChild>
@@ -149,12 +155,15 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
             >
               <div className="flex w-max my-2 gap-1">
                 {filteredPotentials.map((p) => (
-                  <div key={p.id} className="relative">
+                  <div
+                    key={p.id}
+                    className="relative"
+                    onClick={() => {
+                      if (coreExceed && p.rarity === 0) return
+                      addPotential(slot, p)
+                    }}
+                  >
                     <div
-                      onClick={() => {
-                        if (coreExceed && p.rarity === 0) return
-                        addPotential(slot, p)
-                      }}
                       data-disabled={coreExceed}
                       className={`rarity-${p.rarity}`}
                     >
@@ -201,15 +210,9 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
                 Please choose potentials
               </div>
             ) : (
-              selected
-                .sort((a, b) => a.rarity - b.rarity)
-                .map((s) => (
-                  <SingleSelected
-                    key={'selected' + s.id}
-                    slot={slot}
-                    id={s.id}
-                  />
-                ))
+              selected.map((s) => (
+                <SingleSelected key={'selected' + s} slot={slot} id={s} />
+              ))
             )}
           </div>
           <ScrollBar orientation="horizontal" />
