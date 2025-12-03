@@ -2,9 +2,8 @@ import { useMemo } from 'react'
 import { SSAvatar } from './ss-avatar'
 import ResponsivePotential from './responsive-potential'
 import type { RefObject } from 'react'
-import type { SelectedPotential, Slot, TAvatar } from '@/types'
+import type { SelectedPotential, Slot } from '@/types'
 import { useTrekkerStore } from '@/lib/trekker-store'
-import { getTrekkersWithoutPotentials } from '@/lib/utils'
 
 const ListContainer = ({
   potentials,
@@ -32,16 +31,10 @@ const ListContainer = ({
   )
 }
 
-const PreviewRow = ({
-  avatar,
-  slot,
-}: {
-  avatar: TAvatar | null
-  slot: Slot
-}) => {
+const PreviewRow = ({ slot }: { slot: Slot }) => {
   const selectedMap = useTrekkerStore((state) => state.potentials[slot])
   const potentials = useMemo(() => Object.values(selectedMap), [selectedMap])
-
+  const trekker = useTrekkerStore((s) => s.trekkers[slot])
   const grouped = potentials.reduce(
     (acc, item) => {
       acc[item.priority].push(item)
@@ -54,11 +47,13 @@ const PreviewRow = ({
     },
   )
 
+  if (!trekker) return
+
   return (
     <tr>
       <td className="px-2 py-4 border-b">
         <div className="h-[125px] w-[100px]">
-          {avatar && <SSAvatar char={avatar} />}
+          <SSAvatar id={trekker.id} />
         </div>
       </td>
       <td className="px-1 py-2 border-b">
@@ -75,8 +70,6 @@ const PreviewRow = ({
 }
 
 export const Preview = ({ ref }: { ref: RefObject<HTMLElement | null> }) => {
-  const trekkers = useTrekkerStore((state) => state.trekkers)
-  const avatar = getTrekkersWithoutPotentials(trekkers)
   return (
     <div className="h-0 overflow-hidden">
       <section ref={ref} className="w-4xl rounded" id="preview">
@@ -90,9 +83,9 @@ export const Preview = ({ ref }: { ref: RefObject<HTMLElement | null> }) => {
             </tr>
           </thead>
           <tbody>
-            <PreviewRow avatar={avatar.main} slot="main" />
-            <PreviewRow avatar={avatar.sub1} slot="sub1" />
-            <PreviewRow avatar={avatar.sub2} slot="sub2" />
+            <PreviewRow slot="main" />
+            <PreviewRow slot="sub1" />
+            <PreviewRow slot="sub2" />
           </tbody>
         </table>
       </section>

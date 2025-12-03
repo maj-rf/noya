@@ -1,9 +1,12 @@
-import type { TAvatar } from '@/types'
+import { getRouteApi } from '@tanstack/react-router'
 import { cn } from '@/lib/utils'
 
-export const SSAvatar = ({ char }: { char: TAvatar }) => {
+export const SSAvatar = ({ id }: { id: number }) => {
+  const routeApi = getRouteApi('/')
+  const characters = routeApi.useLoaderData()
+  const char = characters[id]
   return (
-    <div className="group-data-[disabled=true]:opacity-40 bg-gray-400 border-none padding-0 outline-offset-4 rounded-sm w-full h-full">
+    <div className="group-data-[disabled=true]:opacity-40 bg-gray-400 border-none padding-0 rounded-sm w-full h-full">
       <div
         className={cn(
           'rounded-xs avatar-border relative -translate-y-0.5 w-full h-full',
@@ -25,19 +28,19 @@ export const SSAvatar = ({ char }: { char: TAvatar }) => {
         />
         <div
           className={cn(
-            'absolute top-0 right-0 text-xs text-white pl-2 left-slant flex items-center justify-center gap-0.5',
+            'absolute top-0 right-0 text-xs text-white pl-1.5 left-slant flex items-center justify-center gap-0.5',
             {
-              'bg-pink-500': char.class === 'Vanguard',
-              'bg-teal-500': char.class === 'Support',
-              'bg-indigo-400': char.class === 'Versatile',
+              'bg-vanguard': char.class === 'Vanguard',
+              'bg-support': char.class === 'Support',
+              'bg-versatile': char.class === 'Versatile',
             },
           )}
         >
           <span>{char.class}</span>
-          <div className="size-4 bg-blue-900 left-slant-l p-[3px]">
+          <div className="size-4 bg-blue-900 left-slant-l flex items-center justify-center pl-0.5">
             <img
               alt={char.name + 'attack type'}
-              className="block object-contain"
+              className="block size-2.5 object-contain"
               src={`./ss-class/${char.attackType}.png`}
             />
           </div>

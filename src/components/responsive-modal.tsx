@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { PlusIcon } from 'lucide-react'
-import { SSAvatar } from './ss-avatar'
-import type { TAvatar } from '@/types'
 import useMediaQuery from '@/lib/useMediaQuery'
 import { Button } from '@/components/ui/button'
 import {
@@ -24,15 +22,10 @@ import {
 } from '@/components/ui/drawer'
 
 type ResponsiveModalProps = {
-  triggerTitle: string | TAvatar
+  triggerTitle: string
   title: string
   desc: string
   children: React.ReactNode
-}
-
-function isTrekker(char: any): char is TAvatar {
-  if (typeof char === 'string') return false
-  return 'star' in char
 }
 
 export function ResponsiveModal(props: ResponsiveModalProps) {
@@ -42,15 +35,11 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger className="h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8] bg-accent border rounded-sm shadow-sm flex items-center justify-center active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
-          {props.triggerTitle && isTrekker(props.triggerTitle) ? (
-            <SSAvatar char={props.triggerTitle} />
-          ) : (
-            <>
-              <PlusIcon size={16} />
-              <span>{props.triggerTitle}</span>
-            </>
-          )}
+        <DialogTrigger className="shadow-sm  active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
+          <Button className="shadow-sm  active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
+            <PlusIcon size={16} />
+            <span>{props.triggerTitle}</span>
+          </Button>
         </DialogTrigger>
         <DialogContent className="min-w-2xl">
           <DialogHeader>
@@ -65,15 +54,11 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
 
   return (
     <Drawer open={open} onOpenChange={setOpen} repositionInputs={false}>
-      <DrawerTrigger className="h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8] bg-accent border rounded-sm shadow-sm flex items-center justify-center ">
-        {props.triggerTitle && isTrekker(props.triggerTitle) ? (
-          <SSAvatar char={props.triggerTitle} />
-        ) : (
-          <>
-            <PlusIcon size={16} />
-            <span>{props.triggerTitle}</span>
-          </>
-        )}
+      <DrawerTrigger asChild>
+        <Button className="shadow-sm  active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
+          <PlusIcon size={16} />
+          <span>{props.triggerTitle}</span>
+        </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">

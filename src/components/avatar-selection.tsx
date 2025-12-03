@@ -1,6 +1,6 @@
 import { getRouteApi } from '@tanstack/react-router'
 import { Search } from 'lucide-react'
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import {
   Select,
   SelectContent,
@@ -10,7 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select'
-import type { SSCharacter, Slot, Trekkers } from '@/types'
+import { Button } from './ui/button'
+import type { SSCharacter, Slot } from '@/types'
 import { SSAvatar } from '@/components/ss-avatar'
 import {
   InputGroup,
@@ -19,6 +20,7 @@ import {
 } from '@/components/ui/input-group'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useTrekkerStore } from '@/lib/trekker-store'
+import { ButtonGroup } from '@/components/ui/button-group'
 
 function getSearchedAndFilteredCharacters(
   characters: Array<SSCharacter>,
@@ -50,42 +52,81 @@ function getSearchedAndFilteredCharacters(
   })
 }
 
-export const AvatarSelection = ({
-  slot,
-  trekkers,
-}: {
-  slot: Slot
-  trekkers: Trekkers
-}) => {
+export const AvatarSelection = () => {
   const routeApi = getRouteApi('/')
   const fetchedCharacters = routeApi.useLoaderData()
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('')
-  const characters = Object.entries(fetchedCharacters).map(([_, char]) => char)
-  const filteredChars = getSearchedAndFilteredCharacters(
-    characters,
-    search,
-    filter,
-  )
   const setTrekker = useTrekkerStore((s) => s.setTrekker)
   const clearPotentials = useTrekkerStore((s) => s.clearPotentials)
+  const trekkers = useTrekkerStore((s) => s.trekkers)
+  const characters = useMemo(
+    () => Object.values(fetchedCharacters),
+    [fetchedCharacters],
+  )
 
-  const updateTrekkers = (s: Slot, char: SSCharacter) => {
-    const alreadyExists = Object.values(trekkers).some((t) => t?.id === char.id)
-    const isSameSlot = trekkers[s]?.id === char.id
-    if (isSameSlot) {
-      setTrekker(s, null)
-      clearPotentials(s)
-    } else if (alreadyExists) {
-      return
-    } else {
-      setTrekker(s, char)
-      clearPotentials(s)
-    }
-  }
+  const filteredChars = useMemo(
+    () => getSearchedAndFilteredCharacters(characters, search, filter),
+    [characters, search, filter],
+  )
+
+  const trekkerIds = useMemo(
+    () =>
+      new Set(
+        Object.values(trekkers)
+          .filter(Boolean)
+          .map((t) => t?.id),
+      ),
+    [trekkers],
+  )
+
+  const updateTrekkers = useCallback(
+    (s: Slot, char: SSCharacter) => {
+      const alreadyExists = trekkerIds.has(char.id)
+      const isSameSlot = trekkers[s]?.id === char.id
+      if (isSameSlot) {
+        setTrekker(s, null)
+        clearPotentials(s)
+        return
+      } else if (alreadyExists) {
+        return
+      } else {
+        setTrekker(s, char)
+        clearPotentials(s)
+      }
+    },
+    [trekkers, setTrekker, clearPotentials],
+  )
+  const [slot, setSlot] = useState<Slot>('main')
 
   return (
     <section>
+      <ButtonGroup
+        className="justify-center items-center w-full mb-2"
+        aria-label="Trekker slot group"
+      >
+        <Button
+          variant={slot === 'main' ? 'default' : 'secondary'}
+          size="sm"
+          onClick={() => setSlot('main')}
+        >
+          Main
+        </Button>
+        <Button
+          variant={slot === 'sub1' ? 'default' : 'secondary'}
+          onClick={() => setSlot('sub1')}
+          size="sm"
+        >
+          Support 1
+        </Button>
+        <Button
+          variant={slot === 'sub2' ? 'default' : 'secondary'}
+          onClick={() => setSlot('sub2')}
+          size="sm"
+        >
+          Support 2
+        </Button>
+      </ButtonGroup>
       <div className="w-full max-w-2xl grid grid-cols-[1fr_0.5fr] gap-2 mb-2 px-2">
         <InputGroup>
           <InputGroupInput
@@ -105,7 +146,10 @@ export const AvatarSelection = ({
             <SelectValue placeholder="Filter" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={'all:all'}>All</SelectItem>
+            <SelectGroup>
+              <SelectLabel>Reset</SelectLabel>
+              <SelectItem value={'all:all'}>All</SelectItem>
+            </SelectGroup>
             <SelectGroup>
               <SelectLabel>By Element</SelectLabel>
               <SelectItem value="element:Ignis">Ignis</SelectItem>
@@ -134,24 +178,20 @@ export const AvatarSelection = ({
           </SelectContent>
         </Select>
       </div>
-      <ScrollArea className="h-100 px-2">
+      <ScrollArea className="h-[300px] px-2">
         <div className="flex flex-wrap justify-center gap-2 mt-2">
-          {filteredChars.map((char) => {
-            const { potential, ...avatar } = char
-            return (
-              <div
-                key={char.id}
-                onClick={() => updateTrekkers(slot, char)}
-                data-disabled={Object.values(trekkers).some(
-                  (t) => t?.id === char.id,
-                )}
-                data-selected={trekkers[slot]?.id === char.id}
-                className="group outline-blue-600 rounded-xs data-[selected=true]:outline-2 h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8]"
-              >
-                <SSAvatar char={avatar} />
-              </div>
-            )
-          })}
+          {filteredChars.map((char) => (
+            <div
+              key={char.id}
+              onClick={() => updateTrekkers(slot, char)}
+              data-disabled={trekkerIds.has(char.id)}
+              data-selected={trekkers[slot]?.id === char.id}
+              data-slot={slot === 'main' ? 'Main' : 'Support'}
+              className="chosen-trekker group rounded-xs data-[selected=true]:outline-2 h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8]"
+            >
+              <SSAvatar id={char.id} />
+            </div>
+          ))}
         </div>
       </ScrollArea>
     </section>

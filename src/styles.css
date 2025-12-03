@@ -52,7 +52,7 @@ body {
     clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 7% 100%);
   }
   .left-slant-l {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 20% 100%);
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 27% 100%);
   }
 
   .text-xxs {
@@ -61,6 +61,21 @@ body {
 
   .rarity-0[data-disabled='true'] {
     opacity: 0.4;
+  }
+
+  .chosen-trekker[data-selected='true'] {
+    position: relative;
+    &::after {
+      content: attr(data-slot);
+      color: inherit;
+      letter-spacing: 2px;
+      font-weight: bold;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
 }
 
@@ -102,7 +117,9 @@ body {
   --color-sidebar-ring: var(--sidebar-ring);
   --color-rare: var(--vestige-rare);
   --color-common: var(--vestige-common);
-
+  --color-versatile: var(--tag-versatile);
+  --color-vanguard: var(--tag-vanguard);
+  --color-support: var(--tag-support);
   --animate-wiggle: wiggle 1s ease-in-out infinite;
   @keyframes wiggle {
     0%,
@@ -150,6 +167,9 @@ body {
   --sidebar-ring: oklch(0.708 0 0);
   --vestige-rare: oklch(0.6127 0.2307 292.24);
   --vestige-common: oklch(0.7548 0.1554 76.75);
+  --tag-versatile: oklch(0.6405 0.1379 279.41);
+  --tag-vanguard: oklch(0.6697 0.1574 0.61);
+  --tag-support: oklch(0.7666 0.1258 177.92);
 }
 
 .dark {
