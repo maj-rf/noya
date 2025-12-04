@@ -57,9 +57,12 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
           <SSAvatar id={trekker.id} />
         </div>
         <p
-          className={cn('text-center rounded-sm font-medium bg-blue-900', {
-            'bg-red-900': slot === 'main',
-          })}
+          className={cn(
+            'text-center text-white rounded-sm font-medium bg-blue-900',
+            {
+              'bg-red-900': slot === 'main',
+            },
+          )}
         >
           {slot === 'main' ? 'Main' : 'Support'}
         </p>
@@ -79,7 +82,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
 
 export const Preview = ({ ref }: { ref: RefObject<HTMLElement | null> }) => {
   return (
-    <div className="h-0 overflow-hidden">
+    <div className="">
       <section ref={ref} className="w-4xl rounded" id="preview">
         <table className="w-full bg-slate-800 shadow-lg rounded-lg table-auto border-collapse">
           <thead className="bg-blue-900 text-white">
