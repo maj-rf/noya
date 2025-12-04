@@ -4,6 +4,7 @@ import ResponsivePotential from './responsive-potential'
 import type { RefObject } from 'react'
 import type { SelectedPotential, Slot } from '@/types'
 import { useTrekkerStore } from '@/lib/trekker-store'
+import { cn } from '@/lib/utils'
 
 const ListContainer = ({
   potentials,
@@ -51,10 +52,17 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
 
   return (
     <tr>
-      <td className="px-2 py-4 border-b">
+      <td className="px-2 py-4 border-b space-y-2">
         <div className="h-[125px] w-[100px]">
           <SSAvatar id={trekker.id} />
         </div>
+        <p
+          className={cn('text-center rounded-sm font-medium bg-blue-900', {
+            'bg-red-900': slot === 'main',
+          })}
+        >
+          {slot === 'main' ? 'Main' : 'Support'}
+        </p>
       </td>
       <td className="px-1 py-2 border-b">
         <ListContainer potentials={grouped.Core} />
