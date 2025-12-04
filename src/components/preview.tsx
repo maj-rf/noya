@@ -82,7 +82,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
 
 export const Preview = ({ ref }: { ref: RefObject<HTMLElement | null> }) => {
   return (
-    <div className="">
+    <div className="h-0 overflow-hidden">
       <section ref={ref} className="w-4xl rounded" id="preview">
         <table className="w-full bg-slate-800 shadow-lg rounded-lg table-auto border-collapse">
           <thead className="bg-blue-900 text-white">
