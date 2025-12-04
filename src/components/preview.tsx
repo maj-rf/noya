@@ -52,7 +52,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
 
   return (
     <tr>
-      <td className="px-2 py-4 border-b space-y-2">
+      <td className="px-2 py-4 border-b border-slate-600 space-y-2">
         <div className="h-[125px] w-[100px]">
           <SSAvatar id={trekker.id} />
         </div>
@@ -67,13 +67,13 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
           {slot === 'main' ? 'Main' : 'Support'}
         </p>
       </td>
-      <td className="px-1 py-2 border-b">
+      <td className="px-1 py-2 border-b border-slate-600">
         <ListContainer potentials={grouped.Core} />
       </td>
-      <td className="px-1 py-2 border-b">
+      <td className="px-1 py-2 border-b border-slate-600">
         <ListContainer potentials={grouped.Medium} />
       </td>
-      <td className="px-1 py-2 border-b">
+      <td className="px-1 py-2 border-b border-slate-600">
         <ListContainer potentials={grouped.Optional} />
       </td>
     </tr>
