@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { PlusIcon } from 'lucide-react'
 import useMediaQuery from '@/lib/useMediaQuery'
 import { Button } from '@/components/ui/button'
 import {
@@ -35,9 +34,8 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger className="shadow-sm  active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
+        <DialogTrigger asChild>
           <Button className="shadow-sm  active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
-            <PlusIcon size={16} />
             <span>{props.triggerTitle}</span>
           </Button>
         </DialogTrigger>
@@ -56,7 +54,6 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
     <Drawer open={open} onOpenChange={setOpen} repositionInputs={false}>
       <DrawerTrigger asChild>
         <Button className="shadow-sm  active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
-          <PlusIcon size={16} />
           <span>{props.triggerTitle}</span>
         </Button>
       </DrawerTrigger>

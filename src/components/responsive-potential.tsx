@@ -27,7 +27,7 @@ export default function ResponsivePotential({
       <img
         src={iconSrc}
         alt={name + ' icon'}
-        className="absolute inset-0 -top-5 w-auto h-20 m-auto"
+        className="absolute inset-0 -top-7 w-auto h-19 m-auto"
       />
 
       {subIcon && (
@@ -35,7 +35,7 @@ export default function ResponsivePotential({
           src={subIconUrl}
           alt={name + ' subIcon'}
           className={cn(
-            `absolute inset-0 -top-4 h-20 w-auto m-auto drop-shadow-sm`,
+            `absolute inset-0 -top-6 h-18 w-auto m-auto drop-shadow-xs`,
             {
               'drop-shadow-purple-800': rarity === 1,
               'drop-shadow-yellow-700': rarity === 2,
