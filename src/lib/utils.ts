@@ -1,10 +1,10 @@
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { snapdom } from '@zumer/snapdom'
-import { useTrekkerStore } from './trekker-store'
+import { useTrekkerStore } from './store'
 import type { SnapdomPlugin } from '@zumer/snapdom'
 import type { ClassValue } from 'clsx'
-import type { SSCharacter, TAvatar, Trekkers } from '@/types'
+import type { SSCharacter } from '@/types'
 
 export function cn(...inputs: Array<ClassValue>) {
   return twMerge(clsx(inputs))
@@ -21,29 +21,12 @@ export async function fetchCharacters(): Promise<Record<string, SSCharacter>> {
 
   useTrekkerStore.setState({
     trekkers: {
-      main: characters[103],
-      sub1: characters[112],
-      sub2: characters[111],
+      main: 103,
+      sub1: 112,
+      sub2: 111,
     },
   })
   return characters
-}
-
-export function getTrekkersWithoutPotentials(trekkers: Trekkers) {
-  const obj = Object.entries(trekkers).reduce(
-    (acc, [key, value]) => {
-      if (value) {
-        const { potential, ...rest } = value
-        acc[key as keyof Trekkers] = rest
-      } else {
-        acc[key as keyof Trekkers] = null
-      }
-      return acc
-    },
-    {} as Record<'main' | 'sub1' | 'sub2', null | TAvatar>,
-  )
-
-  return obj
 }
 
 export function forceDisplayPlugin(): SnapdomPlugin {

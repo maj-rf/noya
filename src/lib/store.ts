@@ -1,42 +1,50 @@
 import { create } from 'zustand'
 import type {
   PotentialPriority,
-  SSCharacter,
+  Potentials,
   SSPotential,
-  SelectedPotentialMap,
   Slot,
+  Trekkers,
 } from '@/types'
 
 interface TrekkerState {
-  trekkers: {
-    main: SSCharacter | null
-    sub1: SSCharacter | null
-    sub2: SSCharacter | null
-  }
-  potentials: {
-    main: SelectedPotentialMap
-    sub1: SelectedPotentialMap
-    sub2: SelectedPotentialMap
-  }
+  trekkers: Trekkers
+
   // actions
-  setTrekker: (slot: Slot, char: SSCharacter | null) => void
-  addPotential: (slot: Slot, p: SSPotential) => void
+  setTrekker: (slot: Slot, id: number | null) => void
+  setAllTrekkers: (trekkers: Trekkers) => void
+}
+
+interface PotentialState {
+  potentials: Potentials
+  addPotential: (slot: Slot, id: SSPotential) => void
   updateLevel: (slot: Slot, id: number, level: number) => void
   updatePriority: (slot: Slot, id: number, value: PotentialPriority) => void
   removePotential: (slot: Slot, id: number) => void
   clearPotentials: (slot: Slot) => void
+  setAllPotentials: (potentials: Potentials) => void
 }
 
 export const useTrekkerStore = create<TrekkerState>()((set) => ({
   trekkers: { main: null, sub1: null, sub2: null },
-  potentials: { main: {}, sub1: {}, sub2: {} },
-
-  setTrekker: (slot, char) =>
+  setTrekker: (slot, id) =>
     set((state) => ({
       trekkers: {
         ...state.trekkers,
-        [slot]: char,
+        [slot]: id,
       },
+    })),
+  setAllTrekkers: (trekkers) =>
+    set(() => ({
+      trekkers,
+    })),
+}))
+
+export const usePotentialStore = create<PotentialState>()((set) => ({
+  potentials: { main: {}, sub1: {}, sub2: {} },
+  setAllPotentials: (potentials) =>
+    set(() => ({
+      potentials,
     })),
   addPotential: (slot, p) =>
     set((state) => ({

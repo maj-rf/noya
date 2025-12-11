@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import { InfoIcon, PlusIcon, X } from 'lucide-react'
 import { useShallow } from 'zustand/shallow'
+import { getRouteApi } from '@tanstack/react-router'
 import ResponsivePotential from './responsive-potential'
 import { Slider } from './ui/slider'
 import { Button } from './ui/button'
@@ -24,7 +25,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { useTrekkerStore } from '@/lib/trekker-store'
+import { usePotentialStore, useTrekkerStore } from '@/lib/store'
 
 type SSPotentialsProps = {
   slot: Slot
@@ -32,42 +33,42 @@ type SSPotentialsProps = {
 }
 
 function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
-  const s = useTrekkerStore((state) => state.potentials[slot][id])
-  const updateLevel = useTrekkerStore((sel) => sel.updateLevel)
-  const removePotential = useTrekkerStore((sel) => sel.removePotential)
-  const updatePriority = useTrekkerStore((sel) => sel.updatePriority)
+  const s = usePotentialStore((state) => state.potentials[slot][id])
+  const updateLevel = usePotentialStore((sel) => sel.updateLevel)
+  const removePotential = usePotentialStore((sel) => sel.removePotential)
+  const updatePriority = usePotentialStore((sel) => sel.updatePriority)
   return (
     <div className="flex flex-col gap-2 justify-center">
-      <HybridTooltip>
-        <HybridTooltipTrigger asChild>
-          <div className="relative">
-            <ResponsivePotential
-              key={'selected' + s.imgId + s.id}
-              rarity={s.rarity}
-              imgId={s.imgId}
-              name={s.name}
-              subIcon={s.subIcon}
-            />
-            {s.rarity !== 0 && (
-              <div className="absolute -top-px left-3 text-xs font-semibold text-indigo-500">
-                {s.level}
-              </div>
-            )}
-
-            <Button
-              variant="destructive"
-              size="icon"
-              className="absolute -top-1 -right-1 rounded-full size-4 border border-white"
-              onClick={() => removePotential(slot, s.id)}
-            >
-              <X className="size-3" />
-            </Button>
+      <div className="relative">
+        <HybridTooltip>
+          <HybridTooltipTrigger asChild>
+            <div>
+              <ResponsivePotential
+                rarity={s.rarity}
+                imgId={s.imgId}
+                name={s.name}
+                subIcon={s.subIcon}
+              />
+            </div>
+          </HybridTooltipTrigger>
+          <HybridTooltipContent>
+            <p>{s.briefDesc}</p>
+          </HybridTooltipContent>
+        </HybridTooltip>
+        {s.rarity !== 0 && (
+          <div className="absolute -top-px left-3 text-xs font-semibold text-indigo-500">
+            {s.level}
           </div>
-        </HybridTooltipTrigger>
-        <HybridTooltipContent>
-          <p>{s.briefDesc}</p>
-        </HybridTooltipContent>
-      </HybridTooltip>
+        )}
+        <Button
+          variant="destructive"
+          size="icon"
+          className="absolute -top-1 -right-1 rounded-full size-4 border border-white"
+          onClick={() => removePotential(slot, s.id)}
+        >
+          <X className="size-3" />
+        </Button>
+      </div>
 
       <div className="w-20 space-y-2">
         <Slider
@@ -108,15 +109,17 @@ function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
 }
 
 function SSPotentials({ slot, type }: SSPotentialsProps) {
-  const potentials = useTrekkerStore((s) => s.trekkers[slot]?.potential)
-  const selected = useTrekkerStore(
+  const routeApi = getRouteApi('/')
+  const fetchedCharacters = routeApi.useLoaderData()
+  const trekkerId = useTrekkerStore((s) => s.trekkers[slot])
+  const selected = usePotentialStore(
     useShallow((s) =>
       Object.values(s.potentials[slot])
         .sort((a, b) => a.rarity - b.rarity)
         .map((p) => p.id),
     ),
   )
-  const coreExceed = useTrekkerStore((s) => {
+  const coreExceed = usePotentialStore((s) => {
     const entries = Object.values(s.potentials[slot])
     let count = 0
     for (const pot of entries) {
@@ -126,9 +129,11 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
     return false
   })
 
-  const addPotential = useTrekkerStore((s) => s.addPotential)
+  const addPotential = usePotentialStore((s) => s.addPotential)
 
-  if (!potentials) return
+  if (!trekkerId) return
+
+  const potentials = fetchedCharacters[trekkerId].potential
 
   const filteredPotentials = potentials
     .filter(
@@ -168,7 +173,6 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
                       className={`rarity-${p.rarity}`}
                     >
                       <ResponsivePotential
-                        key={p.imgId + p.id}
                         rarity={p.rarity}
                         imgId={p.imgId}
                         name={p.name}

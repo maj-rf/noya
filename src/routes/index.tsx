@@ -8,20 +8,20 @@ import { Preview } from '@/components/preview'
 import { Button } from '@/components/ui/button'
 import { Loading } from '@/components/loading'
 import { SSAvatar } from '@/components/ss-avatar'
-import { useTrekkerStore } from '@/lib/trekker-store'
+import { useTrekkerStore } from '@/lib/store'
 
 function AvatarPlaceholder() {
   const trekkers = useTrekkerStore((s) => s.trekkers)
   return (
     <div className="flex gap-2 justify-center max-w-md mx-auto">
       <div className="h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8] bg-accent border rounded-sm shadow-sm flex items-center justify-center active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
-        {trekkers.main ? <SSAvatar id={trekkers.main.id} /> : 'Main'}
+        {trekkers.main ? <SSAvatar id={trekkers.main} /> : 'Main'}
       </div>
       <div className="h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8] bg-accent border rounded-sm shadow-sm flex items-center justify-center active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
-        {trekkers.sub1 ? <SSAvatar id={trekkers.sub1.id} /> : 'Support'}
+        {trekkers.sub1 ? <SSAvatar id={trekkers.sub1} /> : 'Support'}
       </div>
       <div className="h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8] bg-accent border rounded-sm shadow-sm flex items-center justify-center active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
-        {trekkers.sub2 ? <SSAvatar id={trekkers.sub2.id} /> : 'Support'}
+        {trekkers.sub2 ? <SSAvatar id={trekkers.sub2} /> : 'Support'}
       </div>
     </div>
   )

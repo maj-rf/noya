@@ -3,7 +3,7 @@ import { SSAvatar } from './ss-avatar'
 import ResponsivePotential from './responsive-potential'
 import type { RefObject } from 'react'
 import type { SelectedPotential, Slot } from '@/types'
-import { useTrekkerStore } from '@/lib/trekker-store'
+import { usePotentialStore, useTrekkerStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
 
 const ListContainer = ({
@@ -33,7 +33,7 @@ const ListContainer = ({
 }
 
 const PreviewRow = ({ slot }: { slot: Slot }) => {
-  const selectedMap = useTrekkerStore((state) => state.potentials[slot])
+  const selectedMap = usePotentialStore((state) => state.potentials[slot])
   const potentials = useMemo(() => Object.values(selectedMap), [selectedMap])
   const trekker = useTrekkerStore((s) => s.trekkers[slot])
   const grouped = potentials.reduce(
@@ -54,7 +54,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
     <tr>
       <td className="px-2 py-4 border-b border-slate-600 space-y-2">
         <div className="h-[125px] w-[100px]">
-          <SSAvatar id={trekker.id} />
+          <SSAvatar id={trekker} />
         </div>
         <p
           className={cn(

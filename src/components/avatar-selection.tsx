@@ -19,7 +19,7 @@ import {
   InputGroupInput,
 } from '@/components/ui/input-group'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { useTrekkerStore } from '@/lib/trekker-store'
+import { usePotentialStore, useTrekkerStore } from '@/lib/store'
 import { ButtonGroup } from '@/components/ui/button-group'
 
 function getSearchedAndFilteredCharacters(
@@ -58,7 +58,7 @@ export const AvatarSelection = () => {
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('')
   const setTrekker = useTrekkerStore((s) => s.setTrekker)
-  const clearPotentials = useTrekkerStore((s) => s.clearPotentials)
+  const clearPotentials = usePotentialStore((s) => s.clearPotentials)
   const trekkers = useTrekkerStore((s) => s.trekkers)
   const characters = useMemo(
     () => Object.values(fetchedCharacters),
@@ -75,15 +75,15 @@ export const AvatarSelection = () => {
       new Set(
         Object.values(trekkers)
           .filter(Boolean)
-          .map((t) => t?.id),
+          .map((t) => t),
       ),
     [trekkers],
   )
 
   const updateTrekkers = useCallback(
-    (s: Slot, char: SSCharacter) => {
-      const alreadyExists = trekkerIds.has(char.id)
-      const isSameSlot = trekkers[s]?.id === char.id
+    (s: Slot, char: number | null) => {
+      const alreadyExists = trekkerIds.has(char)
+      const isSameSlot = trekkers[s] === char
       if (isSameSlot) {
         setTrekker(s, null)
         clearPotentials(s)
@@ -183,9 +183,9 @@ export const AvatarSelection = () => {
           {filteredChars.map((char) => (
             <div
               key={char.id}
-              onClick={() => updateTrekkers(slot, char)}
+              onClick={() => updateTrekkers(slot, char.id)}
               data-disabled={trekkerIds.has(char.id)}
-              data-selected={trekkers[slot]?.id === char.id}
+              data-selected={trekkers[slot] === char.id}
               data-slot={slot === 'main' ? 'Main' : 'Support'}
               className="chosen-trekker group rounded-xs data-[selected=true]:outline-2 h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8]"
             >
