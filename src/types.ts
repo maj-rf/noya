@@ -29,14 +29,16 @@ export type PotentialPriority = 'Core' | 'Medium' | 'Optional'
 
 export type SelectedPotential =
   | (SSPotential & {
-      rarity: 0
-      level?: never
-      priority: Extract<PotentialPriority, 'Core'>
-    })
+    rarity: 0
+    level?: never
+    priority: Extract<PotentialPriority, 'Core'>
+    selectionTimestamp: number
+  })
   | (SSPotential & {
-      rarity: 1 | 2
-      level: number
-      priority: PotentialPriority
-    })
+    rarity: 1 | 2
+    level: number
+    priority: PotentialPriority
+    selectionTimestamp: number
+  })
 
 export type SelectedPotentialMap = Record<string, SelectedPotential>

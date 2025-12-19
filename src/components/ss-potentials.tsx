@@ -1,8 +1,7 @@
 import { memo } from 'react'
-import { InfoIcon, PlusIcon, X } from 'lucide-react'
+import { InfoIcon, PlusIcon } from 'lucide-react'
 import { useShallow } from 'zustand/shallow'
 import ResponsivePotential from './responsive-potential'
-import { Slider } from './ui/slider'
 import { Button } from './ui/button'
 import { ScrollArea, ScrollBar } from './ui/scroll-area'
 import {
@@ -11,13 +10,6 @@ import {
   HybridTooltipProvider,
   HybridTooltipTrigger,
 } from './ui/hybrid-tooltip'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from './ui/select'
 import type { PotentialPriority, Slot } from '@/types'
 import {
   Popover,
@@ -25,94 +17,30 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useTrekkerStore } from '@/lib/trekker-store'
+import { SingleSelected } from './single-selected'
+
+const PRIORITY_ORDER: Record<PotentialPriority, number> = {
+  Core: 0,
+  Medium: 1,
+  Optional: 2,
+}
 
 type SSPotentialsProps = {
   slot: Slot
   type: 'main' | 'support'
 }
 
-function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
-  const s = useTrekkerStore((state) => state.potentials[slot][id])
-  const updateLevel = useTrekkerStore((sel) => sel.updateLevel)
-  const removePotential = useTrekkerStore((sel) => sel.removePotential)
-  const updatePriority = useTrekkerStore((sel) => sel.updatePriority)
-  return (
-    <div className="flex flex-col gap-2 justify-center">
-      <HybridTooltip>
-        <HybridTooltipTrigger asChild>
-          <div className="relative">
-            <ResponsivePotential
-              key={'selected' + s.imgId + s.id}
-              rarity={s.rarity}
-              imgId={s.imgId}
-              name={s.name}
-              subIcon={s.subIcon}
-            />
-            {s.rarity !== 0 && (
-              <div className="absolute -top-px left-3 text-xs font-semibold text-indigo-500">
-                {s.level}
-              </div>
-            )}
-
-            <Button
-              variant="destructive"
-              size="icon"
-              className="absolute -top-1 -right-1 rounded-full size-4 border border-white"
-              onClick={() => removePotential(slot, s.id)}
-            >
-              <X className="size-3" />
-            </Button>
-          </div>
-        </HybridTooltipTrigger>
-        <HybridTooltipContent>
-          <p>{s.briefDesc}</p>
-        </HybridTooltipContent>
-      </HybridTooltip>
-
-      <div className="w-20 space-y-2">
-        <Slider
-          defaultValue={[1]}
-          step={1}
-          disabled={s.rarity === 0}
-          min={1}
-          max={6}
-          onValueChange={(newValue: Array<number>) =>
-            updateLevel(slot, s.id, newValue[0])
-          }
-        ></Slider>
-        <Select
-          disabled={s.rarity === 0}
-          value={s.priority}
-          onValueChange={(value) =>
-            updatePriority(slot, id, value as PotentialPriority)
-          }
-        >
-          <SelectTrigger className="text-[10px] w-full px-2" size="sm">
-            <SelectValue placeholder="PotentialPriority" />
-          </SelectTrigger>
-          <SelectContent align="start">
-            <SelectItem className="text-[10px]" value="Core">
-              Core
-            </SelectItem>
-            <SelectItem className="text-[10px]" value="Medium">
-              Medium
-            </SelectItem>
-            <SelectItem className="text-[10px]" value="Optional">
-              Optional
-            </SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-    </div>
-  )
-}
-
 function SSPotentials({ slot, type }: SSPotentialsProps) {
   const potentials = useTrekkerStore((s) => s.trekkers[slot]?.potential)
-  const selected = useTrekkerStore(
+  const selectedIds = useTrekkerStore(
     useShallow((s) =>
       Object.values(s.potentials[slot])
-        .sort((a, b) => a.rarity - b.rarity)
+        .sort((a, b) => {
+          if (a.priority !== b.priority) {
+            return PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority]
+          }
+          return a.selectionTimestamp - b.selectionTimestamp
+        })
         .map((p) => p.id),
     ),
   )
@@ -133,7 +61,7 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
   const filteredPotentials = potentials
     .filter(
       (p) =>
-        (p.type === type || p.type === 'common') && !selected.includes(p.id),
+        (p.type === type || p.type === 'common') && !selectedIds.includes(p.id),
     )
     .sort((a, b) => a.rarity - b.rarity)
 
@@ -199,7 +127,7 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
 
         <ScrollArea className="w-full rounded-sm bg-popover border">
           <div className="flex min-h-[180.267px] gap-1 p-2">
-            {selected.length === 0 ? (
+            {selectedIds.length === 0 ? (
               <div className="text-center self-center w-full">
                 <div className="h-20 w-full">
                   <img
@@ -210,8 +138,8 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
                 Please choose potentials
               </div>
             ) : (
-              selected.map((s) => (
-                <SingleSelected key={'selected' + s} slot={slot} id={s} />
+              selectedIds.map((id) => (
+                <SingleSelected key={'selected' + id} slot={slot} id={id} />
               ))
             )}
           </div>
