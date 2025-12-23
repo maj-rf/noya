@@ -46,7 +46,7 @@ export const SSAvatar = ({ id }: { id: number }) => {
           </div>
         </div>
 
-        <h1 className="px-1 pt-4 text-sm absolute right-0 bottom-0 font-medium text-right text-blue-900  bg-linear-0 from-white w-full">
+        <h1 className="px-1 pt-4 text-sm tracking-tight absolute right-0 bottom-0 font-medium text-right text-blue-900  bg-linear-0 from-white w-full">
           {char.name}
         </h1>
       </div>
