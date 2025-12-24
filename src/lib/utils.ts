@@ -2,6 +2,7 @@ import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { snapdom } from '@zumer/snapdom'
 import { useTrekkerStore } from './trekker-store'
+import { CONFIG } from '@/config'
 import type { SnapdomPlugin } from '@zumer/snapdom'
 import type { ClassValue } from 'clsx'
 import type { SSCharacter, TAvatar, Trekkers } from '@/types'
@@ -11,14 +12,14 @@ export function cn(...inputs: Array<ClassValue>) {
 }
 
 export async function fetchCharacters(): Promise<Record<string, SSCharacter>> {
-  const response = await fetch(
-    'https://raw.githubusercontent.com/maj-rf/StellaSoraData/refs/heads/main/character.json',
-  )
+  const response = await fetch(CONFIG.DATA_URL)
   if (!response.ok) {
     throw new Error('Failed to fetch characters')
   }
-  const characters = await response.json()
+  return response.json()
+}
 
+export function initializeDefaultTrekkers(characters: Record<string, SSCharacter>) {
   useTrekkerStore.setState({
     trekkers: {
       main: characters[103],
@@ -26,7 +27,6 @@ export async function fetchCharacters(): Promise<Record<string, SSCharacter>> {
       sub2: characters[111],
     },
   })
-  return characters
 }
 
 export function getTrekkersWithoutPotentials(trekkers: Trekkers) {

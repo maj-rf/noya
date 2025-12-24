@@ -46,8 +46,8 @@ export const useTrekkerStore = create<TrekkerState>()((set) => ({
           ...state.potentials[slot],
           [p.id]:
             p.rarity === 0
-              ? { ...p, rarity: 0, priority: 'Core' }
-              : { ...p, level: 1, priority: 'Medium' },
+              ? { ...p, rarity: 0, priority: 'Core', selectionTimestamp: Date.now() }
+              : { ...p, level: 1, priority: 'Medium', selectionTimestamp: Date.now() },
         },
       },
     })),

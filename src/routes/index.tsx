@@ -3,7 +3,7 @@ import { useRef, useTransition } from 'react'
 import { ResponsiveModal } from '@/components/responsive-modal'
 import SSPotentials from '@/components/ss-potentials'
 import { AvatarSelection } from '@/components/avatar-selection'
-import { downloadImage, fetchCharacters } from '@/lib/utils'
+import { downloadImage, fetchCharacters, initializeDefaultTrekkers } from '@/lib/utils'
 import { Preview } from '@/components/preview'
 import { Button } from '@/components/ui/button'
 import { Loading } from '@/components/loading'
@@ -29,7 +29,11 @@ function AvatarPlaceholder() {
 
 export const Route = createFileRoute('/')({
   component: App,
-  loader: fetchCharacters,
+  loader: async () => {
+    const data = await fetchCharacters()
+    initializeDefaultTrekkers(data)
+    return data
+  },
   pendingComponent: Loading,
 })
 
