@@ -3,25 +3,26 @@ import { useRef, useTransition } from 'react'
 import { ResponsiveModal } from '@/components/responsive-modal'
 import SSPotentials from '@/components/ss-potentials'
 import { AvatarSelection } from '@/components/avatar-selection'
-import { downloadImage, fetchCharacters } from '@/lib/utils'
+import { downloadImage, fetchData } from '@/lib/utils'
 import { Preview } from '@/components/preview'
 import { Button } from '@/components/ui/button'
 import { Loading } from '@/components/loading'
 import { SSAvatar } from '@/components/ss-avatar'
-import { useTrekkerStore } from '@/lib/trekker-store'
+import { useTrekkerStore } from '@/lib/store'
+import { Presets } from '@/components/presets'
 
 function AvatarPlaceholder() {
   const trekkers = useTrekkerStore((s) => s.trekkers)
   return (
-    <div className="flex gap-2 justify-center max-w-md mx-auto">
+    <div className="flex gap-2">
       <div className="h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8] bg-accent border rounded-sm shadow-sm flex items-center justify-center active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
-        {trekkers.main ? <SSAvatar id={trekkers.main.id} /> : 'Main'}
+        {trekkers.main ? <SSAvatar id={trekkers.main} /> : 'Main'}
       </div>
       <div className="h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8] bg-accent border rounded-sm shadow-sm flex items-center justify-center active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
-        {trekkers.sub1 ? <SSAvatar id={trekkers.sub1.id} /> : 'Support'}
+        {trekkers.sub1 ? <SSAvatar id={trekkers.sub1} /> : 'Support'}
       </div>
       <div className="h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8] bg-accent border rounded-sm shadow-sm flex items-center justify-center active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
-        {trekkers.sub2 ? <SSAvatar id={trekkers.sub2.id} /> : 'Support'}
+        {trekkers.sub2 ? <SSAvatar id={trekkers.sub2} /> : 'Support'}
       </div>
     </div>
   )
@@ -29,7 +30,7 @@ function AvatarPlaceholder() {
 
 export const Route = createFileRoute('/')({
   component: App,
-  loader: fetchCharacters,
+  loader: fetchData,
   pendingComponent: Loading,
 })
 
@@ -52,15 +53,18 @@ function App() {
       >
         {isPending ? 'Converting...' : 'Export'}
       </Button>
-      <section className="flex flex-col justify-center items-center gap-4 my-4">
+      <section className="flex flex-col sm:flex-row items-center gap-4 my-4 mx-auto max-w-md">
         <AvatarPlaceholder />
-        <ResponsiveModal
-          title="Released Trekkers"
-          triggerTitle={'Update Trekkers'}
-          desc={`Add the Trekkers to your team`}
-        >
-          <AvatarSelection />
-        </ResponsiveModal>
+        <div className="flex flex-col gap-3">
+          <ResponsiveModal
+            title="Released Trekkers"
+            triggerTitle={'Choose Trekkers'}
+            desc={`Add the Trekkers to your team`}
+          >
+            <AvatarSelection />
+          </ResponsiveModal>
+          <Presets />
+        </div>
       </section>
 
       <SSPotentials slot="main" type="main" />

@@ -1,49 +1,70 @@
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { snapdom } from '@zumer/snapdom'
-import { useTrekkerStore } from './trekker-store'
+import { useTrekkerStore } from './store'
+import type { SSPotential } from './../types'
 import type { SnapdomPlugin } from '@zumer/snapdom'
 import type { ClassValue } from 'clsx'
-import type { SSCharacter, TAvatar, Trekkers } from '@/types'
+import type { SSCharacter } from '@/types'
 
 export function cn(...inputs: Array<ClassValue>) {
   return twMerge(clsx(inputs))
 }
 
-export async function fetchCharacters(): Promise<Record<string, SSCharacter>> {
-  const response = await fetch(
-    'https://raw.githubusercontent.com/maj-rf/StellaSoraData/refs/heads/main/character.json',
-  )
-  if (!response.ok) {
-    throw new Error('Failed to fetch characters')
-  }
-  const characters = await response.json()
+// export async function fetchCharacters(): Promise<Record<string, SSCharacter>> {
+//   const response = await fetch(
+//     'https://raw.githubusercontent.com/maj-rf/StellaSoraData/refs/heads/main/character.json',
+//   )
+//   if (!response.ok) {
+//     throw new Error('Failed to fetch characters')
+//   }
+//   const characters = await response.json()
 
-  useTrekkerStore.setState({
-    trekkers: {
-      main: characters[103],
-      sub1: characters[112],
-      sub2: characters[111],
-    },
-  })
-  return characters
+//   useTrekkerStore.setState({
+//     trekkers: {
+//       main: 103,
+//       sub1: 112,
+//       sub2: 111,
+//     },
+//   })
+//   return characters
+// }
+
+const fetchCharacters = async () => {
+  const response = await fetch('./character.json')
+  return await response.json()
 }
 
-export function getTrekkersWithoutPotentials(trekkers: Trekkers) {
-  const obj = Object.entries(trekkers).reduce(
-    (acc, [key, value]) => {
-      if (value) {
-        const { potential, ...rest } = value
-        acc[key as keyof Trekkers] = rest
-      } else {
-        acc[key as keyof Trekkers] = null
-      }
-      return acc
-    },
-    {} as Record<'main' | 'sub1' | 'sub2', null | TAvatar>,
-  )
+const fetchPotentials = async () => {
+  const response = await fetch('./potential.json')
+  return await response.json()
+}
 
-  return obj
+type TData = {
+  characters: Record<string, SSCharacter>
+  potentials: Record<string, Record<string, SSPotential>>
+}
+
+export async function fetchData(): Promise<TData> {
+  const [characters, potentials] = await Promise.all([
+    fetchCharacters(),
+    fetchPotentials(),
+  ])
+  // for HMR in dev
+  if (
+    Object.values(useTrekkerStore.getState().trekkers).some((a) => a !== null)
+  ) {
+    return { characters, potentials }
+  } else {
+    useTrekkerStore.setState({
+      trekkers: {
+        main: 103,
+        sub1: 112,
+        sub2: 111,
+      },
+    })
+  }
+  return { characters, potentials }
 }
 
 export function forceDisplayPlugin(): SnapdomPlugin {
