@@ -11,32 +11,17 @@ export function cn(...inputs: Array<ClassValue>) {
   return twMerge(clsx(inputs))
 }
 
-// export async function fetchCharacters(): Promise<Record<string, SSCharacter>> {
-//   const response = await fetch(
-//     'https://raw.githubusercontent.com/maj-rf/StellaSoraData/refs/heads/main/character.json',
-//   )
-//   if (!response.ok) {
-//     throw new Error('Failed to fetch characters')
-//   }
-//   const characters = await response.json()
-
-//   useTrekkerStore.setState({
-//     trekkers: {
-//       main: 103,
-//       sub1: 112,
-//       sub2: 111,
-//     },
-//   })
-//   return characters
-// }
-
 const fetchCharacters = async () => {
-  const response = await fetch('./character.json')
+  const response = await fetch(
+    'https://raw.githubusercontent.com/maj-rf/StellaSoraData/refs/heads/main/character.json',
+  )
   return await response.json()
 }
 
 const fetchPotentials = async () => {
-  const response = await fetch('./potential.json')
+  const response = await fetch(
+    'https://raw.githubusercontent.com/maj-rf/StellaSoraData/refs/heads/main/potential.json',
+  )
   return await response.json()
 }
 
