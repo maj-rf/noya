@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { getRouteApi } from '@tanstack/react-router'
 import { SSAvatar } from './ss-avatar'
 import ResponsivePotential from './responsive-potential'
 import type { RefObject } from 'react'
@@ -8,26 +9,33 @@ import { cn } from '@/lib/utils'
 
 const ListContainer = ({
   potentials,
+  id,
 }: {
   potentials: Array<SelectedPotential>
+  id: number
 }) => {
+  const routeApi = getRouteApi('/')
+  const { potentials: fetchedPotentials } = routeApi.useLoaderData()
   return (
     <ul className="flex flex-wrap w-[245px] items-start justify-center gap-0.5">
-      {potentials.map((p) => (
-        <li key={'preview' + p.id} className="relative">
-          <ResponsivePotential
-            rarity={p.rarity}
-            imgId={p.imgId}
-            name={p.name}
-            subIcon={p.subIcon}
-          />
-          {p.rarity !== 0 && (
-            <div className="absolute top-0 left-3 text-xs font-semibold text-indigo-500">
-              {p.level}
-            </div>
-          )}
-        </li>
-      ))}
+      {potentials.map((p) => {
+        const current = fetchedPotentials[id][p.id]
+        return (
+          <li key={'preview' + p.id} className="relative">
+            <ResponsivePotential
+              rarity={current.rarity}
+              imgId={current.imgId}
+              name={current.name}
+              subIcon={current.subIcon}
+            />
+            {p.rarity !== 0 && (
+              <div className="absolute top-0 left-3 text-xs font-semibold text-indigo-500">
+                {p.level}
+              </div>
+            )}
+          </li>
+        )
+      })}
     </ul>
   )
 }
@@ -68,13 +76,13 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
         </p>
       </td>
       <td className="px-1 py-2 border-b border-slate-600">
-        <ListContainer potentials={grouped.Core} />
+        <ListContainer potentials={grouped.Core} id={trekker} />
       </td>
       <td className="px-1 py-2 border-b border-slate-600">
-        <ListContainer potentials={grouped.Medium} />
+        <ListContainer potentials={grouped.Medium} id={trekker} />
       </td>
       <td className="px-1 py-2 border-b border-slate-600">
-        <ListContainer potentials={grouped.Optional} />
+        <ListContainer potentials={grouped.Optional} id={trekker} />
       </td>
     </tr>
   )

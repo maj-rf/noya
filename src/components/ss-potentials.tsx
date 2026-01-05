@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select'
+import type { PropsWithChildren } from 'react'
 import type { PotentialPriority, Slot } from '@/types'
 import {
   Popover,
@@ -32,7 +33,13 @@ type SSPotentialsProps = {
   type: 'main' | 'support'
 }
 
-function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
+type SingleSelectedProps = { slot: Slot; id: number }
+
+function SingleSelected({
+  slot,
+  id,
+  children,
+}: PropsWithChildren<SingleSelectedProps>) {
   const s = usePotentialStore((state) => state.potentials[slot][id])
   const updateLevel = usePotentialStore((sel) => sel.updateLevel)
   const removePotential = usePotentialStore((sel) => sel.removePotential)
@@ -40,21 +47,7 @@ function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
   return (
     <div className="flex flex-col gap-2 justify-center">
       <div className="relative">
-        <HybridTooltip>
-          <HybridTooltipTrigger asChild>
-            <div>
-              <ResponsivePotential
-                rarity={s.rarity}
-                imgId={s.imgId}
-                name={s.name}
-                subIcon={s.subIcon}
-              />
-            </div>
-          </HybridTooltipTrigger>
-          <HybridTooltipContent>
-            <p>{s.briefDesc}</p>
-          </HybridTooltipContent>
-        </HybridTooltip>
+        {children}
         {s.rarity !== 0 && (
           <div className="absolute -top-px left-3 text-xs font-semibold text-indigo-500">
             {s.level}
@@ -72,7 +65,7 @@ function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
 
       <div className="w-20 space-y-2">
         <Slider
-          defaultValue={[1]}
+          defaultValue={s.level ? [s.level] : [1]}
           step={1}
           disabled={s.rarity === 0}
           min={1}
@@ -110,7 +103,7 @@ function SingleSelected({ slot, id }: { slot: Slot; id: number }) {
 
 function SSPotentials({ slot, type }: SSPotentialsProps) {
   const routeApi = getRouteApi('/')
-  const fetchedCharacters = routeApi.useLoaderData()
+  const { potentials: fetchedPotentials, characters } = routeApi.useLoaderData()
   const trekkerId = useTrekkerStore((s) => s.trekkers[slot])
   const selected = usePotentialStore(
     useShallow((s) =>
@@ -132,8 +125,8 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
   const addPotential = usePotentialStore((s) => s.addPotential)
 
   if (!trekkerId) return
-
-  const potentials = fetchedCharacters[trekkerId].potential
+  const potentialList = fetchedPotentials[trekkerId]
+  const potentials = Object.values(potentialList)
 
   const filteredPotentials = potentials
     .filter(
@@ -148,7 +141,9 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="mb-2" size="sm">
-              <PlusIcon /> {slot === 'main' ? 'Main' : 'Support'} Potentials
+              <PlusIcon />{' '}
+              {characters[trekkerId].name +
+                `${type === 'main' ? ' Main' : ' Support'}`}
             </Button>
           </PopoverTrigger>
           <PopoverContent side="top" align="start" asChild>
@@ -165,7 +160,7 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
                     className="relative"
                     onClick={() => {
                       if (coreExceed && p.rarity === 0) return
-                      addPotential(slot, p)
+                      addPotential(slot, { id: p.id, rarity: p.rarity })
                     }}
                   >
                     <div
@@ -214,9 +209,28 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
                 Please choose potentials
               </div>
             ) : (
-              selected.map((s) => (
-                <SingleSelected key={'selected' + s} slot={slot} id={s} />
-              ))
+              selected.map((s) => {
+                const p = potentialList[s]
+                return (
+                  <SingleSelected key={'selected' + s} slot={slot} id={s}>
+                    <HybridTooltip>
+                      <HybridTooltipTrigger asChild>
+                        <div>
+                          <ResponsivePotential
+                            rarity={p.rarity}
+                            imgId={p.imgId}
+                            name={p.name}
+                            subIcon={p.subIcon}
+                          />
+                        </div>
+                      </HybridTooltipTrigger>
+                      <HybridTooltipContent>
+                        <p>{p.briefDesc}</p>
+                      </HybridTooltipContent>
+                    </HybridTooltip>
+                  </SingleSelected>
+                )
+              })
             )}
           </div>
           <ScrollBar orientation="horizontal" />
