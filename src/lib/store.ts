@@ -12,17 +12,15 @@ interface TrekkerState {
 
   // actions
   setTrekker: (slot: Slot, id: number | null) => void
-  setAllTrekkers: (trekkers: Trekkers) => void
 }
 
 interface PotentialState {
   potentials: Potentials
-  addPotential: (slot: Slot, id: SSPotential) => void
+  addPotential: (slot: Slot, p: Pick<SSPotential, 'id' | 'rarity'>) => void
   updateLevel: (slot: Slot, id: number, level: number) => void
   updatePriority: (slot: Slot, id: number, value: PotentialPriority) => void
   removePotential: (slot: Slot, id: number) => void
   clearPotentials: (slot: Slot) => void
-  setAllPotentials: (potentials: Potentials) => void
 }
 
 export const useTrekkerStore = create<TrekkerState>()((set) => ({
@@ -34,18 +32,10 @@ export const useTrekkerStore = create<TrekkerState>()((set) => ({
         [slot]: id,
       },
     })),
-  setAllTrekkers: (trekkers) =>
-    set(() => ({
-      trekkers,
-    })),
 }))
 
 export const usePotentialStore = create<PotentialState>()((set) => ({
   potentials: { main: {}, sub1: {}, sub2: {} },
-  setAllPotentials: (potentials) =>
-    set(() => ({
-      potentials,
-    })),
   addPotential: (slot, p) =>
     set((state) => ({
       potentials: {

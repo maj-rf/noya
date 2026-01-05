@@ -54,7 +54,7 @@ function getSearchedAndFilteredCharacters(
 
 export const AvatarSelection = () => {
   const routeApi = getRouteApi('/')
-  const fetchedCharacters = routeApi.useLoaderData()
+  const { characters: fetchedCharacters } = routeApi.useLoaderData()
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('')
   const setTrekker = useTrekkerStore((s) => s.setTrekker)

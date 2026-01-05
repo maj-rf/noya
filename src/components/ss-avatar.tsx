@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 
 export const SSAvatar = ({ id }: { id: number }) => {
   const routeApi = getRouteApi('/')
-  const characters = routeApi.useLoaderData()
+  const { characters } = routeApi.useLoaderData()
   const char = characters[id]
   return (
     <div className="group-data-[disabled=true]:opacity-40 bg-gray-400 border-none padding-0 rounded-sm w-full h-full">

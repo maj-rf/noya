@@ -26,12 +26,12 @@ export type Trekkers = Record<Slot, number | null>
 export type PotentialPriority = 'Core' | 'Medium' | 'Optional'
 
 export type SelectedPotential =
-  | (SSPotential & {
+  | (Pick<SSPotential, 'id'> & {
       rarity: 0
       level?: never
       priority: Extract<PotentialPriority, 'Core'>
     })
-  | (SSPotential & {
+  | (Pick<SSPotential, 'id'> & {
       rarity: 1 | 2
       level: number
       priority: PotentialPriority
