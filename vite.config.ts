@@ -1,7 +1,7 @@
 import { URL, fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import { devtools } from '@tanstack/devtools-vite'
-import viteReact from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
@@ -14,7 +14,7 @@ export default defineConfig({
       target: 'react',
       autoCodeSplitting: true,
     }),
-    viteReact(),
+    react(),
     tailwindcss(),
   ],
   resolve: {
