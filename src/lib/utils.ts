@@ -7,6 +7,8 @@ import type { SnapdomPlugin } from '@zumer/snapdom'
 import type { ClassValue } from 'clsx'
 import type { SSCharacter } from '@/types'
 
+export const MAX_LEVEL = 6
+
 export function cn(...inputs: Array<ClassValue>) {
   return twMerge(clsx(inputs))
 }

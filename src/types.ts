@@ -33,7 +33,7 @@ export type SelectedPotential =
     })
   | (Pick<SSPotential, 'id'> & {
       rarity: 1 | 2
-      level: number
+      level: number | string
       priority: PotentialPriority
     })
 

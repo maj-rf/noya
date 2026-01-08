@@ -3,7 +3,6 @@ import { InfoIcon, PlusIcon, X } from 'lucide-react'
 import { useShallow } from 'zustand/shallow'
 import { getRouteApi } from '@tanstack/react-router'
 import ResponsivePotential from './responsive-potential'
-import { Slider } from './ui/slider'
 import { Button } from './ui/button'
 import { ScrollArea, ScrollBar } from './ui/scroll-area'
 import {
@@ -27,6 +26,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { usePotentialStore, useTrekkerStore } from '@/lib/store'
+import { MAX_LEVEL, cn } from '@/lib/utils'
 
 type SSPotentialsProps = {
   slot: Slot
@@ -49,13 +49,21 @@ function SingleSelected({
       <div className="relative">
         {children}
         {s.rarity !== 0 && (
-          <div className="absolute -top-px left-3 text-xs font-semibold text-indigo-500">
+          <div
+            className={cn(
+              'absolute top-0 left-3 text-xs font-semibold tracking-tighter text-indigo-500',
+              {
+                'left-2': String(s.level).length >= 2,
+              },
+            )}
+          >
             {s.level}
           </div>
         )}
         <Button
           variant="destructive"
           size="icon"
+          aria-label="delete-card"
           className="absolute -top-1 -right-1 rounded-full size-4 border border-white"
           onClick={() => removePotential(slot, s.id)}
         >
@@ -63,17 +71,33 @@ function SingleSelected({
         </Button>
       </div>
 
-      <div className="w-20 space-y-2">
-        <Slider
-          defaultValue={s.level ? [s.level] : [1]}
-          step={1}
+      <div className="w-20 space-y-1">
+        <Select
           disabled={s.rarity === 0}
-          min={1}
-          max={6}
-          onValueChange={(newValue: Array<number>) =>
-            updateLevel(slot, s.id, newValue[0])
-          }
-        ></Slider>
+          value={s.level ? String(s.level) : undefined}
+          onValueChange={(value) => updateLevel(slot, s.id, value)}
+        >
+          <SelectTrigger className="text-[10px] w-full px-2" size="sm">
+            <SelectValue placeholder="Level" />
+          </SelectTrigger>
+          <SelectContent align="start">
+            <SelectItem className="text-[10px]" value="1+">
+              1+
+            </SelectItem>
+            {[...Array(MAX_LEVEL)].map((_, index) => (
+              <SelectItem
+                className="text-[10px]"
+                key={'level ' + String(index + 1)}
+                value={String(index + 1)}
+              >
+                {index + 1}
+              </SelectItem>
+            ))}
+            <SelectItem className="text-[10px]" value={`${MAX_LEVEL}+`}>
+              {`${MAX_LEVEL}+`}
+            </SelectItem>
+          </SelectContent>
+        </Select>
         <Select
           disabled={s.rarity === 0}
           value={s.priority}
@@ -197,12 +221,13 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
         </Popover>
 
         <ScrollArea className="w-full rounded-sm bg-popover border">
-          <div className="flex min-h-[180.267px] gap-1 p-2">
+          <div className="flex min-h-[194px] gap-1 p-2">
             {selected.length === 0 ? (
               <div className="text-center self-center w-full">
                 <div className="h-20 w-full">
                   <img
                     src="./shy.png"
+                    alt="shy-penguin"
                     className="block w-full h-full object-contain"
                   />
                 </div>

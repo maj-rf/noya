@@ -17,7 +17,7 @@ const ListContainer = ({
   const routeApi = getRouteApi('/')
   const { potentials: fetchedPotentials } = routeApi.useLoaderData()
   return (
-    <ul className="flex flex-wrap w-[245px] items-start justify-center gap-0.5">
+    <ul className="flex flex-wrap w-[245px] justify-center gap-0.5 relative">
       {potentials.map((p) => {
         const current = fetchedPotentials[id][p.id]
         return (
@@ -29,7 +29,14 @@ const ListContainer = ({
               subIcon={current.subIcon}
             />
             {p.rarity !== 0 && (
-              <div className="absolute top-0 left-3 text-xs font-semibold text-indigo-500">
+              <div
+                className={cn(
+                  'absolute top-0 left-3 text-xs font-semibold tracking-tighter text-indigo-500',
+                  {
+                    'left-2': String(p.level).length >= 2,
+                  },
+                )}
+              >
                 {p.level}
               </div>
             )}

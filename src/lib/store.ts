@@ -17,7 +17,7 @@ interface TrekkerState {
 interface PotentialState {
   potentials: Potentials
   addPotential: (slot: Slot, p: Pick<SSPotential, 'id' | 'rarity'>) => void
-  updateLevel: (slot: Slot, id: number, level: number) => void
+  updateLevel: (slot: Slot, id: number, level: string) => void
   updatePriority: (slot: Slot, id: number, value: PotentialPriority) => void
   removePotential: (slot: Slot, id: number) => void
   clearPotentials: (slot: Slot) => void

@@ -19,6 +19,7 @@ export const SSAvatar = ({ id }: { id: number }) => {
         <img
           alt={char.name + ' portrait'}
           className="block w-full h-full object-cover"
+          fetchPriority="high"
           src={`https://res.cloudinary.com/dafqr01it/image/upload/v1762945238/ss/avatar/head_${char.id}01_XL.png`}
         />
         <img
