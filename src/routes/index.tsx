@@ -10,6 +10,7 @@ import { Loading } from '@/components/loading'
 import { SSAvatar } from '@/components/ss-avatar'
 import { useTrekkerStore } from '@/lib/store'
 import { Presets } from '@/components/presets'
+import { SaveBuild } from '@/components/save-build'
 
 function AvatarPlaceholder() {
   const trekkers = useTrekkerStore((s) => s.trekkers)
@@ -66,7 +67,7 @@ function App() {
           <Presets />
         </div>
       </section>
-
+      <SaveBuild />
       <SSPotentials slot="main" type="main" />
       <SSPotentials slot="sub1" type="support" />
       <SSPotentials slot="sub2" type="support" />

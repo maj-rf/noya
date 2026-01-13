@@ -2,7 +2,7 @@ import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { snapdom } from '@zumer/snapdom'
 import { useTrekkerStore } from './store'
-import type { SSPotential } from './../types'
+import type { BuildMap, SSPotential } from './../types'
 import type { SnapdomPlugin } from '@zumer/snapdom'
 import type { ClassValue } from 'clsx'
 import type { SSCharacter } from '@/types'
@@ -30,6 +30,7 @@ const fetchPotentials = async () => {
 type TData = {
   characters: Record<string, SSCharacter>
   potentials: Record<string, Record<string, SSPotential>>
+  savedBuilds: BuildMap
 }
 
 export async function fetchData(): Promise<TData> {
@@ -37,11 +38,13 @@ export async function fetchData(): Promise<TData> {
     fetchCharacters(),
     fetchPotentials(),
   ])
+  const buildsJSON = localStorage.getItem('saved-builds')
+  const savedBuilds = buildsJSON ? JSON.parse(buildsJSON) : {}
   // for HMR in dev
   if (
     Object.values(useTrekkerStore.getState().trekkers).some((a) => a !== null)
   ) {
-    return { characters, potentials }
+    return { characters, potentials, savedBuilds }
   } else {
     useTrekkerStore.setState({
       trekkers: {
@@ -51,7 +54,7 @@ export async function fetchData(): Promise<TData> {
       },
     })
   }
-  return { characters, potentials }
+  return { characters, potentials, savedBuilds }
 }
 
 export function forceDisplayPlugin(): SnapdomPlugin {

@@ -40,3 +40,13 @@ export type SelectedPotential =
 type SelectedPotentialMap = Record<string, SelectedPotential>
 
 export type Potentials = Record<Slot, SelectedPotentialMap>
+
+export type BuildMap = Record<
+  string,
+  {
+    id: string
+    name: string
+    trekkers: Trekkers
+    potentials: Potentials
+  }
+>

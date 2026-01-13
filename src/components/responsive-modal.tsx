@@ -24,7 +24,7 @@ type ResponsiveModalProps = {
   triggerTitle: string
   title: string
   desc: string
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 export function ResponsiveModal(props: ResponsiveModalProps) {
