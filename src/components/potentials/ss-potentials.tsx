@@ -2,22 +2,22 @@ import { memo } from 'react'
 import { InfoIcon, PlusIcon, X } from 'lucide-react'
 import { useShallow } from 'zustand/shallow'
 import { getRouteApi } from '@tanstack/react-router'
-import ResponsivePotential from './responsive-potential'
-import { Button } from './ui/button'
-import { ScrollArea, ScrollBar } from './ui/scroll-area'
+import { Button } from '../ui/button'
+import { ScrollArea, ScrollBar } from '../ui/scroll-area'
 import {
   HybridTooltip,
   HybridTooltipContent,
   HybridTooltipProvider,
   HybridTooltipTrigger,
-} from './ui/hybrid-tooltip'
+} from '../ui/hybrid-tooltip'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select'
+} from '../ui/select'
+import ResponsivePotential from './responsive-potential'
 import type { PropsWithChildren } from 'react'
 import type { PotentialPriority, Slot } from '@/types'
 import {

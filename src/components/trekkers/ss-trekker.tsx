@@ -1,7 +1,7 @@
 import { getRouteApi } from '@tanstack/react-router'
 import { cn } from '@/lib/utils'
 
-export const SSAvatar = ({ id }: { id: number }) => {
+export const SSTrekker = ({ id }: { id: number }) => {
   const routeApi = getRouteApi('/')
   const { characters } = routeApi.useLoaderData()
   const char = characters[id]

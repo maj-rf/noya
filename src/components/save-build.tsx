@@ -3,7 +3,6 @@ import { useRouter } from '@tanstack/react-router'
 import { LoaderCircle } from 'lucide-react'
 import { Button } from './ui/button'
 import { InputGroup, InputGroupAddon, InputGroupInput } from './ui/input-group'
-import { LoadBuild } from './load-build'
 import type { BuildMap } from '@/types'
 import { usePotentialStore, useTrekkerStore } from '@/lib/store'
 
@@ -32,16 +31,17 @@ export const SaveBuild = () => {
   }
   const buildNameRef = useRef<HTMLInputElement>(null)
   return (
-    <section className="w-full max-w-11/12 mx-auto mb-2">
-      <div className="w-full sm:max-w-md flex flex-col sm:flex-row gap-2">
+    <section className="w-full max-w-11/12 mx-auto mb-4">
+      <div className="w-full max-w-md flex gap-2 mx-auto">
         <InputGroup>
+          <InputGroupAddon>
+            <label htmlFor="build-name">Build Name</label>
+          </InputGroupAddon>
           <InputGroupInput
-            placeholder="Amber OHKO Build..."
             ref={buildNameRef}
             disabled={isPending}
+            id="build-name"
           />
-          <InputGroupAddon></InputGroupAddon>
-
           {isPending && (
             <InputGroupAddon align="inline-end">
               <LoaderCircle className="animate-spin" />
@@ -49,12 +49,9 @@ export const SaveBuild = () => {
           )}
         </InputGroup>
 
-        <div className="flex gap-2">
-          <Button onClick={handleSave} disabled={isPending}>
-            Save
-          </Button>
-          <LoadBuild />
-        </div>
+        <Button onClick={handleSave} disabled={isPending}>
+          Save
+        </Button>
       </div>
     </section>
   )

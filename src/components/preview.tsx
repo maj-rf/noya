@@ -1,11 +1,11 @@
-import { useMemo } from 'react'
+import { useMemo, useRef, useTransition } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
-import { SSAvatar } from './ss-avatar'
-import ResponsivePotential from './responsive-potential'
-import type { RefObject } from 'react'
+import { SSTrekker } from './trekkers/ss-trekker'
+import ResponsivePotential from './potentials/responsive-potential'
+import { Button } from './ui/button'
 import type { SelectedPotential, Slot } from '@/types'
 import { usePotentialStore, useTrekkerStore } from '@/lib/store'
-import { cn } from '@/lib/utils'
+import { cn, downloadImage } from '@/lib/utils'
 
 const ListContainer = ({
   potentials,
@@ -69,7 +69,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
     <tr>
       <td className="px-2 py-4 border-b border-slate-600 space-y-2">
         <div className="h-[125px] w-[100px]">
-          <SSAvatar id={trekker} />
+          <SSTrekker id={trekker} />
         </div>
         <p
           className={cn(
@@ -95,26 +95,45 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
   )
 }
 
-export const Preview = ({ ref }: { ref: RefObject<HTMLElement | null> }) => {
+export const Preview = () => {
+  const previewRef = useRef<HTMLElement>(null)
+  const [isPending, startTransition] = useTransition()
+
+  const handleDownload = () => {
+    startTransition(async () => {
+      await downloadImage(previewRef.current)
+    })
+  }
   return (
-    <div className="h-0 overflow-hidden">
-      <section ref={ref} className="w-4xl rounded" id="preview">
-        <table className="w-full bg-slate-800 shadow-lg rounded-lg table-auto border-collapse">
-          <thead className="bg-blue-900 text-white">
-            <tr>
-              <th className="px-2 py-2 text-center font-semibold">Trekker</th>
-              <th className="px-2 py-2 text-center font-semibold">Core</th>
-              <th className="px-2 py-2 text-center font-semibold">Medium</th>
-              <th className="px-2 py-2 text-center font-semibold">Optional</th>
-            </tr>
-          </thead>
-          <tbody>
-            <PreviewRow slot="main" />
-            <PreviewRow slot="sub1" />
-            <PreviewRow slot="sub2" />
-          </tbody>
-        </table>
-      </section>
-    </div>
+    <>
+      <Button
+        onClick={handleDownload}
+        className="fixed bottom-1 left-1 z-2"
+        disabled={isPending}
+      >
+        {isPending ? 'Converting...' : 'Export'}
+      </Button>
+      <div className="h-0 overflow-hidden">
+        <section ref={previewRef} className="w-4xl rounded" id="preview">
+          <table className="w-full bg-slate-800 shadow-lg rounded-lg table-auto border-collapse">
+            <thead className="bg-blue-900 text-white">
+              <tr>
+                <th className="px-2 py-2 text-center font-semibold">Trekker</th>
+                <th className="px-2 py-2 text-center font-semibold">Core</th>
+                <th className="px-2 py-2 text-center font-semibold">Medium</th>
+                <th className="px-2 py-2 text-center font-semibold">
+                  Optional
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <PreviewRow slot="main" />
+              <PreviewRow slot="sub1" />
+              <PreviewRow slot="sub2" />
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </>
   )
 }

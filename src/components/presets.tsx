@@ -186,10 +186,13 @@ export function Presets() {
   return (
     <div>
       <Select onValueChange={setPresets}>
-        <SelectTrigger className="w-full" aria-label="select-presets">
+        <SelectTrigger
+          className="w-[150px] text-xs tracking-tight"
+          aria-label="select-presets"
+        >
           <SelectValue placeholder="Select Presets" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="*:text-xs">
           <SelectGroup>
             <SelectLabel>Aqua Builds</SelectLabel>
             <SelectItem value="Aqua">Chitose AA</SelectItem>
