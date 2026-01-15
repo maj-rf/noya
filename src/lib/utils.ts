@@ -1,11 +1,20 @@
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { snapdom } from '@zumer/snapdom'
-import { useTrekkerStore } from './store'
-import type { SSPotential } from './../types'
+import type { BuildMap, SSCharacter, SSPotential } from '@/types'
 import type { SnapdomPlugin } from '@zumer/snapdom'
 import type { ClassValue } from 'clsx'
-import type { SSCharacter } from '@/types'
+import { usePotentialStore, useTrekkerStore } from '@/lib/store'
+
+export function saveToLocal(id: string, name: string) {
+  const potentials = usePotentialStore.getState().potentials
+  const trekkers = useTrekkerStore.getState().trekkers
+  if (!trekkers.main) return
+  const buildsJSON = localStorage.getItem('saved-builds')
+  const builds: BuildMap = buildsJSON ? JSON.parse(buildsJSON) : {}
+  builds[id] = { id, trekkers, potentials, name }
+  localStorage.setItem('saved-builds', JSON.stringify(builds))
+}
 
 export const MAX_LEVEL = 6
 
@@ -30,6 +39,7 @@ const fetchPotentials = async () => {
 type TData = {
   characters: Record<string, SSCharacter>
   potentials: Record<string, Record<string, SSPotential>>
+  savedBuilds: BuildMap
 }
 
 export async function fetchData(): Promise<TData> {
@@ -37,21 +47,9 @@ export async function fetchData(): Promise<TData> {
     fetchCharacters(),
     fetchPotentials(),
   ])
-  // for HMR in dev
-  if (
-    Object.values(useTrekkerStore.getState().trekkers).some((a) => a !== null)
-  ) {
-    return { characters, potentials }
-  } else {
-    useTrekkerStore.setState({
-      trekkers: {
-        main: 103,
-        sub1: 112,
-        sub2: 111,
-      },
-    })
-  }
-  return { characters, potentials }
+  const buildsJSON = localStorage.getItem('saved-builds')
+  const savedBuilds = buildsJSON ? JSON.parse(buildsJSON) : {}
+  return { characters, potentials, savedBuilds }
 }
 
 export function forceDisplayPlugin(): SnapdomPlugin {

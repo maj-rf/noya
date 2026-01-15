@@ -1,8 +1,9 @@
 import { HeadContent, Outlet, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
-
-import Header from '../components/Header'
+import Header from '../components/navbar/Header'
+import { fetchData } from '@/lib/utils'
+import { Loading } from '@/components/loading'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -11,6 +12,8 @@ export const Route = createRootRoute({
       { title: 'Stella Sora Team Builder' },
     ],
   }),
+  loader: fetchData,
+  pendingComponent: Loading,
   component: () => (
     <>
       <HeadContent />

@@ -9,10 +9,10 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from './ui/select'
-import { Button } from './ui/button'
+} from '../ui/select'
+import { Button } from '../ui/button'
 import type { SSCharacter, Slot } from '@/types'
-import { SSAvatar } from '@/components/ss-avatar'
+import { SSTrekker } from '@/components/trekkers/ss-trekker'
 import {
   InputGroup,
   InputGroupAddon,
@@ -52,8 +52,8 @@ function getSearchedAndFilteredCharacters(
   })
 }
 
-export const AvatarSelection = () => {
-  const routeApi = getRouteApi('/')
+export const TrekkerSelection = () => {
+  const routeApi = getRouteApi('__root__')
   const { characters: fetchedCharacters } = routeApi.useLoaderData()
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('')
@@ -189,7 +189,7 @@ export const AvatarSelection = () => {
               data-slot={slot === 'main' ? 'Main' : 'Support'}
               className="chosen-trekker group rounded-xs data-[selected=true]:outline-2 h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8]"
             >
-              <SSAvatar id={char.id} />
+              <SSTrekker id={char.id} />
             </div>
           ))}
         </div>

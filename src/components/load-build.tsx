@@ -1,0 +1,84 @@
+import { Link, getRouteApi, useRouter } from '@tanstack/react-router'
+import { Check, LoaderCircle, Trash } from 'lucide-react'
+import { useTransition } from 'react'
+import { ScrollArea } from './ui/scroll-area'
+import { ResponsiveModal } from './responsive-modal'
+import { SSTrekker } from './trekkers/ss-trekker'
+import { Button } from './ui/button'
+import type { BuildMap } from '@/types'
+
+function deleteBuild(id: string) {
+  const buildsJSON = localStorage.getItem('saved-builds')
+  const builds: BuildMap = buildsJSON ? JSON.parse(buildsJSON) : {}
+
+  delete builds[id]
+  localStorage.setItem('saved-builds', JSON.stringify(builds))
+}
+
+export function LoadBuild() {
+  const router = useRouter()
+  const routeApi = getRouteApi('__root__')
+  const { savedBuilds } = routeApi.useLoaderData()
+  const [isPending, startTransition] = useTransition()
+
+  return (
+    <ResponsiveModal
+      triggerTitle="Load Build"
+      title="Load or delete your saved builds!"
+      desc="Builds are saved in your browser's local storage"
+    >
+      <ScrollArea className="h-[300px] px-4">
+        <div className="flex flex-wrap justify-center gap-3 mt-2">
+          {Object.values(savedBuilds).map((b) => (
+            <div
+              className="relative w-[100px] md:w-[120px] flex flex-col gap-1"
+              key={b.id}
+            >
+              <div className="h-[125px] w-full md:h-[150px] md:w-[120px] aspect-[0.8]">
+                <SSTrekker id={b.trekkers.main as number} />
+              </div>
+              <p className="truncate bg-muted rounded-2xl px-2 py-1 tracking-tighter text-center">
+                {b.name}
+              </p>
+              <div className="absolute top-5 left-0 flex flex-col gap-1">
+                <Button
+                  asChild
+                  size="icon-sm"
+                  variant="secondary"
+                  className="rounded-full"
+                >
+                  <Link
+                    to={'/$id'}
+                    params={{ id: b.id }}
+                    preload={false}
+                    disabled={isPending}
+                  >
+                    <Check />
+                  </Link>
+                </Button>
+                <Button
+                  onClick={() => {
+                    startTransition(async () => {
+                      deleteBuild(b.id)
+                      await router.invalidate()
+                    })
+                  }}
+                  variant="destructive"
+                  size="icon-sm"
+                  disabled={isPending}
+                  className="rounded-full"
+                >
+                  {isPending ? (
+                    <LoaderCircle className="animate-spin" />
+                  ) : (
+                    <Trash />
+                  )}
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
+    </ResponsiveModal>
+  )
+}
