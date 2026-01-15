@@ -1,7 +1,7 @@
 import {
   Link,
   createFileRoute,
-  redirect,
+  notFound,
   useRouter,
 } from '@tanstack/react-router'
 import { useTransition } from 'react'
@@ -17,20 +17,32 @@ import { usePotentialStore, useTrekkerStore } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { cn, saveToLocal } from '@/lib/utils'
 
+function assertBuild<T>(value: T | undefined): asserts value is T {
+  if (!value) {
+    throw notFound()
+  }
+}
+
 export const Route = createFileRoute('/$id')({
   component: RouteComponent,
   loader: ({ params }) => {
     const buildsJSON = localStorage.getItem('saved-builds')
     const builds: BuildMap = buildsJSON ? JSON.parse(buildsJSON) : {}
     const build = builds[params.id]
-    if (!build.id) {
-      throw redirect({ to: '/' })
-    }
+    assertBuild(build)
     useTrekkerStore.setState({ trekkers: build.trekkers })
     usePotentialStore.setState({ potentials: build.potentials })
     return { id: build.id, name: build.name }
   },
   pendingComponent: Loading,
+  notFoundComponent: () => (
+    <div className="flex flex-col items-center justify-center h-full">
+      <p>Build not found.</p>
+      <Button asChild variant="link">
+        <Link to="/">Return to Home</Link>
+      </Button>
+    </div>
+  ),
 })
 
 function RouteComponent() {
@@ -72,7 +84,7 @@ function RouteComponent() {
           >
             <TrekkerSelection />
           </ResponsiveModal>
-          <Button asChild variant="link">
+          <Button asChild variant="secondary">
             <Link to={'/'}>Create New Build</Link>
           </Button>
         </div>
@@ -93,7 +105,7 @@ function RouteComponent() {
             <span
               className={cn('col-1 row-1', isPending ? 'invisible' : 'visible')}
             >
-              Update
+              Save Changes
             </span>
             <span
               aria-label="Uploading..."

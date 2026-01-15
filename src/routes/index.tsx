@@ -58,7 +58,7 @@ function App() {
             )}
           </div>
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2">
           <ResponsiveModal
             title="Released Trekkers"
             triggerTitle={'Choose Trekkers'}
@@ -66,7 +66,7 @@ function App() {
           >
             <TrekkerSelection />
           </ResponsiveModal>
-          <div className="flex flex-row sm:flex-col gap-3">
+          <div className="flex flex-row sm:flex-col gap-2">
             <LoadBuild />
             <Presets />
           </div>
