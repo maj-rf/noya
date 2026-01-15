@@ -2,7 +2,7 @@ import { getRouteApi } from '@tanstack/react-router'
 import { cn } from '@/lib/utils'
 
 export const SSTrekker = ({ id }: { id: number }) => {
-  const routeApi = getRouteApi('/')
+  const routeApi = getRouteApi('__root__')
   const { characters } = routeApi.useLoaderData()
   const char = characters[id]
   return (

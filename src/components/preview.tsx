@@ -14,7 +14,7 @@ const ListContainer = ({
   potentials: Array<SelectedPotential>
   id: number
 }) => {
-  const routeApi = getRouteApi('/')
+  const routeApi = getRouteApi('__root__')
   const { potentials: fetchedPotentials } = routeApi.useLoaderData()
   return (
     <ul className="flex flex-wrap w-[245px] justify-center gap-0.5 relative">

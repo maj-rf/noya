@@ -126,7 +126,7 @@ function SingleSelected({
 }
 
 function SSPotentials({ slot, type }: SSPotentialsProps) {
-  const routeApi = getRouteApi('/')
+  const routeApi = getRouteApi('__root__')
   const { potentials: fetchedPotentials, characters } = routeApi.useLoaderData()
   const trekkerId = useTrekkerStore((s) => s.trekkers[slot])
   const selected = usePotentialStore(

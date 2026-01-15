@@ -53,7 +53,7 @@ function getSearchedAndFilteredCharacters(
 }
 
 export const TrekkerSelection = () => {
-  const routeApi = getRouteApi('/')
+  const routeApi = getRouteApi('__root__')
   const { characters: fetchedCharacters } = routeApi.useLoaderData()
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('')
