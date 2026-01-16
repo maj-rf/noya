@@ -187,7 +187,7 @@ export function Presets() {
     <div>
       <Select onValueChange={setPresets}>
         <SelectTrigger
-          className="w-40 tracking-tighter "
+          className="w-[148.25px] tracking-tighter px-1.5"
           aria-label="select-presets"
         >
           <SelectValue placeholder="Select Presets" />

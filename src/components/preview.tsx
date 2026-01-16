@@ -1,8 +1,8 @@
 import { useMemo, useRef, useTransition } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
-import { SSTrekker } from './trekkers/ss-trekker'
 import ResponsivePotential from './potentials/responsive-potential'
 import { Button } from './ui/button'
+import { BaseTrekker } from './trekkers/base-trekker'
 import type { SelectedPotential, Slot } from '@/types'
 import { usePotentialStore, useTrekkerStore } from '@/lib/store'
 import { cn, downloadImage } from '@/lib/utils'
@@ -31,7 +31,7 @@ const ListContainer = ({
             {p.rarity !== 0 && (
               <div
                 className={cn(
-                  'absolute top-0 left-3 text-xs font-semibold tracking-tighter text-indigo-500',
+                  'absolute top-0 left-3 text-xs font-semibold tracking-tighter text-slate-600',
                   {
                     'left-2': String(p.level).length >= 2,
                   },
@@ -48,6 +48,8 @@ const ListContainer = ({
 }
 
 const PreviewRow = ({ slot }: { slot: Slot }) => {
+  const routeApi = getRouteApi('__root__')
+  const { characters } = routeApi.useLoaderData()
   const selectedMap = usePotentialStore((state) => state.potentials[slot])
   const potentials = useMemo(() => Object.values(selectedMap), [selectedMap])
   const trekker = useTrekkerStore((s) => s.trekkers[slot])
@@ -69,18 +71,19 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
     <tr>
       <td className="px-2 py-4 border-b border-slate-600 space-y-2">
         <div className="h-[125px] w-[100px]">
-          <SSTrekker id={trekker} />
+          <BaseTrekker char={characters[trekker]}>
+            <p
+              className={cn(
+                '[clip-path:polygon(0_0,100%_0,90%_100%,0_100%)] absolute -top-0.75 text-center text-sm text-white tracking-tighter pr-3 pl-1 bg-indigo-500',
+                {
+                  'bg-rose-500': slot === 'main',
+                },
+              )}
+            >
+              {slot === 'main' ? 'Main' : 'Support'}
+            </p>
+          </BaseTrekker>
         </div>
-        <p
-          className={cn(
-            'text-center text-white rounded-sm font-medium bg-blue-900',
-            {
-              'bg-red-900': slot === 'main',
-            },
-          )}
-        >
-          {slot === 'main' ? 'Main' : 'Support'}
-        </p>
       </td>
       <td className="px-1 py-2 border-b border-slate-600">
         <ListContainer potentials={grouped.Core} id={trekker} />

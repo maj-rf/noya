@@ -1,4 +1,5 @@
 import { getRouteApi } from '@tanstack/react-router'
+import { BaseTrekker } from './base-trekker'
 import { cn } from '@/lib/utils'
 
 export const SSTrekker = ({ id }: { id: number }) => {
@@ -7,21 +8,7 @@ export const SSTrekker = ({ id }: { id: number }) => {
   const char = characters[id]
   return (
     <div className="group-data-[disabled=true]:opacity-40 bg-gray-400 border-none padding-0 rounded-sm w-full h-full">
-      <div
-        className={cn(
-          'rounded-xs avatar-border relative -translate-y-0.5 w-full h-full',
-          {
-            'avatar-common-bg': char.star === 4,
-            'avatar-rare-bg': char.star === 5,
-          },
-        )}
-      >
-        <img
-          alt={char.name + ' portrait'}
-          className="block w-full h-full object-cover"
-          fetchPriority="high"
-          src={`https://res.cloudinary.com/dafqr01it/image/upload/v1762945238/ss/avatar/head_${char.id}01_XL.png`}
-        />
+      <BaseTrekker char={char}>
         <img
           alt={char.name + 'element'}
           className="size-6 absolute -top-1 -left-1 z-100"
@@ -46,11 +33,7 @@ export const SSTrekker = ({ id }: { id: number }) => {
             />
           </div>
         </div>
-
-        <h1 className="px-1 pt-4 text-sm tracking-tight absolute right-0 bottom-0 font-medium text-right text-blue-900  bg-linear-0 from-white w-full">
-          {char.name}
-        </h1>
-      </div>
+      </BaseTrekker>
     </div>
   )
 }

@@ -51,7 +51,7 @@ function SingleSelected({
         {s.rarity !== 0 && (
           <div
             className={cn(
-              'absolute top-0 left-3 text-xs font-semibold tracking-tighter text-indigo-500',
+              'absolute top-0 left-3 text-xs font-semibold tracking-tighter text-slate-600',
               {
                 'left-2': String(s.level).length >= 2,
               },

@@ -12,10 +12,10 @@ import SSPotentials from '@/components/potentials/ss-potentials'
 import { TrekkerSelection } from '@/components/trekkers/trekker-selection'
 import { Preview } from '@/components/preview'
 import { Loading } from '@/components/loading'
-import { SSTrekker } from '@/components/trekkers/ss-trekker'
 import { usePotentialStore, useTrekkerStore } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { cn, saveToLocal } from '@/lib/utils'
+import { TrekkerPlaceholder } from '@/components/trekkers/trekker-placeholder'
 
 function assertBuild<T>(value: T | undefined): asserts value is T {
   if (!value) {
@@ -47,36 +47,13 @@ export const Route = createFileRoute('/$id')({
 
 function RouteComponent() {
   const router = useRouter()
-  const trekkers = useTrekkerStore((s) => s.trekkers)
   const [isPending, startTransition] = useTransition()
   const { id, name } = Route.useLoaderData()
   return (
     <div className="relative pb-8">
       <section className="w-full my-4 flex flex-col sm:flex-row justify-center items-center gap-4">
-        <div className="flex gap-2">
-          <div className="h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8] bg-accent border rounded-sm shadow-sm flex items-center justify-center active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
-            {trekkers.main ? (
-              <SSTrekker id={trekkers.main} />
-            ) : (
-              <span className="text-red-400">Main</span>
-            )}
-          </div>
-          <div className="h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8] bg-accent border rounded-sm shadow-sm flex items-center justify-center active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
-            {trekkers.sub1 ? (
-              <SSTrekker id={trekkers.sub1} />
-            ) : (
-              <span className="text-blue-500">Support</span>
-            )}
-          </div>
-          <div className="h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8] bg-accent border rounded-sm shadow-sm flex items-center justify-center active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
-            {trekkers.sub2 ? (
-              <SSTrekker id={trekkers.sub2} />
-            ) : (
-              <span className="text-blue-500">Support</span>
-            )}
-          </div>
-        </div>
-        <div className="flex flex-col gap-3">
+        <TrekkerPlaceholder />
+        <div className="flex flex-col gap-2">
           <ResponsiveModal
             title="Released Trekkers"
             triggerTitle={'Choose Trekkers'}
@@ -85,36 +62,35 @@ function RouteComponent() {
             <TrekkerSelection />
           </ResponsiveModal>
           <Button asChild variant="secondary">
-            <Link to={'/'}>Create New Build</Link>
+            <Link to="/">Create Build</Link>
           </Button>
         </div>
       </section>
-      <div className="w-full max-w-11/12 mx-auto mb-4">
-        <div className="w-full max-w-md flex justify-center items-center gap-2 mx-auto">
-          <span className="text-muted-foreground">{name} Build</span>
-          <Button
-            onClick={() => {
-              startTransition(async () => {
-                saveToLocal(id, name)
-                await router.invalidate()
-              })
-            }}
-            disabled={isPending}
-            className="grid place-items-center"
+
+      <div className="w-full max-w-md flex justify-center items-center gap-2 mx-auto mb-4">
+        <span className="text-muted-foreground truncate">{name} Build</span>
+        <Button
+          onClick={() => {
+            startTransition(async () => {
+              saveToLocal(id, name)
+              await router.invalidate()
+            })
+          }}
+          disabled={isPending}
+          className="grid place-items-center"
+        >
+          <span
+            className={cn('col-1 row-1', isPending ? 'invisible' : 'visible')}
           >
-            <span
-              className={cn('col-1 row-1', isPending ? 'invisible' : 'visible')}
-            >
-              Save Changes
-            </span>
-            <span
-              aria-label="Uploading..."
-              className={cn('col-1 row-1', isPending ? 'visible' : 'invisible')}
-            >
-              <LoaderCircle className="animate-spin" />
-            </span>
-          </Button>
-        </div>
+            Save Changes
+          </span>
+          <span
+            aria-label="Uploading..."
+            className={cn('col-1 row-1', isPending ? 'visible' : 'invisible')}
+          >
+            <LoaderCircle className="animate-spin" />
+          </span>
+        </Button>
       </div>
       <SSPotentials slot="main" type="main" />
       <SSPotentials slot="sub1" type="support" />
