@@ -37,7 +37,11 @@ const HybridTooltipProvider = (props: TooltipProviderProps) => {
 const HybridTooltip = (props: TooltipProps & PopoverProps) => {
   const isMobile = useTouch()
 
-  return isMobile ? <Popover {...props} /> : <Tooltip {...props} />
+  return isMobile ? (
+    <Popover {...props} open={props.open} onOpenChange={props.onOpenChange} />
+  ) : (
+    <Tooltip {...props} />
+  )
 }
 
 const HybridTooltipTrigger = (
