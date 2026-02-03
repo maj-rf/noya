@@ -1,6 +1,5 @@
 import { AutoFitText } from './auto-fit-text'
 import type { SSPotential } from '@/types'
-import { cn } from '@/lib/utils'
 
 type Props = Pick<SSPotential, 'rarity' | 'name' | 'imgId' | 'subIcon'> & {
   size?: string // e.g. "w-32", "w-16", "w-full"
@@ -18,7 +17,7 @@ export default function ResponsivePotential({
   const bgSrc = `./ss-vestige/vestige_${rarity}.png`
   const iconSrc = `https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/${imgId}_A.png`
   const subIconUrl = `https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/Potential_${subIcon}_A.png`
-
+  const maskIconUrl = `https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/Potential_${subIcon}_B.png`
   return (
     <div
       className={`relative ${size} h-fit aspect-[0.7851] bg-contain bg-center bg-no-repeat ${className} rounded border-[0.5px]`}
@@ -29,18 +28,18 @@ export default function ResponsivePotential({
         alt={name + ' icon'}
         className="absolute inset-0 -top-7 w-auto h-19 m-auto"
       />
-
       {subIcon && (
         <img
-          src={subIconUrl}
           alt={name + ' subIcon'}
-          className={cn(
-            `absolute inset-0 -top-6 h-18 w-auto m-auto drop-shadow-xs`,
-            {
-              'drop-shadow-purple-800': rarity === 1,
-              'drop-shadow-yellow-700': rarity === 2,
-            },
-          )}
+          src={subIconUrl}
+          style={{
+            maskImage: `url(${maskIconUrl})`,
+            maskSize: 'cover',
+            backgroundColor:
+              rarity === 1 ? 'var(--color-rare)' : 'var(--color-common)',
+            maskRepeat: 'no-repeat',
+            maskPosition: 'center',
+          }}
         />
       )}
 
