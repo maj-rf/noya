@@ -1,6 +1,7 @@
 import { useRef, useTransition } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { LoaderCircle } from 'lucide-react'
+import { toast } from 'sonner'
 import { Button } from './ui/button'
 import { InputGroup, InputGroupAddon, InputGroupInput } from './ui/input-group'
 import { saveToLocal } from '@/lib/utils'
@@ -13,12 +14,21 @@ export const SaveBuild = () => {
   const main = useTrekkerStore((s) => s.trekkers.main)
 
   const handleSave = () => {
-    if (!buildNameRef.current?.value || !main) return
+    if (!buildNameRef.current?.value || !main) {
+      toast.error('Missing Main Trekker or Build Name')
+      return
+    }
+
     startTransition(async () => {
-      if (buildNameRef.current) {
-        saveToLocal(crypto.randomUUID(), buildNameRef.current.value)
-        buildNameRef.current.value = ''
-        await router.invalidate()
+      try {
+        if (buildNameRef.current) {
+          saveToLocal(crypto.randomUUID(), buildNameRef.current.value)
+          await router.invalidate()
+          toast.success(`Saved build: ${buildNameRef.current.value}`)
+          buildNameRef.current.value = ''
+        }
+      } catch (error) {
+        toast.error('Cannot properly save build')
       }
     })
   }

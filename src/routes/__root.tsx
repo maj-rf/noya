@@ -4,6 +4,7 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import Header from '../components/navbar/Header'
 import { fetchData } from '@/lib/utils'
 import { Loading } from '@/components/loading'
+import { Toaster } from '@/components/ui/sonner'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -25,6 +26,7 @@ export const Route = createRootRoute({
         <Header />
         <main className="flex-1">
           <Outlet />
+          <Toaster richColors />
         </main>
       </div>
       <TanStackDevtools

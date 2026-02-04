@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-router'
 import { useTransition } from 'react'
 import { LoaderCircle } from 'lucide-react'
+import { toast } from 'sonner'
 import type { BuildMap } from '@/types'
 import { ResponsiveModal } from '@/components/responsive-modal'
 import SSPotentials from '@/components/potentials/ss-potentials'
@@ -76,8 +77,13 @@ function RouteComponent() {
         <Button
           onClick={() => {
             startTransition(async () => {
-              saveToLocal(id, name)
-              await router.invalidate()
+              try {
+                saveToLocal(id, name)
+                await router.invalidate()
+                toast.success(`${name} build updated`)
+              } catch (error) {
+                toast.error('Cannot properly save build')
+              }
             })
           }}
           disabled={isPending}
