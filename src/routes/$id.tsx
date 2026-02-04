@@ -34,7 +34,11 @@ export const Route = createFileRoute('/$id')({
     usePotentialStore.setState({ potentials: build.potentials })
     return { id: build.id, name: build.name }
   },
-  pendingComponent: Loading,
+  pendingComponent: () => (
+    <div className="h-screen">
+      <Loading />
+    </div>
+  ),
   notFoundComponent: () => (
     <div className="flex flex-col items-center justify-center h-full">
       <p>Build not found.</p>

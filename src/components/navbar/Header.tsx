@@ -1,10 +1,13 @@
+import { Link } from '@tanstack/react-router'
 import { ModeToggle } from './mode-toggle'
 
 export default function Header() {
   return (
     <>
       <header className="p-2 px-6 flex items-center bg-gray-800 dark:bg-gray-900 text-white shadow-lg">
-        <h1 className="text-xl font-semibold">noya</h1>
+        <Link to="/" className="text-xl font-semibold">
+          noya
+        </Link>
         <div className="ml-auto flex items-center gap-2">
           <ModeToggle />
           <a

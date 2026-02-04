@@ -13,7 +13,11 @@ export const Route = createRootRoute({
     ],
   }),
   loader: fetchData,
-  pendingComponent: Loading,
+  pendingComponent: () => (
+    <div className="h-screen">
+      <Loading />
+    </div>
+  ),
   component: () => (
     <>
       <HeadContent />
