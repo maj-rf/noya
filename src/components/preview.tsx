@@ -123,7 +123,7 @@ export const Preview = () => {
       </Button>
       <div className="h-0 overflow-hidden">
         <section ref={previewRef} className="w-4xl rounded" id="preview">
-          <table className="w-full bg-slate-800 shadow-lg rounded-lg table-auto border-collapse">
+          <table className="w-full bg-slate-800 table-auto border-collapse">
             <thead className="bg-blue-900 text-white">
               <tr>
                 <th className="px-2 py-2 text-center font-semibold">Trekker</th>
