@@ -21,8 +21,12 @@ export default function ResponsivePotential({
   return (
     <div
       className={`relative ${size} h-fit aspect-[0.7851] bg-contain bg-center bg-no-repeat ${className} rounded border-[0.5px]`}
-      style={{ backgroundImage: `url(${bgSrc})` }}
     >
+      <img
+        src={bgSrc}
+        alt={rarity + ' background'}
+        className="absolute inset-0 w-full h-full object-cover"
+      />
       <img
         src={iconSrc}
         alt={name + ' icon'}

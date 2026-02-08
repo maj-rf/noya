@@ -25,7 +25,7 @@ export const BaseTrekker = ({
         fetchPriority="high"
         src={`https://res.cloudinary.com/dafqr01it/image/upload/v1762945238/ss/avatar/head_${char.id}01_XL.png`}
       />
-      <h1 className="px-1 pt-5 text-sm tracking-tight leading-3.5 absolute right-0 bottom-0 font-medium text-right text-blue-900  bg-linear-0 from-white w-full">
+      <h1 className="px-1 pt-3 text-sm tracking-tight leading-3.5 absolute right-0 -bottom-px font-medium text-right text-blue-900  bg-linear-0 from-white w-full">
         {char.name}
       </h1>
       {children}
