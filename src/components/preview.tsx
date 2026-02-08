@@ -66,12 +66,17 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
   )
 
   if (!trekker) return
-
+  const char = characters[trekker]
   return (
-    <tr>
-      <td className="px-2 py-4 border-b border-slate-600 space-y-2">
+    <tr className="border-b last:border-b-0 border-b-slate-600">
+      <td className="px-2 py-4  space-y-2">
         <div className="h-[125px] w-[100px]">
-          <BaseTrekker char={characters[trekker]}>
+          <BaseTrekker char={char}>
+            <img
+              alt={char.name + 'element preview'}
+              className="size-6 absolute -top-1 -right-1"
+              src={`./ss-element/${char.element}.webp`}
+            />
             <p
               className={cn(
                 '[clip-path:polygon(0_0,100%_0,90%_100%,0_100%)] absolute -top-0.75 text-center text-sm text-white tracking-tighter pr-3 pl-1 bg-indigo-500',
@@ -85,13 +90,13 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
           </BaseTrekker>
         </div>
       </td>
-      <td className="px-1 py-2 border-b border-slate-600">
+      <td className="px-1 py-2 border-slate-600">
         <ListContainer potentials={grouped.Core} id={trekker} />
       </td>
-      <td className="px-1 py-2 border-b border-slate-600">
+      <td className="px-1 py-2 border-slate-600">
         <ListContainer potentials={grouped.Medium} id={trekker} />
       </td>
-      <td className="px-1 py-2 border-b border-slate-600">
+      <td className="px-1 py-2 border-slate-600">
         <ListContainer potentials={grouped.Optional} id={trekker} />
       </td>
     </tr>
@@ -118,7 +123,7 @@ export const Preview = () => {
       </Button>
       <div className="h-0 overflow-hidden">
         <section ref={previewRef} className="w-4xl rounded" id="preview">
-          <table className="w-full bg-slate-800 shadow-lg rounded-lg table-auto border-collapse">
+          <table className="w-full bg-slate-800 table-auto border-collapse">
             <thead className="bg-blue-900 text-white">
               <tr>
                 <th className="px-2 py-2 text-center font-semibold">Trekker</th>
