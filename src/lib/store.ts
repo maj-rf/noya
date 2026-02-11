@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { MAX_LEVEL } from './utils'
 import type {
   PotentialPriority,
   Potentials,
@@ -45,7 +46,7 @@ export const usePotentialStore = create<PotentialState>()((set) => ({
           [p.id]:
             p.rarity === 0
               ? { ...p, rarity: 0, priority: 'Core' }
-              : { ...p, level: 1, priority: 'Medium' },
+              : { ...p, level: MAX_LEVEL, priority: 'Medium' },
         },
       },
     })),
