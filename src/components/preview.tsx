@@ -90,8 +90,8 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
           </BaseTrekker>
         </div>
         {grouped.Core.length !== 0 && (
-          <div className="relative outline-3 outline-support mt-3">
-            <div className="w-[86px] text-white text-sm font-semibold absolute -top-5 -left-[3px] bg-support rounded px-2">
+          <div className="relative bg-support p-0.75 mt-3">
+            <div className="w-[86px] text-white text-sm font-semibold absolute -top-4 left-0 bg-support rounded px-2">
               Core
             </div>
             <ListContainer potentials={grouped.Core} id={trekker} />
@@ -99,8 +99,8 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
         )}
 
         {grouped.Medium.length !== 0 && (
-          <div className="relative outline-3 outline-versatile mt-3">
-            <div className="w-[86px] text-white text-sm font-semibold absolute -top-5 -left-[3px] bg-versatile rounded px-2">
+          <div className="relative bg-versatile p-0.75 mt-3">
+            <div className="w-[86px] text-white text-sm font-semibold absolute -top-4 left-0 bg-versatile rounded px-2">
               Medium
             </div>
             <ListContainer potentials={grouped.Medium} id={trekker} />
