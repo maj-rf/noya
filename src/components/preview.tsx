@@ -17,7 +17,7 @@ const ListContainer = ({
   const routeApi = getRouteApi('__root__')
   const { potentials: fetchedPotentials } = routeApi.useLoaderData()
   return (
-    <ul className="flex flex-wrap w-[245px] justify-center gap-0.5 relative">
+    <ul className="flex justify-center">
       {potentials.map((p) => {
         const current = fetchedPotentials[id][p.id]
         return (
@@ -68,8 +68,8 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
   if (!trekker) return
   const char = characters[trekker]
   return (
-    <tr className="border-b last:border-b-0 border-b-slate-600">
-      <td className="px-2 py-4  space-y-2">
+    <div className="border-b last:border-b-0 border-b-slate-600 p-4">
+      <div className="flex items-center gap-2.5">
         <div className="h-[125px] w-[100px]">
           <BaseTrekker char={char}>
             <img
@@ -89,17 +89,34 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
             </p>
           </BaseTrekker>
         </div>
-      </td>
-      <td className="px-1 py-2 border-slate-600">
-        <ListContainer potentials={grouped.Core} id={trekker} />
-      </td>
-      <td className="px-1 py-2 border-slate-600">
-        <ListContainer potentials={grouped.Medium} id={trekker} />
-      </td>
-      <td className="px-1 py-2 border-slate-600">
-        <ListContainer potentials={grouped.Optional} id={trekker} />
-      </td>
-    </tr>
+        {grouped.Core.length !== 0 && (
+          <div className="relative bg-support p-0.75 mt-3">
+            <div className="w-[86px] text-white text-sm font-semibold absolute -top-4 left-0 bg-support rounded px-2">
+              Core
+            </div>
+            <ListContainer potentials={grouped.Core} id={trekker} />
+          </div>
+        )}
+
+        {grouped.Medium.length !== 0 && (
+          <div className="relative bg-versatile p-0.75 mt-3">
+            <div className="w-[86px] text-white text-sm font-semibold absolute -top-4 left-0 bg-versatile rounded px-2">
+              Medium
+            </div>
+            <ListContainer potentials={grouped.Medium} id={trekker} />
+          </div>
+        )}
+
+        {grouped.Optional.length !== 0 && (
+          <div className="relative outline-3 outline-vanguard outline-dashed mt-3">
+            <div className="w-[86px] text-white text-sm font-semibold absolute -top-5 -left-[3px] bg-vanguard rounded px-2">
+              Optional
+            </div>
+            <ListContainer potentials={grouped.Optional} id={trekker} />
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
 
@@ -122,24 +139,14 @@ export const Preview = () => {
         {isPending ? 'Converting...' : 'Export'}
       </Button>
       <div className="h-0 overflow-hidden">
-        <section ref={previewRef} className="w-4xl rounded" id="preview">
-          <table className="w-full bg-slate-800 table-auto border-collapse">
-            <thead className="bg-blue-900 text-white">
-              <tr>
-                <th className="px-2 py-2 text-center font-semibold">Trekker</th>
-                <th className="px-2 py-2 text-center font-semibold">Core</th>
-                <th className="px-2 py-2 text-center font-semibold">Medium</th>
-                <th className="px-2 py-2 text-center font-semibold">
-                  Optional
-                </th>
-              </tr>
-            </thead>
-            <tbody>
+        <section ref={previewRef} className="w-max" id="preview">
+          <div className="w-full bg-slate-800">
+            <div>
               <PreviewRow slot="main" />
               <PreviewRow slot="sub1" />
               <PreviewRow slot="sub2" />
-            </tbody>
-          </table>
+            </div>
+          </div>
         </section>
       </div>
     </>
