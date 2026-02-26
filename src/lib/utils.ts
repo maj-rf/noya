@@ -21,14 +21,16 @@ export function cn(...inputs: Array<ClassValue>) {
   return twMerge(clsx(inputs))
 }
 
-const fetchCharacters = async () => {
+const fetchCharacters = async (): Promise<Record<string, SSCharacter>> => {
   const response = await fetch(
     'https://raw.githubusercontent.com/maj-rf/StellaSoraData/refs/heads/main/character.json',
   )
   return await response.json()
 }
 
-const fetchPotentials = async () => {
+const fetchPotentials = async (): Promise<
+  Record<string, Record<string, SSPotential>>
+> => {
   const response = await fetch(
     'https://raw.githubusercontent.com/maj-rf/StellaSoraData/refs/heads/main/potential.json',
   )

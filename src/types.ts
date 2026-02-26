@@ -16,7 +16,6 @@ export type SSCharacter = {
   class: string
   attackType: string
   tag: Array<string>
-  potential: Array<SSPotential>
 }
 
 export type Slot = 'main' | 'sub1' | 'sub2'
