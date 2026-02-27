@@ -1,56 +1,12 @@
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { snapdom } from '@zumer/snapdom'
-import type { BuildMap, SSCharacter, SSPotential } from '@/types'
 import type { ClassValue } from 'clsx'
-import { usePotentialStore, useTrekkerStore } from '@/lib/store'
-
-export function saveToLocal(id: string, name: string) {
-  const potentials = usePotentialStore.getState().potentials
-  const trekkers = useTrekkerStore.getState().trekkers
-  if (!trekkers.main) return
-  const buildsJSON = localStorage.getItem('saved-builds')
-  const builds: BuildMap = buildsJSON ? JSON.parse(buildsJSON) : {}
-  builds[id] = { id, trekkers, potentials, name }
-  localStorage.setItem('saved-builds', JSON.stringify(builds))
-}
 
 export const MAX_LEVEL = 6
 
 export function cn(...inputs: Array<ClassValue>) {
   return twMerge(clsx(inputs))
-}
-
-const fetchCharacters = async (): Promise<Record<string, SSCharacter>> => {
-  const response = await fetch(
-    'https://raw.githubusercontent.com/maj-rf/StellaSoraData/refs/heads/main/character.json',
-  )
-  return await response.json()
-}
-
-const fetchPotentials = async (): Promise<
-  Record<string, Record<string, SSPotential>>
-> => {
-  const response = await fetch(
-    'https://raw.githubusercontent.com/maj-rf/StellaSoraData/refs/heads/main/potential.json',
-  )
-  return await response.json()
-}
-
-type TData = {
-  characters: Record<string, SSCharacter>
-  potentials: Record<string, Record<string, SSPotential>>
-  savedBuilds: BuildMap
-}
-
-export async function fetchData(): Promise<TData> {
-  const [characters, potentials] = await Promise.all([
-    fetchCharacters(),
-    fetchPotentials(),
-  ])
-  const buildsJSON = localStorage.getItem('saved-builds')
-  const savedBuilds = buildsJSON ? JSON.parse(buildsJSON) : {}
-  return { characters, potentials, savedBuilds }
 }
 
 export async function downloadImage(element: HTMLElement | null) {

@@ -1,5 +1,5 @@
 import { beforeEach } from 'vitest'
-import { fetchData } from '@/lib/utils'
+import { fetchData } from '@/utils/fetchData'
 
 vi.mock('./fetchCharacters', () => ({ fetchCharacters: vi.fn() }))
 vi.mock('./fetchPotentials', () => ({ fetchPotentials: vi.fn() }))
