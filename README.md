@@ -17,6 +17,8 @@ Feel free to report issues, suggest improvements, and create pull requests. I wi
 ## Credits
 
 - Datamined Stella Sora data by [Hiro420](https://github.com/Hiro420/StellaSoraData)
+- Stelladb by [AutumnVN](https://github.com/AutumnVN/stelladb)
+- Mistique's Field Reports by [Minzhire](https://docs.google.com/spreadsheets/d/1otsS2C1RkXLaFSvp2SMOS-vtRBaEBpZlcgR361_fdAE/edit?usp=sharing)
 - SSTools by [JforPlay](https://github.com/JforPlay/sstoy)
 
 ## Disclaimer
