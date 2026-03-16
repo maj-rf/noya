@@ -5,15 +5,7 @@ import { ScrollArea } from './ui/scroll-area'
 import { ResponsiveModal } from './responsive-modal'
 import { Button } from './ui/button'
 import { BaseTrekker } from './trekkers/base-trekker'
-import type { BuildMap } from '@/types'
-
-function deleteBuild(id: string) {
-  const buildsJSON = localStorage.getItem('saved-builds')
-  const builds: BuildMap = buildsJSON ? JSON.parse(buildsJSON) : {}
-
-  delete builds[id]
-  localStorage.setItem('saved-builds', JSON.stringify(builds))
-}
+import { deleteBuild } from '@/utils/saveAndDeleteBuilds'
 
 export function LoadBuild() {
   const router = useRouter()

@@ -4,7 +4,7 @@ import { LoaderCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from './ui/button'
 import { InputGroup, InputGroupAddon, InputGroupInput } from './ui/input-group'
-import { saveToLocal } from '@/lib/utils'
+import { saveToLocal } from '@/utils/saveAndDeleteBuilds'
 import { useTrekkerStore } from '@/lib/store'
 
 export const SaveBuild = () => {

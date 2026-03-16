@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '../ui/select'
 import { Button } from '../ui/button'
-import type { SSCharacter, Slot } from '@/types'
+import type { Slot } from '@/types'
 import { SSTrekker } from '@/components/trekkers/ss-trekker'
 import {
   InputGroup,
@@ -21,36 +21,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { usePotentialStore, useTrekkerStore } from '@/lib/store'
 import { ButtonGroup } from '@/components/ui/button-group'
-
-function getSearchedAndFilteredCharacters(
-  characters: Array<SSCharacter>,
-  search?: string,
-  filter?: string,
-) {
-  return characters.filter((c) => {
-    // Check search condition
-    if (search && !c.name.toLowerCase().includes(search.toLowerCase())) {
-      return false
-    }
-
-    // Check filter condition
-    if (filter) {
-      const [type, value] = filter.split(':')
-      if (type == 'all') return true
-      if (
-        type === 'star' &&
-        Number(c[type as keyof SSCharacter]) === Number(value)
-      ) {
-        return true
-      }
-      if (c[type as keyof SSCharacter] !== value) {
-        return false
-      }
-    }
-
-    return true
-  })
-}
+import { searchAndFilter } from '@/utils/searchAndFilter'
 
 export const TrekkerSelection = () => {
   const routeApi = getRouteApi('__root__')
@@ -66,7 +37,7 @@ export const TrekkerSelection = () => {
   )
 
   const filteredChars = useMemo(
-    () => getSearchedAndFilteredCharacters(characters, search, filter),
+    () => searchAndFilter(characters, search, filter),
     [characters, search, filter],
   )
 
@@ -170,7 +141,7 @@ export const TrekkerSelection = () => {
               <SelectItem value="star:5">5⭐️</SelectItem>
             </SelectGroup>
             <SelectGroup>
-              <SelectLabel>By Tag</SelectLabel>
+              <SelectLabel>By Class</SelectLabel>
               <SelectItem value="class:Vanguard">Vanguard</SelectItem>
               <SelectItem value="class:Versatile">Versatile</SelectItem>
             </SelectGroup>

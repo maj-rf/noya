@@ -15,7 +15,8 @@ import { Preview } from '@/components/preview'
 import { Loading } from '@/components/loading'
 import { usePotentialStore, useTrekkerStore } from '@/lib/store'
 import { Button } from '@/components/ui/button'
-import { cn, saveToLocal } from '@/lib/utils'
+import { cn } from '@/lib/utils'
+import { saveToLocal } from '@/utils/saveAndDeleteBuilds'
 import { TrekkerPlaceholder } from '@/components/trekkers/trekker-placeholder'
 
 function assertBuild<T>(value: T | undefined): asserts value is T {
