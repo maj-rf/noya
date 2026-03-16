@@ -85,12 +85,7 @@ body {
         rgba(255, 255, 255, 0.85) 50%,
         rgba(255, 255, 255, 1) 50%
       ),
-      conic-gradient(
-        white 90deg,
-        transparent 90deg 180deg,
-        white 180deg 270deg,
-        transparent 270deg
-      );
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='3' height='3'%3E%3Crect width='1.5' height='1.5' fill='white'/%3E%3Crect x='1.5' y='1.5' width='1.5' height='1.5' fill='white'/%3E%3C/svg%3E");
     background-size:
       100% 100%,
       3px 3px;
