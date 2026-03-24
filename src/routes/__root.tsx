@@ -13,6 +13,7 @@ export const Route = createRootRoute({
       { title: 'Stella Sora Team Builder' },
     ],
   }),
+  staleTime: Infinity,
   loader: fetchData,
   pendingComponent: () => (
     <div className="h-screen">
