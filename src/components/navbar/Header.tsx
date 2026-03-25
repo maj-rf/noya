@@ -1,7 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { ModeToggle } from './mode-toggle'
 import { LangSwitcher } from './lang-switcher'
-import { Guide } from './guide'
 
 export default function Header() {
   return (
@@ -12,7 +11,6 @@ export default function Header() {
         </Link>
         <div className="ml-auto flex items-center gap-2">
           <LangSwitcher />
-          <Guide />
           <ModeToggle />
           <a
             href="https://github.com/maj-rf/ss-build"
