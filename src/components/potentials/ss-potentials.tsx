@@ -245,15 +245,11 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
         <ScrollArea className="w-full rounded-sm bg-popover border">
           <div className="flex min-h-[194px] gap-1 p-2">
             {selected.length === 0 ? (
-              <div className="text-center self-center w-full">
-                <div className="h-20 w-full">
-                  <img
-                    src="./shy.png"
-                    alt="shy-penguin"
-                    className="block w-full h-full object-contain"
-                  />
+              <div className="flex flex-col w-full justify-center items-center">
+                <div className="w-20 h-20">
+                  <img src="./shy.png" alt="shy-penguin" />
                 </div>
-                Please choose potentials
+                <span>Please choose potentials</span>
               </div>
             ) : (
               selected.map((s) => {

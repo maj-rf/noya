@@ -1,16 +1,17 @@
-import { Link, getRouteApi, useRouter } from '@tanstack/react-router'
+import { Link, getRouteApi } from '@tanstack/react-router'
 import { Check, LoaderCircle, Trash } from 'lucide-react'
 import { useTransition } from 'react'
 import { ScrollArea } from './ui/scroll-area'
 import { ResponsiveModal } from './responsive-modal'
 import { Button } from './ui/button'
 import { BaseTrekker } from './trekkers/base-trekker'
-import { deleteBuild } from '@/utils/saveAndDeleteBuilds'
+import { useBuildStore } from '@/lib/store'
 
 export function LoadBuild() {
-  const router = useRouter()
   const routeApi = getRouteApi('__root__')
-  const { savedBuilds, characters } = routeApi.useLoaderData()
+  const savedBuilds = useBuildStore((state) => state.builds)
+  const deleteBuild = useBuildStore((state) => state.remove)
+  const { characters } = routeApi.useLoaderData()
   const [isPending, startTransition] = useTransition()
 
   return (
@@ -52,9 +53,8 @@ export function LoadBuild() {
                   </Button>
                   <Button
                     onClick={() => {
-                      startTransition(async () => {
+                      startTransition(() => {
                         deleteBuild(b.id)
-                        await router.invalidate()
                       })
                     }}
                     variant="destructive"

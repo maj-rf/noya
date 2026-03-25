@@ -20,7 +20,6 @@ const fetchPotentials = async (
 type TData = {
   characters: Record<string, SSCharacter>
   potentials: Record<string, Record<string, SSPotential>>
-  savedBuilds: BuildMap
 }
 
 export async function fetchData(): Promise<TData> {
@@ -34,7 +33,5 @@ export async function fetchData(): Promise<TData> {
     fetchCharacters(lang),
     fetchPotentials(lang),
   ])
-  const buildsJSON = localStorage.getItem('saved-builds')
-  const savedBuilds = buildsJSON ? JSON.parse(buildsJSON) : {}
-  return { characters, potentials, savedBuilds }
+  return { characters, potentials }
 }
