@@ -1,6 +1,8 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 import { MAX_LEVEL } from './utils'
 import type {
+  BuildMap,
   PotentialPriority,
   Potentials,
   SSPotential,
@@ -23,6 +25,50 @@ interface PotentialState {
   removePotential: (slot: Slot, id: number) => void
   clearPotentials: (slot: Slot) => void
 }
+
+interface BuildState {
+  builds: BuildMap
+  save: (id: string, name: string) => void
+  remove: (id: string) => void
+}
+
+export const useBuildStore = create<BuildState>()(
+  persist(
+    (set) => ({
+      builds: {},
+      save: (id, name) => {
+        const trekkers = useTrekkerStore.getState().trekkers
+        const potentials = usePotentialStore.getState().potentials
+        if (!trekkers.main || !name) return
+        set((state) => ({
+          builds: {
+            ...state.builds,
+            [id]: { id, trekkers, potentials, name },
+          },
+        }))
+      },
+      remove: (id) =>
+        set((state) => {
+          const { [id]: _, ...rest } = state.builds
+          return { builds: rest }
+        }),
+    }),
+    {
+      name: 'saved-builds',
+      storage: {
+        getItem: (name) => {
+          const value = localStorage.getItem(name)
+          if (!value) return null
+          return { state: { builds: JSON.parse(value) } }
+        },
+        setItem: (name, value) => {
+          localStorage.setItem(name, JSON.stringify(value.state.builds))
+        },
+        removeItem: (name) => localStorage.removeItem(name),
+      },
+    },
+  ),
+)
 
 export const useTrekkerStore = create<TrekkerState>()((set) => ({
   trekkers: { main: null, sub1: null, sub2: null },

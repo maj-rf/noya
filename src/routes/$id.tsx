@@ -1,9 +1,4 @@
-import {
-  Link,
-  createFileRoute,
-  notFound,
-  useRouter,
-} from '@tanstack/react-router'
+import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { useTransition } from 'react'
 import { LoaderCircle } from 'lucide-react'
 import { toast } from 'sonner'
@@ -13,10 +8,9 @@ import SSPotentials from '@/components/potentials/ss-potentials'
 import { TrekkerSelection } from '@/components/trekkers/trekker-selection'
 import { Preview } from '@/components/preview'
 import { Loading } from '@/components/loading'
-import { usePotentialStore, useTrekkerStore } from '@/lib/store'
+import { useBuildStore, usePotentialStore, useTrekkerStore } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { saveToLocal } from '@/utils/saveAndDeleteBuilds'
 import { TrekkerPlaceholder } from '@/components/trekkers/trekker-placeholder'
 
 function assertBuild<T>(value: T | undefined): asserts value is T {
@@ -52,7 +46,6 @@ export const Route = createFileRoute('/$id')({
 })
 
 function RouteComponent() {
-  const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const { id, name } = Route.useLoaderData()
   return (
@@ -77,10 +70,9 @@ function RouteComponent() {
         <span className="text-muted-foreground truncate">{name} Build</span>
         <Button
           onClick={() => {
-            startTransition(async () => {
+            startTransition(() => {
               try {
-                saveToLocal(id, name)
-                await router.invalidate()
+                useBuildStore.getState().save(id, name)
                 toast.success(`${name} build updated`)
               } catch (error) {
                 toast.error('Cannot properly save build')

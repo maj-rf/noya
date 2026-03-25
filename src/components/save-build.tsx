@@ -1,14 +1,11 @@
 import { useRef, useTransition } from 'react'
-import { useRouter } from '@tanstack/react-router'
 import { LoaderCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from './ui/button'
 import { InputGroup, InputGroupAddon, InputGroupInput } from './ui/input-group'
-import { saveToLocal } from '@/utils/saveAndDeleteBuilds'
-import { useTrekkerStore } from '@/lib/store'
+import { useBuildStore, useTrekkerStore } from '@/lib/store'
 
 export const SaveBuild = () => {
-  const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const buildNameRef = useRef<HTMLInputElement>(null)
   const main = useTrekkerStore((s) => s.trekkers.main)
@@ -19,11 +16,12 @@ export const SaveBuild = () => {
       return
     }
 
-    startTransition(async () => {
+    startTransition(() => {
       try {
         if (buildNameRef.current) {
-          saveToLocal(crypto.randomUUID(), buildNameRef.current.value)
-          await router.invalidate()
+          useBuildStore
+            .getState()
+            .save(crypto.randomUUID(), buildNameRef.current.value)
           toast.success(`Saved build: ${buildNameRef.current.value}`)
           buildNameRef.current.value = ''
         }

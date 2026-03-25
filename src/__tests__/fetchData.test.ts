@@ -60,20 +60,8 @@ afterEach(() => {
 
 describe('fetching character and potential data', () => {
   it('returns merged data from fetches and localStorage', async () => {
-    localStorage.setItem('saved-builds', JSON.stringify({ build1: [103] }))
     const result = await fetchData()
     expect(result.characters).toEqual(mockCharacters)
     expect(result.potentials).toEqual(mockPotentials)
-    expect(result.savedBuilds).toEqual({ build1: [103] })
-  })
-
-  it('returns empty savedBuilds if localStorage is empty', async () => {
-    const result = await fetchData()
-    expect(result.savedBuilds).toEqual({})
-  })
-
-  it('handles invalid localStorage JSON gracefully', async () => {
-    localStorage.setItem('saved-builds', 'invalid json')
-    await expect(fetchData()).rejects.toThrow()
   })
 })
