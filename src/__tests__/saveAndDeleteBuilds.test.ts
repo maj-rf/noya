@@ -1,6 +1,5 @@
 import type { Potentials, Trekkers } from '@/types'
-import { usePotentialStore, useTrekkerStore } from '@/lib/store'
-import { deleteBuild, saveToLocal } from '@/utils/saveAndDeleteBuilds'
+import { useBuildStore, usePotentialStore, useTrekkerStore } from '@/lib/store'
 
 const mockTrekkers: Trekkers = { main: 103, sub1: 112, sub2: 111 }
 const mockPotentials: Potentials = {
@@ -20,15 +19,15 @@ const mockPotentials: Potentials = {
 }
 
 beforeEach(() => {
-  localStorage.clear()
+  useBuildStore.setState({ builds: {} })
   useTrekkerStore.setState({ trekkers: mockTrekkers })
   usePotentialStore.setState({ potentials: mockPotentials })
 })
 
 describe('saving builds', () => {
   it('saves a build to localStorage', () => {
-    saveToLocal('uuid-1', 'My Build')
-    const builds = JSON.parse(localStorage.getItem('saved-builds')!)
+    useBuildStore.getState().save('uuid-1', 'My Build')
+    const builds = useBuildStore.getState().builds
     expect(builds['uuid-1']).toEqual({
       id: 'uuid-1',
       name: 'My Build',
@@ -41,37 +40,34 @@ describe('saving builds', () => {
     useTrekkerStore.setState({
       trekkers: { main: null, sub1: null, sub2: null },
     })
-    saveToLocal('uuid-1', 'My Build')
-    expect(localStorage.getItem('saved-builds')).toBeNull()
+    useBuildStore.getState().save('uuid-1', 'My Build')
+    expect(useBuildStore.getState().builds).toEqual({})
   })
 
   it('does not save if build name is missing', () => {
-    saveToLocal('uuid-2', '')
-    const builds = JSON.parse(localStorage.getItem('saved-builds')!)
-    expect(builds).toBeNull()
+    useBuildStore.getState().save('uuid-2', '')
+    expect(useBuildStore.getState().builds).toEqual({})
   })
+
   it('appends to existing builds without overwriting', () => {
-    saveToLocal('uuid-1', 'Build One')
-    saveToLocal('uuid-2', 'Build Two')
-    const builds = JSON.parse(localStorage.getItem('saved-builds')!)
-    expect(Object.keys(builds)).toHaveLength(2)
+    useBuildStore.getState().save('uuid-1', 'Build One')
+    useBuildStore.getState().save('uuid-2', 'Build Two')
+    expect(Object.keys(useBuildStore.getState().builds)).toHaveLength(2)
   })
 })
 
 describe('delete builds', () => {
   it('deletes an existing build', () => {
-    saveToLocal('uuid-1', 'My Build')
-    deleteBuild('uuid-1')
-    const builds = JSON.parse(localStorage.getItem('saved-builds')!)
-    expect(builds).toEqual({})
+    useBuildStore.getState().save('uuid-1', 'My Build')
+    useBuildStore.getState().remove('uuid-1')
+    expect(useBuildStore.getState().builds['uuid-1']).toBeUndefined()
   })
   it('does nothing if build id does not exist', () => {
-    saveToLocal('uuid-1', 'My Build')
-    deleteBuild('non-existent-id')
-    const builds = JSON.parse(localStorage.getItem('saved-builds')!)
-    expect(Object.keys(builds)).toHaveLength(1)
+    useBuildStore.getState().save('uuid-1', 'My Build')
+    useBuildStore.getState().remove('non-existent-id')
+    expect(Object.keys(useBuildStore.getState().builds)).toHaveLength(1)
   })
   it('handles empty localStorage gracefully when deleting', () => {
-    expect(() => deleteBuild('uuid-1')).not.toThrow()
+    expect(() => useBuildStore.getState().remove('uuid-1')).not.toThrow()
   })
 })

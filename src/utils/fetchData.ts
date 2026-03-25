@@ -1,4 +1,4 @@
-import type { BuildMap, SSCharacter, SSPotential } from '@/types'
+import type { SSCharacter, SSPotential } from '@/types'
 
 const BASE =
   'https://raw.githubusercontent.com/maj-rf/StellaSoraData/refs/heads/main'

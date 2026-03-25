@@ -39,7 +39,7 @@ export const useBuildStore = create<BuildState>()(
       save: (id, name) => {
         const trekkers = useTrekkerStore.getState().trekkers
         const potentials = usePotentialStore.getState().potentials
-        if (!trekkers.main) return
+        if (!trekkers.main || !name) return
         set((state) => ({
           builds: {
             ...state.builds,

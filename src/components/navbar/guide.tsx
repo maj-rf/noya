@@ -1,3 +1,4 @@
+import { BookOpenText, Database } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Button } from '../ui/button'
 
@@ -14,8 +15,13 @@ export function Guide() {
             <span className="inline-block bg-support text-white px-2 font-semibold mr-1 rounded-xl">
               Core Priority
             </span>
-            : Makes or breaks your build. Pink Potentials are automatically in
-            this priority type. These are the most important to get and upgrade.
+            : Makes or breaks your build. These are the most important to get
+            and upgrade.
+            <img
+              src="/ss-vestige/vestige_0.png"
+              className="mx-1 inline-block h-5 w-auto"
+            ></img>
+            Pink Potentials are automatically in this priority type.
           </li>
           <li>
             <span className="inline-block bg-versatile text-white px-2 font-semibold mr-1 rounded-xl">
@@ -35,8 +41,8 @@ export function Guide() {
           <li>
             Ultimately, Core and Medium priorities are essentially the same. For
             representation's sake, you may split the required potentials from
-            your build into Core and Medium because not all Ascension runs are
-            made equal.
+            your build into Core and Medium. Not all Ascension runs are made
+            equal.
           </li>
           <li className="text-muted-foreground">
             <sup>*</sup>Everything is subject to change once we get better
@@ -46,26 +52,26 @@ export function Guide() {
         <div>
           <p>Useful Links</p>
           <div className="space-y-2">
-            <div className="flex">
-              <img
-                src="https://res.cloudinary.com/dafqr01it/image/upload/v1763441231/ss/avatar/head_13501_XL.png"
-                className="size-10 rounded-full border-2 border-foreground object-cover object-top"
-              />
-              <Button variant="link" asChild>
-                <a href="https://docs.google.com/spreadsheets/d/1otsS2C1RkXLaFSvp2SMOS-vtRBaEBpZlcgR361_fdAE/edit?gid=1265175955#gid=1265175955">
-                  Mistique's Field Reports
-                </a>
-              </Button>
-            </div>
-            <div className="flex">
-              <img
-                src="https://res.cloudinary.com/dafqr01it/image/upload/v1763441238/ss/avatar/head_15601_XL.png"
-                className="size-10 rounded-full border-2 border-foreground object-cover object-top"
-              />
-              <Button variant="link" asChild>
-                <a href="https://stelladb.pages.dev">StellaDB</a>
-              </Button>
-            </div>
+            <Button variant="link" asChild>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://docs.google.com/spreadsheets/d/1otsS2C1RkXLaFSvp2SMOS-vtRBaEBpZlcgR361_fdAE/edit?gid=1265175955#gid=1265175955"
+              >
+                <BookOpenText />
+                Mistique's Field Reports
+              </a>
+            </Button>
+            <Button variant="link" asChild>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://stelladb.pages.dev"
+              >
+                <Database />
+                StellaDB
+              </a>
+            </Button>
           </div>
         </div>
       </PopoverContent>
