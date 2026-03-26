@@ -17,7 +17,7 @@ const ListContainer = ({
   const routeApi = getRouteApi('__root__')
   const { potentials: fetchedPotentials } = routeApi.useLoaderData()
   return (
-    <ul className="flex justify-center">
+    <ul className="flex justify-center gap-0.5">
       {potentials.map((p) => {
         const current = fetchedPotentials[id][p.id]
         return (

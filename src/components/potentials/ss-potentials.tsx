@@ -161,7 +161,10 @@ function PotentialSelection({
             addPotential(slot, { id: p.id, rarity: p.rarity })
           }}
         >
-          <div data-disabled={coreExceed} className={`rarity-${p.rarity}`}>
+          <div
+            data-disabled={coreExceed}
+            className={`rarity-${p.rarity} outline-[0.5px] rounded-xs`}
+          >
             <ResponsivePotential
               rarity={p.rarity}
               imgId={p.imgId}
@@ -258,7 +261,7 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
                   <SingleSelected key={'selected' + s} slot={slot} id={s}>
                     <HybridTooltip>
                       <HybridTooltipTrigger asChild>
-                        <div>
+                        <div className="outline-[0.5px] rounded-xs">
                           <ResponsivePotential
                             rarity={p.rarity}
                             imgId={p.imgId}

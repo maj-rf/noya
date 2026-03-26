@@ -20,7 +20,7 @@ export default function ResponsivePotential({
   const maskIconUrl = `https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/Potential_${subIcon}_B.png`
   return (
     <div
-      className={`relative ${size} h-fit aspect-[0.7851] bg-contain bg-center bg-no-repeat ${className} rounded-xs border-[0.5px]`}
+      className={`relative ${size} h-fit aspect-[0.7851] bg-contain bg-center bg-no-repeat ${className} rounded-xs`}
     >
       <img
         src={bgSrc}
