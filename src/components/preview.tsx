@@ -31,7 +31,7 @@ const ListContainer = ({
             {p.rarity !== 0 && (
               <div
                 className={cn(
-                  'absolute top-0 left-3 text-xs font-semibold tracking-tighter text-slate-600',
+                  'absolute -top-px left-3 text-xs font-semibold tracking-tighter text-slate-600',
                   {
                     'left-2': String(p.level).length >= 2,
                   },
@@ -90,8 +90,10 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
           </BaseTrekker>
         </div>
         {grouped.Core.length !== 0 && (
-          <div className="relative bg-support p-0.75 mt-3">
-            <div className="w-[86px] text-white text-sm font-semibold absolute -top-4 left-0 bg-support rounded px-2">
+          <div
+            className={`relative bg-support p-0.75 mt-3 rounded-br-xs rounded-bl-xs ${grouped.Core.length !== 1 ? 'rounded-tr-xs' : ''}`}
+          >
+            <div className="w-[86px] text-center text-white text-sm font-semibold absolute -top-4 left-0 bg-support rounded px-2">
               Core
             </div>
             <ListContainer potentials={grouped.Core} id={trekker} />
@@ -99,8 +101,10 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
         )}
 
         {grouped.Medium.length !== 0 && (
-          <div className="relative bg-versatile p-0.75 mt-3">
-            <div className="w-[86px] text-white text-sm font-semibold absolute -top-4 left-0 bg-versatile rounded px-2">
+          <div
+            className={`relative bg-versatile p-0.75 mt-3 rounded-br-xs rounded-bl-xs ${grouped.Medium.length !== 1 ? 'rounded-tr-xs' : ''}`}
+          >
+            <div className="w-[86px] text-center text-white text-sm font-semibold absolute -top-4 left-0 bg-versatile rounded px-2">
               Medium
             </div>
             <ListContainer potentials={grouped.Medium} id={trekker} />
@@ -108,8 +112,10 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
         )}
 
         {grouped.Optional.length !== 0 && (
-          <div className="relative outline-3 outline-vanguard outline-dashed mt-3">
-            <div className="w-[86px] text-white text-sm font-semibold absolute -top-5 -left-[3px] bg-vanguard rounded px-2">
+          <div
+            className={`relative outline-3 outline-vanguard outline-dashed mt-3 rounded-br-xs rounded-bl-xs ${grouped.Optional.length !== 1 ? 'rounded-tr-xs' : ''}`}
+          >
+            <div className="w-[86px] text-center text-white text-sm font-semibold absolute -top-5 -left-[3px] bg-vanguard rounded px-2">
               Optional
             </div>
             <ListContainer potentials={grouped.Optional} id={trekker} />
