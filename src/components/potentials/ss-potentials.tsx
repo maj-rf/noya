@@ -40,10 +40,13 @@ function SingleSelected({
   id,
   children,
 }: PropsWithChildren<SingleSelectedProps>) {
-  const s = usePotentialStore((state) => state.potentials[slot][id])
+  const s = usePotentialStore((state) =>
+    state.potentials[slot].find((sel) => sel.id === id),
+  )
   const updateLevel = usePotentialStore((sel) => sel.updateLevel)
   const removePotential = usePotentialStore((sel) => sel.removePotential)
   const updatePriority = usePotentialStore((sel) => sel.updatePriority)
+  if (!s) return
   return (
     <div className="flex flex-col gap-2 justify-center">
       <div className="relative">
@@ -201,8 +204,12 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
   const trekkerId = useTrekkerStore((s) => s.trekkers[slot])
   const selected = usePotentialStore(
     useShallow((s) =>
-      Object.values(s.potentials[slot])
-        .sort((a, b) => a.rarity - b.rarity)
+      s.potentials[slot]
+        .sort((a, b) => {
+          const aRank = a.rarity === 0 ? 0 : 1
+          const bRank = b.rarity === 0 ? 0 : 1
+          return aRank - bRank // rarity 0 first, 1 & 2 after
+        })
         .map((p) => p.id),
     ),
   )
@@ -257,6 +264,7 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
             ) : (
               selected.map((s) => {
                 const p = potentialList[s]
+                console.log({ s, p, selected })
                 return (
                   <SingleSelected key={'selected' + s} slot={slot} id={s}>
                     <HybridTooltip>

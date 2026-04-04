@@ -5,7 +5,6 @@ import { TrekkerSelection } from '@/components/trekkers/trekker-selection'
 import { Preview } from '@/components/preview'
 import { Loading } from '@/components/loading'
 import { useTrekkerStore } from '@/lib/store'
-import { Presets } from '@/components/presets'
 import { SaveBuild } from '@/components/save-build'
 import { LoadBuild } from '@/components/load-build'
 import { TrekkerPlaceholder } from '@/components/trekkers/trekker-placeholder'
@@ -45,7 +44,6 @@ function App() {
           </ResponsiveModal>
           <div className="flex flex-row sm:flex-col gap-2">
             <LoadBuild />
-            <Presets />
           </div>
         </div>
       </section>
