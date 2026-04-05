@@ -62,6 +62,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
       Core: [] as typeof potentials,
       Medium: [] as typeof potentials,
       Optional: [] as typeof potentials,
+      Low: [] as typeof potentials,
     },
   )
 
@@ -108,6 +109,17 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
               Medium
             </div>
             <ListContainer potentials={grouped.Medium} id={trekker} />
+          </div>
+        )}
+
+        {grouped.Low.length !== 0 && (
+          <div
+            className={`relative bg-common p-0.75 mt-3 rounded-br-xs rounded-bl-xs ${grouped.Low.length !== 1 ? 'rounded-tr-xs' : ''}`}
+          >
+            <div className="w-[86px] text-center text-white text-sm font-semibold absolute -top-4 left-0 bg-common rounded px-2">
+              Low
+            </div>
+            <ListContainer potentials={grouped.Low} id={trekker} />
           </div>
         )}
 

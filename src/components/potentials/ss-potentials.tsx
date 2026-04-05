@@ -1,5 +1,5 @@
-import { memo, useState } from 'react'
-import { InfoIcon, PlusIcon, X } from 'lucide-react'
+import { memo } from 'react'
+import { PlusIcon } from 'lucide-react'
 import { useShallow } from 'zustand/shallow'
 import { getRouteApi } from '@tanstack/react-router'
 import { Button } from '../ui/button'
@@ -10,192 +10,20 @@ import {
   HybridTooltipProvider,
   HybridTooltipTrigger,
 } from '../ui/hybrid-tooltip'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select'
 import ResponsivePotential from './responsive-potential'
-import type { PropsWithChildren } from 'react'
-import type { PotentialPriority, SSPotential, Slot } from '@/types'
+import { SingleSelected } from './single-selected'
+import { PotentialSelection } from './potential-selection'
+import type { Slot } from '@/types'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { usePotentialStore, useTrekkerStore } from '@/lib/store'
-import { MAX_LEVEL, cn } from '@/lib/utils'
 
 type SSPotentialsProps = {
   slot: Slot
   type: 'main' | 'support'
-}
-
-type SingleSelectedProps = { slot: Slot; id: number }
-
-function SingleSelected({
-  slot,
-  id,
-  children,
-}: PropsWithChildren<SingleSelectedProps>) {
-  const s = usePotentialStore((state) =>
-    state.potentials[slot].find((sel) => sel.id === id),
-  )
-  const updateLevel = usePotentialStore((sel) => sel.updateLevel)
-  const removePotential = usePotentialStore((sel) => sel.removePotential)
-  const updatePriority = usePotentialStore((sel) => sel.updatePriority)
-  if (!s) return
-  return (
-    <div className="flex flex-col gap-2 justify-center">
-      <div className="relative">
-        {children}
-        {s.rarity !== 0 && (
-          <div
-            className={cn(
-              'absolute -top-px left-3 text-xs font-semibold tracking-tighter text-slate-600',
-              {
-                'left-2': String(s.level).length >= 2,
-              },
-            )}
-          >
-            {s.level}
-          </div>
-        )}
-        <Button
-          variant="destructive"
-          size="icon"
-          aria-label="delete-card"
-          className="absolute -top-1 -right-1 rounded-full size-4 border border-white"
-          onClick={() => removePotential(slot, s.id)}
-        >
-          <X className="size-3" />
-        </Button>
-      </div>
-
-      <div className="w-20 space-y-1">
-        <Select
-          disabled={s.rarity === 0}
-          value={s.level ? String(s.level) : undefined}
-          onValueChange={(value) => updateLevel(slot, s.id, value)}
-        >
-          <SelectTrigger className="text-[10px] w-full px-2" size="sm">
-            <SelectValue placeholder="Level" />
-          </SelectTrigger>
-          <SelectContent align="start">
-            <SelectItem className="text-[10px]" value="1+">
-              1+
-            </SelectItem>
-            {[...Array(MAX_LEVEL)].map((_, index) => (
-              <SelectItem
-                className="text-[10px]"
-                key={'level ' + String(index + 1)}
-                value={String(index + 1)}
-              >
-                {index + 1}
-              </SelectItem>
-            ))}
-            <SelectItem className="text-[10px]" value={`${MAX_LEVEL}+`}>
-              {`${MAX_LEVEL}+`}
-            </SelectItem>
-          </SelectContent>
-        </Select>
-        <Select
-          disabled={s.rarity === 0}
-          value={s.priority}
-          onValueChange={(value) =>
-            updatePriority(slot, id, value as PotentialPriority)
-          }
-        >
-          <SelectTrigger className="text-[10px] w-full px-2" size="sm">
-            <SelectValue placeholder="PotentialPriority" />
-          </SelectTrigger>
-          <SelectContent align="start">
-            <SelectItem className="text-[10px]" value="Core">
-              Core
-            </SelectItem>
-            <SelectItem className="text-[10px]" value="Medium">
-              Medium
-            </SelectItem>
-            <SelectItem className="text-[10px]" value="Optional">
-              Optional
-            </SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-    </div>
-  )
-}
-
-function PotentialSelection({
-  filteredPotentials,
-  slot,
-}: {
-  filteredPotentials: Array<SSPotential>
-  slot: Slot
-}) {
-  const coreExceed = usePotentialStore((s) => {
-    const entries = Object.values(s.potentials[slot])
-    let count = 0
-    for (const pot of entries) {
-      if (pot.rarity === 0) count++
-      if (count === 2) return true
-    }
-    return false
-  })
-  const addPotential = usePotentialStore((s) => s.addPotential)
-  const [openId, setOpenId] = useState<number | null>(null)
-  const handleOpenChange = (id: number) => (isOpen: boolean) => {
-    if (isOpen) {
-      setOpenId(id)
-    } else if (openId === id) {
-      setOpenId(null)
-    }
-  }
-  return (
-    <div className="flex w-max my-2 gap-1">
-      {filteredPotentials.map((p) => (
-        <div
-          key={p.id}
-          className="relative"
-          onClick={() => {
-            if (coreExceed && p.rarity === 0) return
-            addPotential(slot, { id: p.id, rarity: p.rarity })
-          }}
-        >
-          <div
-            data-disabled={coreExceed}
-            className={`rarity-${p.rarity} outline-[0.5px] rounded-xs`}
-          >
-            <ResponsivePotential
-              rarity={p.rarity}
-              imgId={p.imgId}
-              name={p.name}
-              subIcon={p.subIcon}
-            />
-          </div>
-          <HybridTooltip
-            open={openId === p.id}
-            onOpenChange={handleOpenChange(p.id)}
-          >
-            <HybridTooltipTrigger asChild>
-              <Button
-                aria-label={p.name + 'description'}
-                size="icon"
-                className="absolute -top-1.5 -right-1 rounded-full size-5 border border-background"
-              >
-                <InfoIcon />
-              </Button>
-            </HybridTooltipTrigger>
-            <HybridTooltipContent>
-              <p>{p.briefDesc}</p>
-            </HybridTooltipContent>
-          </HybridTooltip>
-        </div>
-      ))}
-    </div>
-  )
 }
 
 function SSPotentials({ slot, type }: SSPotentialsProps) {
