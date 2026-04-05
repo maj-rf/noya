@@ -2,7 +2,6 @@ import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { useTransition } from 'react'
 import { LoaderCircle } from 'lucide-react'
 import { toast } from 'sonner'
-import type { BuildMap } from '@/types'
 import { ResponsiveModal } from '@/components/responsive-modal'
 import SSPotentials from '@/components/potentials/ss-potentials'
 import { TrekkerSelection } from '@/components/trekkers/trekker-selection'
@@ -22,9 +21,7 @@ function assertBuild<T>(value: T | undefined): asserts value is T {
 export const Route = createFileRoute('/$id')({
   component: RouteComponent,
   loader: ({ params }) => {
-    const buildsJSON = localStorage.getItem('saved-builds')
-    const builds: BuildMap = buildsJSON ? JSON.parse(buildsJSON) : {}
-    const build = builds[params.id]
+    const build = useBuildStore.getState().builds[params.id]
     assertBuild(build)
     useTrekkerStore.setState({ trekkers: build.trekkers })
     usePotentialStore.setState({ potentials: build.potentials })

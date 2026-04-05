@@ -3,19 +3,19 @@ import { useBuildStore, usePotentialStore, useTrekkerStore } from '@/lib/store'
 
 const mockTrekkers: Trekkers = { main: 103, sub1: 112, sub2: 111 }
 const mockPotentials: Potentials = {
-  main: {
-    511903: { id: 511903, rarity: 0, priority: 'Core' },
-    511904: { id: 511904, rarity: 0, priority: 'Core' },
-    511912: { id: 511912, rarity: 2, level: '1+', priority: 'Optional' },
-  },
-  sub1: {
-    513323: { id: 513323, rarity: 0, priority: 'Core' },
-    513324: { id: 513324, rarity: 0, priority: 'Core' },
-  },
-  sub2: {
-    512321: { id: 512321, rarity: 0, priority: 'Core' },
-    512323: { id: 512323, rarity: 0, priority: 'Core' },
-  },
+  main: [
+    { id: 511903, rarity: 0, priority: 'Core' },
+    { id: 511904, rarity: 0, priority: 'Core' },
+    { id: 511912, rarity: 2, level: '1+', priority: 'Optional' },
+  ],
+  sub1: [
+    { id: 513323, rarity: 0, priority: 'Core' },
+    { id: 513324, rarity: 0, priority: 'Core' },
+  ],
+  sub2: [
+    { id: 512321, rarity: 0, priority: 'Core' },
+    { id: 512323, rarity: 0, priority: 'Core' },
+  ],
 }
 
 beforeEach(() => {

@@ -42,9 +42,7 @@ function App() {
           >
             <TrekkerSelection />
           </ResponsiveModal>
-          <div className="flex flex-row sm:flex-col gap-2">
-            <LoadBuild />
-          </div>
+          <LoadBuild />
         </div>
       </section>
       <SaveBuild />

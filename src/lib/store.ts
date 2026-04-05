@@ -138,7 +138,7 @@ export const usePotentialStore = create<PotentialState>()((set) => ({
     set((state) => ({
       potentials: {
         ...state.potentials,
-        [slot]: {},
+        [slot]: [],
       },
     })),
 }))
