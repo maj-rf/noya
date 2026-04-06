@@ -23,6 +23,7 @@ interface PotentialState {
   updateLevel: (slot: Slot, id: number, level: string) => void
   updatePriority: (slot: Slot, id: number, value: PotentialPriority) => void
   removePotential: (slot: Slot, id: number) => void
+  reorder: (update: Potentials) => void
   clearPotentials: (slot: Slot) => void
 }
 
@@ -126,12 +127,17 @@ export const usePotentialStore = create<PotentialState>()((set) => ({
   removePotential: (slot, id) =>
     set((state) => {
       const filtered = state.potentials[slot].filter((p) => p.id !== id)
-      console.log({ filtered })
       return {
         potentials: {
           ...state.potentials,
           [slot]: filtered,
         },
+      }
+    }),
+  reorder: (update) =>
+    set(() => {
+      return {
+        potentials: update,
       }
     }),
   clearPotentials: (slot) =>

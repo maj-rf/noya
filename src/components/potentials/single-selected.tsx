@@ -1,4 +1,5 @@
 import { X } from 'lucide-react'
+import { useSortable } from '@dnd-kit/react/sortable'
 import {
   Select,
   SelectContent,
@@ -12,11 +13,18 @@ import type { PropsWithChildren } from 'react'
 import { usePotentialStore } from '@/lib/store'
 import { MAX_LEVEL, cn } from '@/lib/utils'
 
-type SingleSelectedProps = { slot: Slot; id: number }
+type SingleSelectedProps = {
+  slot: Slot
+  id: number
+  idx: number
+  rarity: 1 | 2 | 0
+}
 
 export function SingleSelected({
   slot,
   id,
+  idx,
+  rarity,
   children,
 }: PropsWithChildren<SingleSelectedProps>) {
   const s = usePotentialStore((state) =>
@@ -25,15 +33,20 @@ export function SingleSelected({
   const updateLevel = usePotentialStore((sel) => sel.updateLevel)
   const removePotential = usePotentialStore((sel) => sel.removePotential)
   const updatePriority = usePotentialStore((sel) => sel.updatePriority)
+  const { ref } = useSortable({
+    id,
+    index: idx,
+    disabled: rarity === 0,
+  })
   if (!s) return
   return (
-    <div className="flex flex-col gap-2 justify-center">
+    <div ref={ref} className="flex flex-col gap-2 justify-center">
       <div className="relative">
         {children}
         {s.rarity !== 0 && (
           <div
             className={cn(
-              'absolute -top-px left-3 text-xs font-semibold tracking-tighter text-slate-600',
+              'absolute -top-px left-3 text-xs font-semibold tracking-tighter text-slate-600 pointer-events-none',
               {
                 'left-2': String(s.level).length >= 2,
               },

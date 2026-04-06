@@ -2,6 +2,8 @@ import { memo } from 'react'
 import { PlusIcon } from 'lucide-react'
 import { useShallow } from 'zustand/shallow'
 import { getRouteApi } from '@tanstack/react-router'
+import { DragDropProvider } from '@dnd-kit/react'
+import { move } from '@dnd-kit/helpers'
 import { Button } from '../ui/button'
 import { ScrollArea, ScrollBar } from '../ui/scroll-area'
 import {
@@ -41,6 +43,7 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
         .map((p) => p.id),
     ),
   )
+  const reorder = usePotentialStore((s) => s.reorder)
 
   if (!trekkerId) return
   const potentialList = fetchedPotentials[trekkerId]
@@ -90,29 +93,41 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
                 <span>Please choose potentials</span>
               </div>
             ) : (
-              selected.map((s) => {
-                const p = potentialList[s]
-                console.log({ s, p, selected })
-                return (
-                  <SingleSelected key={'selected' + s} slot={slot} id={s}>
-                    <HybridTooltip>
-                      <HybridTooltipTrigger asChild>
-                        <div className="outline-[0.5px] rounded-xs">
-                          <ResponsivePotential
-                            rarity={p.rarity}
-                            imgId={p.imgId}
-                            name={p.name}
-                            subIcon={p.subIcon}
-                          />
-                        </div>
-                      </HybridTooltipTrigger>
-                      <HybridTooltipContent>
-                        <p>{p.briefDesc}</p>
-                      </HybridTooltipContent>
-                    </HybridTooltip>
-                  </SingleSelected>
-                )
-              })
+              <DragDropProvider
+                onDragEnd={(event) => {
+                  if (event.canceled) return
+                  reorder(move(usePotentialStore.getState().potentials, event))
+                }}
+              >
+                {selected.map((s, index) => {
+                  const p = potentialList[s]
+                  return (
+                    <SingleSelected
+                      key={'selected' + s}
+                      slot={slot}
+                      id={s}
+                      idx={index}
+                      rarity={p.rarity}
+                    >
+                      <HybridTooltip>
+                        <HybridTooltipTrigger asChild>
+                          <div className="outline-[0.5px] rounded-xs">
+                            <ResponsivePotential
+                              rarity={p.rarity}
+                              imgId={p.imgId}
+                              name={p.name}
+                              subIcon={p.subIcon}
+                            />
+                          </div>
+                        </HybridTooltipTrigger>
+                        <HybridTooltipContent>
+                          <p>{p.briefDesc}</p>
+                        </HybridTooltipContent>
+                      </HybridTooltip>
+                    </SingleSelected>
+                  )
+                })}
+              </DragDropProvider>
             )}
           </div>
           <ScrollBar orientation="horizontal" />
