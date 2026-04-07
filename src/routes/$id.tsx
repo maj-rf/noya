@@ -49,7 +49,7 @@ function RouteComponent() {
     <div className="relative pb-8">
       <section className="w-full my-4 flex flex-col sm:flex-row justify-center items-center gap-4">
         <TrekkerPlaceholder />
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-row sm:flex-col gap-2">
           <ResponsiveModal
             title="Released Trekkers"
             triggerTitle={'Choose Trekkers'}

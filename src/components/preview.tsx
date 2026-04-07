@@ -3,6 +3,14 @@ import { getRouteApi } from '@tanstack/react-router'
 import ResponsivePotential from './potentials/responsive-potential'
 import { Button } from './ui/button'
 import { BaseTrekker } from './trekkers/base-trekker'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog'
 import type { SelectedPotential, Slot } from '@/types'
 import { usePotentialStore, useTrekkerStore } from '@/lib/store'
 import { cn, downloadImage } from '@/lib/utils'
@@ -138,6 +146,18 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
   )
 }
 
+const PreviewContent = () => {
+  return (
+    <div className="w-full bg-slate-800">
+      <div>
+        <PreviewRow slot="main" />
+        <PreviewRow slot="sub1" />
+        <PreviewRow slot="sub2" />
+      </div>
+    </div>
+  )
+}
+
 export const Preview = () => {
   const previewRef = useRef<HTMLElement>(null)
   const [isPending, startTransition] = useTransition()
@@ -149,24 +169,26 @@ export const Preview = () => {
   }
   return (
     <>
-      <Button
-        onClick={handleDownload}
-        className="fixed bottom-1 left-1 z-2"
-        disabled={isPending}
-      >
-        {isPending ? 'Converting...' : 'Export'}
-      </Button>
-      <div className="h-0 overflow-hidden">
-        <section ref={previewRef} className="w-max" id="preview">
-          <div className="w-full bg-slate-800">
-            <div>
-              <PreviewRow slot="main" />
-              <PreviewRow slot="sub1" />
-              <PreviewRow slot="sub2" />
-            </div>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button className="fixed bottom-1 left-1 z-2">Preview</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Preview</DialogTitle>
+          </DialogHeader>
+          <div className="overflow-x-auto">
+            <section ref={previewRef} className="w-max">
+              <PreviewContent />
+            </section>
           </div>
-        </section>
-      </div>
+          <DialogFooter>
+            <Button onClick={handleDownload} disabled={isPending}>
+              {isPending ? 'Converting...' : 'Export'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

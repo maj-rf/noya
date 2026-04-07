@@ -25,12 +25,12 @@ export default function ResponsivePotential({
       <img
         src={bgSrc}
         alt={rarity + ' background'}
-        className="absolute inset-0 w-full h-full object-cover rounded-xs"
+        className="absolute inset-0 w-full h-full object-cover rounded-xs pointer-events-none"
       />
       <img
         src={iconSrc}
         alt={name + ' icon'}
-        className="absolute inset-0 -top-7 w-auto h-19 m-auto"
+        className="absolute inset-0 -top-7 w-auto h-19 m-auto pointer-events-none"
       />
       {subIcon && (
         <img
@@ -43,6 +43,7 @@ export default function ResponsivePotential({
               rarity === 1 ? 'var(--color-rare)' : 'var(--color-common)',
             maskRepeat: 'no-repeat',
             maskPosition: 'center',
+            pointerEvents: 'none',
           }}
         />
       )}
