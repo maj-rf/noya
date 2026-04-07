@@ -5,7 +5,6 @@ import { TrekkerSelection } from '@/components/trekkers/trekker-selection'
 import { Preview } from '@/components/preview'
 import { Loading } from '@/components/loading'
 import { useTrekkerStore } from '@/lib/store'
-import { Presets } from '@/components/presets'
 import { SaveBuild } from '@/components/save-build'
 import { LoadBuild } from '@/components/load-build'
 import { TrekkerPlaceholder } from '@/components/trekkers/trekker-placeholder'
@@ -35,7 +34,7 @@ function App() {
     <div className="relative pb-8">
       <section className="w-full my-4 flex flex-col sm:flex-row justify-center items-center gap-4">
         <TrekkerPlaceholder />
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-row sm:flex-col gap-2">
           <ResponsiveModal
             title="Released Trekkers"
             triggerTitle={'Choose Trekkers'}
@@ -43,10 +42,7 @@ function App() {
           >
             <TrekkerSelection />
           </ResponsiveModal>
-          <div className="flex flex-row sm:flex-col gap-2">
-            <LoadBuild />
-            <Presets />
-          </div>
+          <LoadBuild />
         </div>
       </section>
       <SaveBuild />

@@ -3,6 +3,14 @@ import { getRouteApi } from '@tanstack/react-router'
 import ResponsivePotential from './potentials/responsive-potential'
 import { Button } from './ui/button'
 import { BaseTrekker } from './trekkers/base-trekker'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog'
 import type { SelectedPotential, Slot } from '@/types'
 import { usePotentialStore, useTrekkerStore } from '@/lib/store'
 import { cn, downloadImage } from '@/lib/utils'
@@ -62,6 +70,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
       Core: [] as typeof potentials,
       Medium: [] as typeof potentials,
       Optional: [] as typeof potentials,
+      Low: [] as typeof potentials,
     },
   )
 
@@ -111,6 +120,17 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
           </div>
         )}
 
+        {grouped.Low.length !== 0 && (
+          <div
+            className={`relative bg-common p-0.75 mt-3 rounded-br-xs rounded-bl-xs ${grouped.Low.length !== 1 ? 'rounded-tr-xs' : ''}`}
+          >
+            <div className="w-[86px] text-center text-white text-sm font-semibold absolute -top-4 left-0 bg-common rounded px-2">
+              Low
+            </div>
+            <ListContainer potentials={grouped.Low} id={trekker} />
+          </div>
+        )}
+
         {grouped.Optional.length !== 0 && (
           <div
             className={`relative outline-3 outline-vanguard outline-dashed mt-3 rounded-br-xs rounded-bl-xs ${grouped.Optional.length !== 1 ? 'rounded-tr-xs' : ''}`}
@@ -121,6 +141,18 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
             <ListContainer potentials={grouped.Optional} id={trekker} />
           </div>
         )}
+      </div>
+    </div>
+  )
+}
+
+const PreviewContent = () => {
+  return (
+    <div className="w-full bg-slate-800">
+      <div>
+        <PreviewRow slot="main" />
+        <PreviewRow slot="sub1" />
+        <PreviewRow slot="sub2" />
       </div>
     </div>
   )
@@ -137,24 +169,26 @@ export const Preview = () => {
   }
   return (
     <>
-      <Button
-        onClick={handleDownload}
-        className="fixed bottom-1 left-1 z-2"
-        disabled={isPending}
-      >
-        {isPending ? 'Converting...' : 'Export'}
-      </Button>
-      <div className="h-0 overflow-hidden">
-        <section ref={previewRef} className="w-max" id="preview">
-          <div className="w-full bg-slate-800">
-            <div>
-              <PreviewRow slot="main" />
-              <PreviewRow slot="sub1" />
-              <PreviewRow slot="sub2" />
-            </div>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button className="fixed bottom-1 left-1 z-2">Preview</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Preview</DialogTitle>
+          </DialogHeader>
+          <div className="overflow-x-auto">
+            <section ref={previewRef} className="w-max">
+              <PreviewContent />
+            </section>
           </div>
-        </section>
-      </div>
+          <DialogFooter>
+            <Button onClick={handleDownload} disabled={isPending}>
+              {isPending ? 'Converting...' : 'Export'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

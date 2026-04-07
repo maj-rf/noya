@@ -23,6 +23,7 @@ interface PotentialState {
   updateLevel: (slot: Slot, id: number, level: string) => void
   updatePriority: (slot: Slot, id: number, value: PotentialPriority) => void
   removePotential: (slot: Slot, id: number) => void
+  reorder: (update: Potentials) => void
   clearPotentials: (slot: Slot) => void
 }
 
@@ -55,11 +56,39 @@ export const useBuildStore = create<BuildState>()(
     }),
     {
       name: 'saved-builds',
+      version: 1,
+      migrate: (persistedState: any, version: number) => {
+        if (version === 0) {
+          // version 0 → 1: convert potentials from object to array
+          const builds = persistedState.builds ?? {}
+          const migratedBuilds = Object.fromEntries(
+            Object.entries(builds).map(([id, build]: [string, any]) => [
+              id,
+              {
+                ...build,
+                potentials: Object.fromEntries(
+                  Object.entries(build.potentials ?? {}).map(
+                    ([slot, slotValue]: [string, any]) => [
+                      slot,
+                      Object.values(slotValue), // Record<string, SelectedPotential> → Array<SelectedPotential>
+                    ],
+                  ),
+                ),
+              },
+            ]),
+          )
+          return { ...persistedState, builds: migratedBuilds }
+        }
+        return persistedState
+      },
       storage: {
         getItem: (name) => {
           const value = localStorage.getItem(name)
           if (!value) return null
-          return { state: { builds: JSON.parse(value) } }
+          // if old format (raw builds object), wrap it so migrate can handle it
+          const parsed = JSON.parse(value)
+          const isLegacy = !parsed.version
+          return isLegacy ? { version: 0, state: { builds: parsed } } : parsed
         },
         setItem: (name, value) => {
           localStorage.setItem(name, JSON.stringify(value.state.builds))
@@ -82,55 +111,68 @@ export const useTrekkerStore = create<TrekkerState>()((set) => ({
 }))
 
 export const usePotentialStore = create<PotentialState>()((set) => ({
-  potentials: { main: {}, sub1: {}, sub2: {} },
+  potentials: { main: [], sub1: [], sub2: [] },
   addPotential: (slot, p) =>
     set((state) => ({
       potentials: {
         ...state.potentials,
-        [slot]: {
+        [slot]: [
           ...state.potentials[slot],
-          [p.id]:
-            p.rarity === 0
-              ? { ...p, rarity: 0, priority: 'Core' }
-              : { ...p, level: MAX_LEVEL, priority: 'Medium' },
-        },
+          p.rarity === 0
+            ? { ...p, rarity: 0, priority: 'Core' }
+            : { ...p, level: MAX_LEVEL, priority: 'Medium' },
+        ],
       },
     })),
   updateLevel: (slot, id, level) =>
-    set((state) => ({
-      potentials: {
-        ...state.potentials,
-        [slot]: {
-          ...state.potentials[slot],
-          [id]: { ...state.potentials[slot][id], level },
-        },
-      },
-    })),
-  updatePriority: (slot, id, value) =>
-    set((state) => ({
-      potentials: {
-        ...state.potentials,
-        [slot]: {
-          ...state.potentials[slot],
-          [id]: { ...state.potentials[slot][id], priority: value },
-        },
-      },
-    })),
-  removePotential: (slot, id) =>
     set((state) => {
-      const { [id]: remove, ...rest } = state.potentials[slot]
+      const index = state.potentials[slot].findIndex((item) => item.id === id)
+      const item = { ...state.potentials[slot][index] }
+      const updated = [...state.potentials[slot]]
+      item.level = level
+      updated[index] = item
       return {
         potentials: {
           ...state.potentials,
-          [slot]: rest,
+          [slot]: updated,
         },
+      }
+    }),
+  updatePriority: (slot, id, value) =>
+    set((state) => {
+      const index = state.potentials[slot].findIndex((item) => item.id === id)
+      const item = { ...state.potentials[slot][index] }
+      const updated = [...state.potentials[slot]]
+      item.priority = value
+      updated[index] = item
+      return {
+        potentials: {
+          ...state.potentials,
+          [slot]: updated,
+        },
+      }
+    }),
+  removePotential: (slot, id) =>
+    set((state) => {
+      const filtered = state.potentials[slot].filter((p) => p.id !== id)
+      return {
+        potentials: {
+          ...state.potentials,
+          [slot]: filtered,
+        },
+      }
+    }),
+  reorder: (update) =>
+    set(() => {
+      return {
+        potentials: update,
       }
     }),
   clearPotentials: (slot) =>
     set((state) => ({
       potentials: {
         ...state.potentials,
-        [slot]: {},
+        [slot]: [],
       },
     })),
 }))

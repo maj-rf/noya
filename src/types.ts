@@ -22,7 +22,7 @@ export type Slot = 'main' | 'sub1' | 'sub2'
 
 export type Trekkers = Record<Slot, number | null>
 
-export type PotentialPriority = 'Core' | 'Medium' | 'Optional'
+export type PotentialPriority = 'Core' | 'Medium' | 'Optional' | 'Low'
 
 export type SelectedPotential =
   | (Pick<SSPotential, 'id'> & {
@@ -36,9 +36,7 @@ export type SelectedPotential =
       priority: PotentialPriority
     })
 
-type SelectedPotentialMap = Record<string, SelectedPotential>
-
-export type Potentials = Record<Slot, SelectedPotentialMap>
+export type Potentials = Record<Slot, Array<SelectedPotential>>
 
 export type BuildMap = Record<
   string,
