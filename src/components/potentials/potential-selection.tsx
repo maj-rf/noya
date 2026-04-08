@@ -64,8 +64,8 @@ export function PotentialSelection({
             <HybridTooltipTrigger asChild>
               <Button
                 aria-label={p.name + 'description'}
-                size="icon"
-                className="absolute -top-1.5 -right-1 rounded-full size-5 border border-background"
+                size="icon-xs"
+                className="absolute -top-1.5 -right-1 rounded-full"
               >
                 <InfoIcon />
               </Button>

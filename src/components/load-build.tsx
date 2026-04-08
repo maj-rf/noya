@@ -60,7 +60,7 @@ export function LoadBuild() {
                     variant="destructive"
                     size="icon-sm"
                     disabled={isPending}
-                    className="rounded-full"
+                    className="rounded-full bg-destructive/90 dark:bg-destructive hover:bg-destructive/80 dark:hover:bg-destructive/90 text-white"
                   >
                     {isPending ? (
                       <LoaderCircle className="animate-spin" />

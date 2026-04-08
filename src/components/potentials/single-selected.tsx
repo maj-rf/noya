@@ -46,7 +46,7 @@ export function SingleSelected({
         {s.rarity !== 0 && (
           <div
             className={cn(
-              'absolute -top-px left-3 text-xs font-semibold tracking-tighter text-slate-600 pointer-events-none',
+              'absolute top-0 left-3 text-xs font-semibold tracking-tighter text-slate-600 pointer-events-none',
               {
                 'left-2': String(s.level).length >= 2,
               },
@@ -55,15 +55,17 @@ export function SingleSelected({
             {s.level}
           </div>
         )}
-        <Button
-          variant="destructive"
-          size="icon"
-          aria-label="delete-card"
-          className="absolute -top-1 -right-1 rounded-full size-4 border border-white"
-          onClick={() => removePotential(slot, s.id)}
-        >
-          <X className="size-3" />
-        </Button>
+        <div className="absolute -top-1 -right-1">
+          <Button
+            variant="destructive"
+            size="icon-xs"
+            aria-label="delete-card"
+            className="rounded-full bg-destructive/90 dark:bg-destructive hover:bg-destructive/80 dark:hover:bg-destructive/90 text-white"
+            onClick={() => removePotential(slot, s.id)}
+          >
+            <X />
+          </Button>
+        </div>
       </div>
 
       <div className="w-20 space-y-1">

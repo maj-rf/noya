@@ -6,6 +6,7 @@ import { BaseTrekker } from './trekkers/base-trekker'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -39,7 +40,7 @@ const ListContainer = ({
             {p.rarity !== 0 && (
               <div
                 className={cn(
-                  'absolute -top-px left-3 text-xs font-semibold tracking-tighter text-slate-600',
+                  'absolute top-0 left-3 text-xs font-semibold tracking-tighter text-slate-600',
                   {
                     'left-2': String(p.level).length >= 2,
                   },
@@ -176,6 +177,7 @@ export const Preview = () => {
         <DialogContent className="sm:max-w-3xl">
           <DialogHeader>
             <DialogTitle>Preview</DialogTitle>
+            <DialogDescription>Your current build</DialogDescription>
           </DialogHeader>
           <div className="overflow-x-auto">
             <section ref={previewRef} className="w-max">
