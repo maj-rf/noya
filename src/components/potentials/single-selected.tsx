@@ -33,20 +33,23 @@ export function SingleSelected({
   const updateLevel = usePotentialStore((sel) => sel.updateLevel)
   const removePotential = usePotentialStore((sel) => sel.removePotential)
   const updatePriority = usePotentialStore((sel) => sel.updatePriority)
-  const { ref } = useSortable({
+  const { ref, isDragging } = useSortable({
     id,
     index: idx,
     disabled: rarity === 0,
   })
   if (!s) return
   return (
-    <div ref={ref} className="flex flex-col gap-2 justify-center">
+    <div
+      ref={ref}
+      className={`flex flex-col gap-2 justify-center ${isDragging && 'rotate-6'}`}
+    >
       <div className="relative">
         {children}
         {s.rarity !== 0 && (
           <div
             className={cn(
-              'absolute top-0 left-3 text-xs font-semibold tracking-tighter text-slate-600 pointer-events-none',
+              'absolute -top-[1.5px] left-3 text-xs font-semibold tracking-tighter text-slate-600 pointer-events-none',
               {
                 'left-2': String(s.level).length >= 2,
               },
@@ -112,11 +115,11 @@ export function SingleSelected({
             <SelectItem className="text-[10px]" value="Medium">
               Medium
             </SelectItem>
-            <SelectItem className="text-[10px]" value="Optional">
-              Optional
-            </SelectItem>
             <SelectItem className="text-[10px]" value="Low">
               Low
+            </SelectItem>
+            <SelectItem className="text-[10px]" value="Optional">
+              Optional
             </SelectItem>
           </SelectContent>
         </Select>
