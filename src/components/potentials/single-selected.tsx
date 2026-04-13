@@ -42,14 +42,14 @@ export function SingleSelected({
   return (
     <div
       ref={ref}
-      className={`flex flex-col gap-2 justify-center ${isDragging && 'rotate-6'}`}
+      className={`flex flex-col gap-2 justify-center ease-in-out transition-transform duration-300 ${isDragging && 'rotate-6 opacity-90'}`}
     >
       <div className="relative">
         {children}
         {s.rarity !== 0 && (
           <div
             className={cn(
-              'absolute -top-[1.5px] left-3 text-xs font-semibold tracking-tighter text-slate-600 pointer-events-none',
+              'absolute -top-px left-3 text-xs font-semibold tracking-tighter text-slate-600 pointer-events-none',
               {
                 'left-2': String(s.level).length >= 2,
               },
@@ -58,12 +58,12 @@ export function SingleSelected({
             {s.level}
           </div>
         )}
-        <div className="absolute -top-1 -right-1">
+        <div className="absolute -top-1 -right-[0.5px]">
           <Button
             variant="destructive"
             size="icon-xs"
             aria-label="delete-card"
-            className="rounded-full bg-destructive/90 dark:bg-destructive hover:bg-destructive/80 dark:hover:bg-destructive/90 text-white"
+            className="rounded-full bg-destructive/90 dark:bg-destructive hover:bg-destructive/80 dark:hover:bg-destructive/90 text-white border-white"
             onClick={() => removePotential(slot, s.id)}
           >
             <X />
