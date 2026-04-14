@@ -48,7 +48,7 @@ export default function ResponsivePotential({
         />
       )}
 
-      <div className="absolute bottom-0 left-0 right-0 px-0.5 pb-1 text-black">
+      <div className="absolute bottom-0 left-0 right-0 px-[2.25px] pb-1 text-black">
         <AutoFitText text={name} />
       </div>
     </div>
