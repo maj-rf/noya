@@ -6,6 +6,7 @@ import { BaseTrekker } from './trekkers/base-trekker'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -176,6 +177,7 @@ export const Preview = () => {
         <DialogContent className="sm:max-w-3xl">
           <DialogHeader>
             <DialogTitle>Preview</DialogTitle>
+            <DialogDescription>Your current build</DialogDescription>
           </DialogHeader>
           <div className="overflow-x-auto">
             <section ref={previewRef} className="w-max">

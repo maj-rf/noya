@@ -99,6 +99,9 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
                   reorder(move(usePotentialStore.getState().potentials, event))
                 }}
               >
+                <p className="absolute top-0 text-[10px] text-muted-foreground">
+                  *Click / Hold potential cards to drag and reorder
+                </p>
                 {selected.map((s, index) => {
                   const p = potentialList[s]
                   return (

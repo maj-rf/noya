@@ -33,14 +33,17 @@ export function SingleSelected({
   const updateLevel = usePotentialStore((sel) => sel.updateLevel)
   const removePotential = usePotentialStore((sel) => sel.removePotential)
   const updatePriority = usePotentialStore((sel) => sel.updatePriority)
-  const { ref } = useSortable({
+  const { ref, isDragging } = useSortable({
     id,
     index: idx,
     disabled: rarity === 0,
   })
   if (!s) return
   return (
-    <div ref={ref} className="flex flex-col gap-2 justify-center">
+    <div
+      ref={ref}
+      className={`flex flex-col gap-2 justify-center ease-in-out transition-transform duration-300 ${isDragging && 'rotate-6 opacity-90'}`}
+    >
       <div className="relative">
         {children}
         {s.rarity !== 0 && (
@@ -55,15 +58,17 @@ export function SingleSelected({
             {s.level}
           </div>
         )}
-        <Button
-          variant="destructive"
-          size="icon"
-          aria-label="delete-card"
-          className="absolute -top-1 -right-1 rounded-full size-4 border border-white"
-          onClick={() => removePotential(slot, s.id)}
-        >
-          <X className="size-3" />
-        </Button>
+        <div className="absolute -top-1 -right-[0.5px]">
+          <Button
+            variant="destructive"
+            size="icon-xs"
+            aria-label="delete-card"
+            className="rounded-full bg-destructive/90 dark:bg-destructive hover:bg-destructive/80 dark:hover:bg-destructive/90 text-white border-white"
+            onClick={() => removePotential(slot, s.id)}
+          >
+            <X />
+          </Button>
+        </div>
       </div>
 
       <div className="w-20 space-y-1">
@@ -110,11 +115,11 @@ export function SingleSelected({
             <SelectItem className="text-[10px]" value="Medium">
               Medium
             </SelectItem>
-            <SelectItem className="text-[10px]" value="Optional">
-              Optional
-            </SelectItem>
             <SelectItem className="text-[10px]" value="Low">
               Low
+            </SelectItem>
+            <SelectItem className="text-[10px]" value="Optional">
+              Optional
             </SelectItem>
           </SelectContent>
         </Select>

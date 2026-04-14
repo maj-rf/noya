@@ -17,7 +17,7 @@ export function LangSwitcher() {
       <Select value={language} onValueChange={switchLang}>
         <SelectTrigger
           size="sm"
-          className="border-gray-500 min-w-8 flex items-center justify-center [&_svg]:hidden"
+          className="border-gray-500 bg-inherit min-w-8 flex items-center justify-center [&_svg]:hidden"
         >
           <SelectValue placeholder="Language" />
         </SelectTrigger>
