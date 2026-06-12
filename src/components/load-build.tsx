@@ -5,7 +5,7 @@ import { ScrollArea } from './ui/scroll-area'
 import { ResponsiveModal } from './responsive-modal'
 import { Button } from './ui/button'
 import { BaseTrekker } from './trekkers/base-trekker'
-import { useBuildStore } from '@/lib/store'
+import { useBuildStore, useLangStore } from '@/lib/store'
 
 export function LoadBuild() {
   const routeApi = getRouteApi('__root__')
@@ -13,6 +13,7 @@ export function LoadBuild() {
   const deleteBuild = useBuildStore((state) => state.remove)
   const { characters } = routeApi.useLoaderData()
   const [isPending, startTransition] = useTransition()
+  const lang = useLangStore((s) => s.lang)
 
   return (
     <ResponsiveModal
@@ -30,7 +31,7 @@ export function LoadBuild() {
                 key={b.id}
               >
                 <div className="h-[125px] w-full md:h-[150px] md:w-[120px] aspect-[0.8]">
-                  <BaseTrekker char={char} />
+                  <BaseTrekker char={char} lang={lang} />
                 </div>
                 <p className="truncate bg-muted rounded-2xl px-2 py-1 tracking-tighter text-center">
                   {b.name}

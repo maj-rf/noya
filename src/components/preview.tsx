@@ -13,15 +13,17 @@ import {
   DialogTrigger,
 } from './ui/dialog'
 import type { SelectedPotential, Slot } from '@/types'
-import { usePotentialStore, useTrekkerStore } from '@/lib/store'
+import { useLangStore, usePotentialStore, useTrekkerStore } from '@/lib/store'
 import { cn, downloadImage } from '@/lib/utils'
 
 const ListContainer = ({
   potentials,
   id,
+  lang,
 }: {
   potentials: Array<SelectedPotential>
   id: number
+  lang: 'EN' | 'JP' | 'KR' | 'CN' | 'TW'
 }) => {
   const routeApi = getRouteApi('__root__')
   const { potentials: fetchedPotentials } = routeApi.useLoaderData()
@@ -34,7 +36,7 @@ const ListContainer = ({
             <ResponsivePotential
               rarity={current.rarity}
               imgId={current.imgId}
-              name={current.name}
+              name={current.name[lang]}
               subIcon={current.subIcon}
             />
             {p.rarity !== 0 && (
@@ -62,6 +64,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
   const selectedMap = usePotentialStore((state) => state.potentials[slot])
   const potentials = useMemo(() => Object.values(selectedMap), [selectedMap])
   const trekker = useTrekkerStore((s) => s.trekkers[slot])
+  const lang = useLangStore((s) => s.lang)
   const grouped = potentials.reduce(
     (acc, item) => {
       acc[item.priority].push(item)
@@ -81,7 +84,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
     <div className="border-b last:border-b-0 border-b-slate-600 p-4">
       <div className="flex items-center gap-2.5">
         <div className="h-[125px] w-[100px]">
-          <BaseTrekker char={char}>
+          <BaseTrekker char={char} lang={lang}>
             <img
               alt={char.name + 'element preview'}
               className="size-6 absolute -top-1 -right-1"
@@ -106,7 +109,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
             <div className="w-[86px] text-center text-white text-sm font-semibold absolute -top-4 left-0 bg-support rounded px-2">
               Core
             </div>
-            <ListContainer potentials={grouped.Core} id={trekker} />
+            <ListContainer potentials={grouped.Core} id={trekker} lang={lang} />
           </div>
         )}
 
@@ -117,7 +120,11 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
             <div className="w-[86px] text-center text-white text-sm font-semibold absolute -top-4 left-0 bg-versatile rounded px-2">
               Medium
             </div>
-            <ListContainer potentials={grouped.Medium} id={trekker} />
+            <ListContainer
+              potentials={grouped.Medium}
+              id={trekker}
+              lang={lang}
+            />
           </div>
         )}
 
@@ -128,7 +135,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
             <div className="w-[86px] text-center text-white text-sm font-semibold absolute -top-4 left-0 bg-common rounded px-2">
               Low
             </div>
-            <ListContainer potentials={grouped.Low} id={trekker} />
+            <ListContainer potentials={grouped.Low} id={trekker} lang={lang} />
           </div>
         )}
 
@@ -139,7 +146,11 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
             <div className="w-[86px] text-center text-white text-sm font-semibold absolute -top-5 -left-[3px] bg-vanguard rounded px-2">
               Optional
             </div>
-            <ListContainer potentials={grouped.Optional} id={trekker} />
+            <ListContainer
+              potentials={grouped.Optional}
+              id={trekker}
+              lang={lang}
+            />
           </div>
         )}
       </div>
