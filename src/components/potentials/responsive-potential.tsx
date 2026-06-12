@@ -1,8 +1,12 @@
 import { AutoFitText } from './auto-fit-text'
 import type { SSPotential } from '@/types'
 
-type Props = Pick<SSPotential, 'rarity' | 'name' | 'imgId' | 'subIcon'> & {
-  size?: string // e.g. "w-32", "w-16", "w-full"
+type Props = Omit<
+  Pick<SSPotential, 'rarity' | 'name' | 'imgId' | 'subIcon'>,
+  'name'
+> & {
+  name: string
+  size?: string
   className?: string
 }
 

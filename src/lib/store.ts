@@ -33,6 +33,44 @@ interface BuildState {
   remove: (id: string) => void
 }
 
+interface LangState {
+  lang: 'EN' | 'JP' | 'KR' | 'CN' | 'TW'
+  change: (lang: 'EN' | 'JP' | 'KR' | 'CN' | 'TW') => void
+}
+
+export const useLangStore = create<LangState>()(
+  persist(
+    (set) => ({
+      lang: 'EN',
+      change: (lang) => set({ lang }),
+    }),
+    {
+      name: 'lang',
+
+      storage: {
+        getItem: (name) => {
+          const value = localStorage.getItem(name)
+
+          return value
+            ? {
+                state: { lang: JSON.parse(value) },
+                version: 0,
+              }
+            : null
+        },
+
+        setItem: (name, value) => {
+          localStorage.setItem(name, JSON.stringify(value.state.lang))
+        },
+
+        removeItem: (name) => {
+          localStorage.removeItem(name)
+        },
+      },
+    },
+  ),
+)
+
 export const useBuildStore = create<BuildState>()(
   persist(
     (set) => ({

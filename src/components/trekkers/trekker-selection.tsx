@@ -19,7 +19,7 @@ import {
   InputGroupInput,
 } from '@/components/ui/input-group'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { usePotentialStore, useTrekkerStore } from '@/lib/store'
+import { useLangStore, usePotentialStore, useTrekkerStore } from '@/lib/store'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { searchAndFilter } from '@/utils/searchAndFilter'
 
@@ -31,14 +31,15 @@ export const TrekkerSelection = () => {
   const setTrekker = useTrekkerStore((s) => s.setTrekker)
   const clearPotentials = usePotentialStore((s) => s.clearPotentials)
   const trekkers = useTrekkerStore((s) => s.trekkers)
+  const lang = useLangStore((s) => s.lang)
   const characters = useMemo(
     () => Object.values(fetchedCharacters),
     [fetchedCharacters],
   )
 
   const filteredChars = useMemo(
-    () => searchAndFilter(characters, search, filter),
-    [characters, search, filter],
+    () => searchAndFilter(characters, lang, search, filter),
+    [characters, lang, search, filter],
   )
 
   const trekkerIds = useMemo(
@@ -144,8 +145,8 @@ export const TrekkerSelection = () => {
               <SelectLabel>By Class</SelectLabel>
               <SelectItem value="class:Vanguard">Vanguard</SelectItem>
               <SelectItem value="class:Versatile">Versatile</SelectItem>
+              <SelectItem value="class:Support">Support</SelectItem>
             </SelectGroup>
-            <SelectItem value="class:Support">Support</SelectItem>
           </SelectContent>
         </Select>
       </div>

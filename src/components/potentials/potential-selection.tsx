@@ -8,7 +8,7 @@ import {
 import { Button } from '../ui/button'
 import ResponsivePotential from './responsive-potential'
 import type { SSPotential, Slot } from '@/types'
-import { usePotentialStore } from '@/lib/store'
+import { useLangStore, usePotentialStore } from '@/lib/store'
 
 export function PotentialSelection({
   filteredPotentials,
@@ -26,6 +26,7 @@ export function PotentialSelection({
     }
     return false
   })
+  const lang = useLangStore((s) => s.lang)
   const addPotential = usePotentialStore((s) => s.addPotential)
   const [openId, setOpenId] = useState<number | null>(null)
   const handleOpenChange = (id: number) => (isOpen: boolean) => {
@@ -53,7 +54,7 @@ export function PotentialSelection({
             <ResponsivePotential
               rarity={p.rarity}
               imgId={p.imgId}
-              name={p.name}
+              name={p.name[lang]}
               subIcon={p.subIcon}
             />
           </div>
@@ -71,7 +72,7 @@ export function PotentialSelection({
               </Button>
             </HybridTooltipTrigger>
             <HybridTooltipContent>
-              <p>{p.briefDesc}</p>
+              <p>{p.briefDesc[lang]}</p>
             </HybridTooltipContent>
           </HybridTooltip>
         </div>

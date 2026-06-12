@@ -2,12 +2,13 @@ import type { SSCharacter } from '@/types'
 
 export function searchAndFilter(
   characters: Array<SSCharacter>,
+  lang: 'EN' | 'JP' | 'KR' | 'CN' | 'TW',
   search?: string,
   filter?: string,
 ) {
   return characters.filter((c) => {
     // Check search condition
-    if (search && !c.name.toLowerCase().includes(search.toLowerCase())) {
+    if (search && !c.name[lang].toLowerCase().includes(search.toLowerCase())) {
       return false
     }
 

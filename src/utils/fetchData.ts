@@ -1,19 +1,18 @@
 import type { SSCharacter, SSPotential } from '@/types'
+import { useLangStore } from '@/lib/store'
 
 const BASE =
   'https://raw.githubusercontent.com/maj-rf/StellaSoraData/refs/heads/main'
 
-const fetchCharacters = async (
-  lang: string,
-): Promise<Record<string, SSCharacter>> => {
-  const response = await fetch(`${BASE}/character${lang}.json`)
+const fetchCharacters = async (): Promise<Record<string, SSCharacter>> => {
+  const response = await fetch(`${BASE}/character.json`)
   return await response.json()
 }
 
-const fetchPotentials = async (
-  lang: string,
-): Promise<Record<string, Record<string, SSPotential>>> => {
-  const response = await fetch(`${BASE}/potential${lang}.json`)
+const fetchPotentials = async (): Promise<
+  Record<string, Record<string, SSPotential>>
+> => {
+  const response = await fetch(`${BASE}/potential.json`)
   return await response.json()
 }
 
@@ -23,15 +22,14 @@ type TData = {
 }
 
 export async function fetchData(): Promise<TData> {
-  let lang = localStorage.getItem('lang') ?? 'EN'
+  const lang = useLangStore.getState().lang
   if (!['EN', 'JP', 'TW', 'CN', 'KR'].includes(lang)) {
-    localStorage.setItem('lang', 'EN')
-    lang = 'EN'
+    useLangStore.setState({ lang: 'EN' })
   }
 
   const [characters, potentials] = await Promise.all([
-    fetchCharacters(lang),
-    fetchPotentials(lang),
+    fetchCharacters(),
+    fetchPotentials(),
   ])
   return { characters, potentials }
 }

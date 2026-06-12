@@ -1,6 +1,18 @@
 export type SSPotential = {
-  name: string
-  briefDesc: string
+  name: {
+    EN: string
+    KR: string
+    JP: string
+    CN: string
+    TW: string
+  }
+  briefDesc: {
+    EN: string
+    KR: string
+    JP: string
+    CN: string
+    TW: string
+  }
   type: 'main' | 'common' | 'support'
   rarity: 0 | 1 | 2
   imgId: string
@@ -10,12 +22,17 @@ export type SSPotential = {
 
 export type SSCharacter = {
   id: number
-  name: string
+  name: {
+    EN: string
+    KR: string
+    JP: string
+    CN: string
+    TW: string
+  }
   star: number
   element: string
   class: string
   attackType: string
-  tag: Array<string>
 }
 
 export type Slot = 'main' | 'sub1' | 'sub2'

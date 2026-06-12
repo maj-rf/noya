@@ -21,7 +21,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { usePotentialStore, useTrekkerStore } from '@/lib/store'
+import { useLangStore, usePotentialStore, useTrekkerStore } from '@/lib/store'
 
 type SSPotentialsProps = {
   slot: Slot
@@ -31,6 +31,7 @@ type SSPotentialsProps = {
 function SSPotentials({ slot, type }: SSPotentialsProps) {
   const routeApi = getRouteApi('__root__')
   const { potentials: fetchedPotentials, characters } = routeApi.useLoaderData()
+  const lang = useLangStore((s) => s.lang)
   const trekkerId = useTrekkerStore((s) => s.trekkers[slot])
   const selected = usePotentialStore(
     useShallow((s) =>
@@ -63,7 +64,7 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
           <PopoverTrigger asChild>
             <Button variant="outline" className="mb-2" size="sm">
               <PlusIcon />{' '}
-              {characters[trekkerId].name +
+              {characters[trekkerId].name[lang] +
                 `${type === 'main' ? ' Main' : ' Support'}`}
             </Button>
           </PopoverTrigger>
@@ -118,13 +119,13 @@ function SSPotentials({ slot, type }: SSPotentialsProps) {
                             <ResponsivePotential
                               rarity={p.rarity}
                               imgId={p.imgId}
-                              name={p.name}
+                              name={p.name[lang]}
                               subIcon={p.subIcon}
                             />
                           </div>
                         </HybridTooltipTrigger>
                         <HybridTooltipContent>
-                          <p>{p.briefDesc}</p>
+                          <p>{p.briefDesc[lang]}</p>
                         </HybridTooltipContent>
                       </HybridTooltip>
                     </SingleSelected>

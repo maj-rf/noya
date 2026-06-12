@@ -1,20 +1,14 @@
-import { useRouter } from '@tanstack/react-router'
 import { SelectValue } from '@radix-ui/react-select'
-import { useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '../ui/select'
+import { useLangStore } from '@/lib/store'
 
 export function LangSwitcher() {
-  const router = useRouter()
-  const [language, setLanguage] = useState(localStorage.getItem('lang') ?? 'EN')
-  const switchLang = (lang: string) => {
-    setLanguage(lang)
-    localStorage.setItem('lang', lang)
-    router.invalidate()
-  }
+  const lang = useLangStore((s) => s.lang)
+  const changeLang = useLangStore((s) => s.change)
 
   return (
     <div>
-      <Select value={language} onValueChange={switchLang}>
+      <Select value={lang} onValueChange={changeLang}>
         <SelectTrigger
           size="sm"
           className="border-gray-500 bg-inherit min-w-8 flex items-center justify-center [&_svg]:hidden"

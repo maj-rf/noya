@@ -1,16 +1,18 @@
 import { getRouteApi } from '@tanstack/react-router'
 import { BaseTrekker } from './base-trekker'
 import { cn } from '@/lib/utils'
+import { useLangStore } from '@/lib/store'
 
 export const SSTrekker = ({ id }: { id: number }) => {
   const routeApi = getRouteApi('__root__')
   const { characters } = routeApi.useLoaderData()
+  const lang = useLangStore((s) => s.lang)
   const char = characters[id]
   return (
     <div className="group-data-[disabled=true]:opacity-40 bg-gray-400 border-none padding-0 rounded-sm w-full h-full">
-      <BaseTrekker char={char}>
+      <BaseTrekker char={char} lang={lang}>
         <img
-          alt={char.name + 'element'}
+          alt={char.name.EN + 'element'}
           className="size-6 absolute -top-1 -left-1 z-100"
           src={`./ss-element/${char.element}.webp`}
         />
@@ -27,7 +29,7 @@ export const SSTrekker = ({ id }: { id: number }) => {
           <span>{char.class}</span>
           <div className="size-4 bg-blue-900 left-slant-l flex items-center justify-center pl-0.5">
             <img
-              alt={char.name + 'attack type'}
+              alt={char.name.EN + 'attack type'}
               className="block size-2.5 object-contain"
               src={`./ss-class/${char.attackType}.png`}
             />
