@@ -1,11 +1,11 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { MAX_LEVEL } from './utils'
 import type {
   BuildMap,
   PotentialPriority,
   Potentials,
   SSPotential,
+  SelectedPotential,
   Slot,
   Trekkers,
 } from '@/types'
@@ -19,11 +19,10 @@ interface TrekkerState {
 
 interface PotentialState {
   potentials: Potentials
-  addPotential: (slot: Slot, p: Pick<SSPotential, 'id' | 'rarity'>) => void
+  togglePotential: (slot: Slot, p: Pick<SSPotential, 'id' | 'rarity'>) => void
   updateLevel: (slot: Slot, id: number, level: string) => void
   updatePriority: (slot: Slot, id: number, value: PotentialPriority) => void
-  removePotential: (slot: Slot, id: number) => void
-  reorder: (update: Potentials) => void
+  update: (slot: Slot, update: Array<SelectedPotential>) => void
   clearPotentials: (slot: Slot) => void
 }
 
@@ -150,18 +149,20 @@ export const useTrekkerStore = create<TrekkerState>()((set) => ({
 
 export const usePotentialStore = create<PotentialState>()((set) => ({
   potentials: { main: [], sub1: [], sub2: [] },
-  addPotential: (slot, p) =>
-    set((state) => ({
-      potentials: {
-        ...state.potentials,
-        [slot]: [
-          ...state.potentials[slot],
-          p.rarity === 0
-            ? { ...p, rarity: 0, priority: 'Core' }
-            : { ...p, level: MAX_LEVEL, priority: 'Medium' },
-        ],
-      },
-    })),
+  togglePotential: (slot, p) =>
+    set((state) => {
+      const index = state.potentials[slot].findIndex((item) => item.id === p.id)
+      const item = { ...state.potentials[slot][index] }
+      const updated = [...state.potentials[slot]]
+      item.picked = !item.picked
+      updated[index] = item
+      return {
+        potentials: {
+          ...state.potentials,
+          [slot]: updated,
+        },
+      }
+    }),
   updateLevel: (slot, id, level) =>
     set((state) => {
       const index = state.potentials[slot].findIndex((item) => item.id === id)
@@ -190,20 +191,13 @@ export const usePotentialStore = create<PotentialState>()((set) => ({
         },
       }
     }),
-  removePotential: (slot, id) =>
+  update: (slot, update) =>
     set((state) => {
-      const filtered = state.potentials[slot].filter((p) => p.id !== id)
       return {
         potentials: {
           ...state.potentials,
-          [slot]: filtered,
+          [slot]: update,
         },
-      }
-    }),
-  reorder: (update) =>
-    set(() => {
-      return {
-        potentials: update,
       }
     }),
   clearPotentials: (slot) =>

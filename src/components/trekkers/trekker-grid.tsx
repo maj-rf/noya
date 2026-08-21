@@ -1,6 +1,8 @@
 import { getRouteApi } from '@tanstack/react-router'
-import { useShallow } from 'zustand/shallow'
 import { MinusIcon, ThumbsUpIcon } from 'lucide-react'
+import { DragDropProvider } from '@dnd-kit/react'
+import { useSortable } from '@dnd-kit/react/sortable'
+import { move } from '@dnd-kit/helpers'
 import ResponsivePotential from '../potentials/responsive-potential'
 import {
   Select,
@@ -20,56 +22,68 @@ type SSPotentialsProps = {
   type: 'main' | 'support'
 }
 
-function SingleSelected({ slot, p }: { slot: Slot; p: SSPotential }) {
+function SingleSelected({
+  slot,
+  p,
+  idx,
+}: {
+  slot: Slot
+  p: SSPotential
+  idx: number
+}) {
   const sel = usePotentialStore((s) =>
     s.potentials[slot].find((sp) => sp.id === p.id),
   )
   const lang = useLangStore((s) => s.lang)
-  const selected = usePotentialStore(
-    useShallow((s) => s.potentials[slot].map((sp) => sp.id)),
-  )
   const coreExceed = usePotentialStore((s) => {
     const entries = Object.values(s.potentials[slot])
     let count = 0
     for (const pot of entries) {
-      if (pot.rarity === 0) count++
+      if (pot.rarity === 0 && pot.picked) count++
       if (count === 2) return true
     }
     return false
   })
 
-  const add = usePotentialStore((s) => s.addPotential)
-  const remove = usePotentialStore((s) => s.removePotential)
+  const toggle = usePotentialStore((s) => s.togglePotential)
   const updateLevel = usePotentialStore((s) => s.updateLevel)
   const updatePriority = usePotentialStore((s) => s.updatePriority)
-  // const reorder = usePotentialStore((s) => s.reorder)
+
+  const { ref, isDragging } = useSortable({
+    id: p.id,
+    index: idx,
+    disabled: p.rarity === 0,
+  })
 
   return (
-    <div key={p.id} className="relative w-full">
-      {selected.includes(p.id) ? (
+    <div
+      ref={ref}
+      className={`relative w-full ease-in-out transition-transform duration-300 ${isDragging && 'rotate-6 outline-blue-300 outline-3'}`}
+    >
+      {sel?.picked ? (
         <Button
-          className="absolute -top-1 -right-0.5 m-auto z-10 rounded-full"
+          className="absolute -top-1 -right-1 m-auto z-10 rounded-full"
           size="icon-xs"
-          onClick={() => remove(slot, p.id)}
+          onClick={() => toggle(slot, p)}
         >
           <MinusIcon />
         </Button>
       ) : (
         <Button
-          className="absolute -top-1 -right-0.5 m-auto z-10 rounded-full"
+          className="absolute -top-1 -right-1 m-auto z-10 rounded-full"
           size="icon-xs"
-          onClick={() => add(slot, p)}
+          onClick={() => toggle(slot, p)}
           disabled={p.rarity === 0 && coreExceed}
         >
           <ThumbsUpIcon />
         </Button>
       )}
       <div
-        data-selected={selected.includes(p.id)}
+        data-selected={sel?.picked}
         className="opacity-60 data-[selected=true]:opacity-100"
       >
         <ResponsivePotential
-          size="w-20 sm:w-full"
+          size="w-18"
           rarity={p.rarity}
           imgId={p.imgId}
           name={p.name[lang]}
@@ -77,14 +91,14 @@ function SingleSelected({ slot, p }: { slot: Slot; p: SSPotential }) {
       </div>
       {p.rarity !== 0 && (
         <div className="absolute top-0 bg-white flex w-full rounded-sm">
-          {sel && (
+          {sel?.picked && (
             <Select
               value={sel.level ? String(sel.level) : undefined}
               onValueChange={(value) => updateLevel(slot, p.id, value)}
               defaultValue={'6'}
             >
               <SelectTrigger
-                className="text-[10px] justify-start gap-0.5 pl-1 pr-0 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 text-mauve-800 bg-transparent data-[size=sm]:h-3"
+                className="text-[10px] justify-start gap-0 pl-1 pr-0 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 text-mauve-800 bg-transparent data-[size=sm]:h-3"
                 size="sm"
               >
                 <SelectValue placeholder="Level" />
@@ -108,8 +122,8 @@ function SingleSelected({ slot, p }: { slot: Slot; p: SSPotential }) {
               </SelectContent>
             </Select>
           )}
-          <div className="bg-white w-fit px-1">
-            {sel && (
+          <div className="bg-white px-0.5">
+            {sel?.picked && (
               <Select
                 value={sel.priority}
                 onValueChange={(value) => {
@@ -118,7 +132,7 @@ function SingleSelected({ slot, p }: { slot: Slot; p: SSPotential }) {
                 defaultValue="Medium"
               >
                 <SelectTrigger
-                  className="text-[10px] justify-start gap-0.5 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 bg-transparent p-0 text-mauve-800 data-[size=sm]:h-3.25"
+                  className="text-[10px] justify-start gap-0 border-none shadow-none ring-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 bg-transparent p-0 text-mauve-800 data-[size=sm]:h-3.25"
                   size="sm"
                 >
                   <SelectValue placeholder="Priority" />
@@ -146,34 +160,37 @@ function SingleSelected({ slot, p }: { slot: Slot; p: SSPotential }) {
   )
 }
 
-export function TrekkerGrid({ slot, type }: SSPotentialsProps) {
+export function TrekkerGrid({ slot }: SSPotentialsProps) {
   const routeApi = getRouteApi('__root__')
   const { potentials: fetchedPotentials } = routeApi.useLoaderData()
   const trekkerId = useTrekkerStore((s) => s.trekkers[slot])
+  const update = usePotentialStore((s) => s.update)
+  const pots = usePotentialStore((s) => s.potentials[slot])
   if (!trekkerId) return
   const potentialList = fetchedPotentials[trekkerId]
-  const potentials = Object.values(potentialList)
-  const filteredPotentials = potentials
-    .filter((p) => p.type === type || p.type === 'common')
-    .sort((a, b) => a.rarity - b.rarity)
 
   return (
     <section className="mt-5">
       <div className="flex justify-center gap-1 w-full max-w-lg mx-auto p-1 bg-muted">
-        <div className="grid grid-cols-[80px_80px] auto-rows-[102px] gap-1">
+        <div className="grid grid-cols-[72px_72px_72px_72px] auto-rows-[91.8px] gap-1">
           <div className="col-span-2 row-span-2">
             <SSTrekker id={trekkerId} />
           </div>
-          {filteredPotentials.slice(0, 4).map((s) => {
-            const p = potentialList[s.id]
-            return <SingleSelected key={p.id} slot={slot} p={p} />
-          })}
-        </div>
-        <div className="grid grid-cols-[80px_80px_80px] auto-rows-[102px] gap-1">
-          {filteredPotentials.slice(4).map((s) => {
-            const p = potentialList[s.id]
-            return <SingleSelected key={p.id} slot={slot} p={p} />
-          })}
+          <DragDropProvider
+            onDragEnd={(event) => {
+              if (event.canceled) return
+              // not working
+              update(
+                slot,
+                move(usePotentialStore.getState().potentials[slot], event),
+              )
+            }}
+          >
+            {pots.map((s, index) => {
+              const p = potentialList[s.id]
+              return <SingleSelected key={p.id} slot={slot} p={p} idx={index} />
+            })}
+          </DragDropProvider>
         </div>
       </div>
     </section>

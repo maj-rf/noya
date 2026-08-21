@@ -1,12 +1,18 @@
-import { HeadContent, Outlet, createRootRoute } from '@tanstack/react-router'
+import {
+  HeadContent,
+  Outlet,
+  createRootRouteWithContext,
+} from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import Header from '../components/navbar/Header'
-import { fetchData } from '@/utils/fetchData'
+import type { fetchData } from '@/utils/fetchData'
 import { Loading } from '@/components/loading'
 import { Toaster } from '@/components/ui/sonner'
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{
+  fetchData: typeof fetchData
+}>()({
   head: () => ({
     meta: [
       { name: 'description', content: 'Create your Stella Sora Team Build' },
@@ -14,7 +20,7 @@ export const Route = createRootRoute({
     ],
   }),
   staleTime: Infinity,
-  loader: fetchData,
+  loader: ({ context }) => context.fetchData(),
   pendingComponent: () => (
     <div className="h-screen">
       <Loading />

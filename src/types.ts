@@ -46,11 +46,13 @@ export type SelectedPotential =
       rarity: 0
       level?: never
       priority: Extract<PotentialPriority, 'Core'>
+      picked: boolean
     })
   | (Pick<SSPotential, 'id'> & {
       rarity: 1 | 2
       level: number | string
       priority: PotentialPriority
+      picked: boolean
     })
 
 export type Potentials = Record<Slot, Array<SelectedPotential>>

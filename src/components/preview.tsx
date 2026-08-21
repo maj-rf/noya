@@ -67,7 +67,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
   const lang = useLangStore((s) => s.lang)
   const grouped = potentials.reduce(
     (acc, item) => {
-      acc[item.priority].push(item)
+      if (item.picked) acc[item.priority].push(item)
       return acc
     },
     {

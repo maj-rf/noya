@@ -22,13 +22,15 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { useLangStore, usePotentialStore, useTrekkerStore } from '@/lib/store'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { searchAndFilter } from '@/utils/searchAndFilter'
+import { getSelectedPots } from '@/utils/getSelectedPots'
 
 export const TrekkerSelection = () => {
   const routeApi = getRouteApi('__root__')
-  const { characters: fetchedCharacters } = routeApi.useLoaderData()
+  const { characters: fetchedCharacters, potentials } = routeApi.useLoaderData()
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('')
   const setTrekker = useTrekkerStore((s) => s.setTrekker)
+  const update = usePotentialStore((s) => s.update)
   const clearPotentials = usePotentialStore((s) => s.clearPotentials)
   const trekkers = useTrekkerStore((s) => s.trekkers)
   const lang = useLangStore((s) => s.lang)
@@ -64,10 +66,13 @@ export const TrekkerSelection = () => {
         return
       } else {
         setTrekker(s, char)
-        clearPotentials(s)
+        update(
+          s,
+          getSelectedPots(potentials[char!], s === 'main' ? 'main' : 'support'),
+        )
       }
     },
-    [trekkers, setTrekker, clearPotentials],
+    [trekkers, setTrekker, clearPotentials, update],
   )
   const [slot, setSlot] = useState<Slot>('main')
 
