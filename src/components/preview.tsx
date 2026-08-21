@@ -18,27 +18,16 @@ import { cn, downloadImage } from '@/lib/utils'
 
 const ListContainer = ({
   potentials,
-  id,
-  lang,
 }: {
   potentials: Array<SelectedPotential>
   id: number
-  lang: 'EN' | 'JP' | 'KR' | 'CN' | 'TW'
 }) => {
-  const routeApi = getRouteApi('__root__')
-  const { potentials: fetchedPotentials } = routeApi.useLoaderData()
   return (
     <ul className="flex justify-center gap-0.5">
       {potentials.map((p) => {
-        const current = fetchedPotentials[id][p.id]
         return (
           <li key={'preview' + p.id} className="relative">
-            <ResponsivePotential
-              rarity={current.rarity}
-              imgId={current.imgId}
-              name={current.name[lang]}
-              subIcon={current.subIcon}
-            />
+            <ResponsivePotential id={p.id} />
             {p.rarity !== 0 && (
               <div
                 className={cn(
@@ -109,7 +98,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
             <div className="w-[86px] text-center text-white text-sm font-semibold absolute -top-4 left-0 bg-support rounded px-2">
               Core
             </div>
-            <ListContainer potentials={grouped.Core} id={trekker} lang={lang} />
+            <ListContainer potentials={grouped.Core} id={trekker} />
           </div>
         )}
 
@@ -120,11 +109,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
             <div className="w-[86px] text-center text-white text-sm font-semibold absolute -top-4 left-0 bg-versatile rounded px-2">
               Medium
             </div>
-            <ListContainer
-              potentials={grouped.Medium}
-              id={trekker}
-              lang={lang}
-            />
+            <ListContainer potentials={grouped.Medium} id={trekker} />
           </div>
         )}
 
@@ -135,7 +120,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
             <div className="w-[86px] text-center text-white text-sm font-semibold absolute -top-4 left-0 bg-common rounded px-2">
               Low
             </div>
-            <ListContainer potentials={grouped.Low} id={trekker} lang={lang} />
+            <ListContainer potentials={grouped.Low} id={trekker} />
           </div>
         )}
 
@@ -146,11 +131,7 @@ const PreviewRow = ({ slot }: { slot: Slot }) => {
             <div className="w-[86px] text-center text-white text-sm font-semibold absolute -top-5 -left-[3px] bg-vanguard rounded px-2">
               Optional
             </div>
-            <ListContainer
-              potentials={grouped.Optional}
-              id={trekker}
-              lang={lang}
-            />
+            <ListContainer potentials={grouped.Optional} id={trekker} />
           </div>
         )}
       </div>

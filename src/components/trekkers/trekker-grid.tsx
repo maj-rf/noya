@@ -14,7 +14,7 @@ import {
 import { Button } from '../ui/button'
 import { SSTrekker } from './ss-trekker'
 import type { PotentialPriority, SSPotential, Slot } from '@/types'
-import { useLangStore, usePotentialStore, useTrekkerStore } from '@/lib/store'
+import { usePotentialStore, useTrekkerStore } from '@/lib/store'
 import { MAX_LEVEL } from '@/lib/utils'
 
 type SSPotentialsProps = {
@@ -34,7 +34,6 @@ function SingleSelected({
   const sel = usePotentialStore((s) =>
     s.potentials[slot].find((sp) => sp.id === p.id),
   )
-  const lang = useLangStore((s) => s.lang)
   const coreExceed = usePotentialStore((s) => {
     const entries = Object.values(s.potentials[slot])
     let count = 0
@@ -80,14 +79,9 @@ function SingleSelected({
       )}
       <div
         data-selected={sel?.picked}
-        className="opacity-60 data-[selected=true]:opacity-100"
+        className="relative data-[selected=true]:after:hidden after:absolute after:inset-0 after:bg-muted/40"
       >
-        <ResponsivePotential
-          size="w-18"
-          rarity={p.rarity}
-          imgId={p.imgId}
-          name={p.name[lang]}
-        />
+        <ResponsivePotential size="w-18" id={p.id} />
       </div>
       {p.rarity !== 0 && (
         <div className="absolute top-0 bg-white flex w-full rounded-sm">
@@ -171,7 +165,7 @@ export function TrekkerGrid({ slot }: SSPotentialsProps) {
 
   return (
     <section className="mt-5">
-      <div className="flex justify-center gap-1 w-full max-w-lg mx-auto p-1 bg-muted">
+      <div className="flex justify-center gap-1 w-full max-w-lg mx-auto px-1 py-2 bg-muted rounded-sm">
         <div className="grid grid-cols-[72px_72px_72px_72px] auto-rows-[91.8px] gap-1">
           <div className="col-span-2 row-span-2">
             <SSTrekker id={trekkerId} />

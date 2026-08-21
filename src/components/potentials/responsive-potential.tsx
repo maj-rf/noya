@@ -1,11 +1,6 @@
-import { AutoFitText } from './auto-fit-text'
 import type { SSPotential } from '@/types'
 
-type Props = Omit<
-  Pick<SSPotential, 'rarity' | 'name' | 'imgId' | 'subIcon'>,
-  'name'
-> & {
-  name: string
+type Props = Pick<SSPotential, 'id'> & {
   size?: string
   className?: string
 }
@@ -13,48 +8,19 @@ type Props = Omit<
 export default function ResponsivePotential({
   size = 'w-20',
   className = '',
-  rarity,
-  imgId,
-  name,
-  subIcon,
+  id,
 }: Props) {
-  const bgSrc = `./ss-vestige/vestige_${rarity}.png`
-  const iconSrc = `https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/${imgId}_A.png`
-  const subIconUrl = `https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/Potential_${subIcon}_A.png`
-  const maskIconUrl = `https://res.cloudinary.com/dafqr01it/image/upload/v1763084273/ss/potential/Potential_${subIcon}_B.png`
+  const iconSrc = `https://res.cloudinary.com/dafqr01it/image/upload/v1787302355/ss/pots/${id}.png`
+
   return (
     <div
       className={`relative ${size} h-fit aspect-[0.7851] bg-contain bg-center bg-no-repeat ${className} rounded-xs`}
     >
       <img
-        src={bgSrc}
-        alt={rarity + ' background'}
+        src={iconSrc}
+        alt={id + 'pots'}
         className="absolute inset-0 w-full h-full object-cover rounded-xs pointer-events-none"
       />
-      <img
-        src={iconSrc}
-        alt={name + ' icon'}
-        className="absolute inset-0 -top-7 w-auto h-19 m-auto pointer-events-none"
-      />
-      {subIcon && (
-        <img
-          alt={name + ' subIcon'}
-          src={subIconUrl}
-          style={{
-            maskImage: `url(${maskIconUrl})`,
-            maskSize: 'cover',
-            backgroundColor:
-              rarity === 1 ? 'var(--color-rare)' : 'var(--color-common)',
-            maskRepeat: 'no-repeat',
-            maskPosition: 'center',
-            pointerEvents: 'none',
-          }}
-        />
-      )}
-
-      <div className="absolute bottom-0 left-0 right-0 px-[2.25px] pb-1 text-black">
-        <AutoFitText text={name} />
-      </div>
     </div>
   )
 }
