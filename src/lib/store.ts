@@ -208,3 +208,13 @@ export const usePotentialStore = create<PotentialState>()((set) => ({
       },
     })),
 }))
+
+export const selectCoreCount = (slot: Slot) => (s: PotentialState) => {
+  let count = 0
+
+  for (const pot of Object.values(s.potentials[slot])) {
+    if (pot.rarity === 0 && pot.picked) count++
+  }
+
+  return count
+}

@@ -14,8 +14,12 @@ import {
 import { Button } from '../ui/button'
 import { SSTrekker } from './ss-trekker'
 import type { PotentialPriority, SSPotential, Slot } from '@/types'
-import { usePotentialStore, useTrekkerStore } from '@/lib/store'
-import { MAX_LEVEL } from '@/lib/utils'
+import {
+  selectCoreCount,
+  usePotentialStore,
+  useTrekkerStore,
+} from '@/lib/store'
+import { MAX_LEVEL, cn } from '@/lib/utils'
 
 type SSPotentialsProps = {
   slot: Slot
@@ -34,15 +38,7 @@ function SingleSelected({
   const sel = usePotentialStore((s) =>
     s.potentials[slot].find((sp) => sp.id === p.id),
   )
-  const coreExceed = usePotentialStore((s) => {
-    const entries = Object.values(s.potentials[slot])
-    let count = 0
-    for (const pot of entries) {
-      if (pot.rarity === 0 && pot.picked) count++
-      if (count === 2) return true
-    }
-    return false
-  })
+  const coreCount = usePotentialStore(selectCoreCount(slot))
 
   const toggle = usePotentialStore((s) => s.togglePotential)
   const updateLevel = usePotentialStore((s) => s.updateLevel)
@@ -57,7 +53,7 @@ function SingleSelected({
   return (
     <div
       ref={ref}
-      className={`relative w-full ease-in-out transition-transform duration-300 ${isDragging && 'rotate-6 outline-blue-300 outline-3'}`}
+      className={`relative w-full ease-in-out transition-transform duration-300 shadow-md ${isDragging && 'rotate-6 outline-blue-300 outline-3'}`}
     >
       {sel?.picked ? (
         <Button
@@ -72,7 +68,7 @@ function SingleSelected({
           className="absolute -top-1 -right-1 m-auto z-10 rounded-full"
           size="icon-xs"
           onClick={() => toggle(slot, p)}
-          disabled={p.rarity === 0 && coreExceed}
+          disabled={p.rarity === 0 && coreCount === 2}
         >
           <ThumbsUpIcon />
         </Button>
@@ -160,13 +156,30 @@ export function TrekkerGrid({ slot }: SSPotentialsProps) {
   const trekkerId = useTrekkerStore((s) => s.trekkers[slot])
   const update = usePotentialStore((s) => s.update)
   const pots = usePotentialStore((s) => s.potentials[slot])
+  const coreCount = usePotentialStore(selectCoreCount(slot))
   if (!trekkerId) return
   const potentialList = fetchedPotentials[trekkerId]
 
   return (
     <section className="mt-5">
-      <div className="flex justify-center gap-1 w-full max-w-lg mx-auto px-1 py-2 bg-muted rounded-sm">
-        <div className="grid grid-cols-[72px_72px_72px_72px] auto-rows-[91.8px] gap-1">
+      <div className="flex flex-col justify-center gap-1 w-full max-w-lg mx-auto bg-muted rounded-sm overflow-hidden">
+        <div className="flex justify-between items-center text-sm">
+          <h1
+            className={cn(
+              '[clip-path:polygon(0_0,100%_0,90%_100%,0_100%)] text-center text-sm text-white tracking-tighter pr-6 pl-3 py-1 bg-indigo-500 dark:bg-indigo-700',
+              {
+                'bg-rose-500 dark:bg-rose-700': slot === 'main',
+              },
+            )}
+          >
+            {slot === 'main' ? 'Main' : 'Support'}
+          </h1>
+          <div className="flex gap-2 px-2 py-1">
+            <div>Core(Pink): {coreCount}/2</div>
+            <div>Picked: {pots.filter((p) => p.picked).length}</div>
+          </div>
+        </div>
+        <div className="grid grid-cols-[72px_72px_72px_72px] auto-rows-[91.8px] gap-1 px-1 pb-1">
           <div className="col-span-2 row-span-2">
             <SSTrekker id={trekkerId} />
           </div>
