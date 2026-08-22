@@ -163,9 +163,11 @@ export const Preview = () => {
   return (
     <>
       <Dialog>
-        <DialogTrigger asChild>
-          <Button className="fixed bottom-1 left-1 z-2">Preview</Button>
-        </DialogTrigger>
+        <DialogTrigger
+          render={
+            <Button className="fixed bottom-1 left-1 z-2">Preview</Button>
+          }
+        ></DialogTrigger>
         <DialogContent className="sm:max-w-3xl">
           <DialogHeader>
             <DialogTitle>Preview</DialogTitle>

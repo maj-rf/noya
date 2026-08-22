@@ -9,7 +9,6 @@ import { routeTree } from './routeTree.gen'
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
 import { ThemeProvider } from './lib/theme-provider.tsx'
-import { TouchProvider } from './components/ui/hybrid-tooltip.tsx'
 
 // Create a new router instance
 const router = createRouter({
@@ -37,9 +36,7 @@ if (rootElement && !rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <ThemeProvider>
-        <TouchProvider>
-          <RouterProvider router={router} />
-        </TouchProvider>
+        <RouterProvider router={router} />
       </ThemeProvider>
     </StrictMode>,
   )

@@ -1,5 +1,10 @@
-import { SelectValue } from '@radix-ui/react-select'
-import { Select, SelectContent, SelectItem, SelectTrigger } from '../ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select'
 import { useLangStore } from '@/lib/store'
 
 export function LangSwitcher() {
@@ -8,7 +13,13 @@ export function LangSwitcher() {
 
   return (
     <div>
-      <Select value={lang} onValueChange={changeLang}>
+      <Select
+        value={lang}
+        onValueChange={(value) => {
+          if (value == null) return
+          changeLang(value)
+        }}
+      >
         <SelectTrigger
           size="sm"
           className="border-gray-500 bg-inherit min-w-8 flex items-center justify-center [&_svg]:hidden"

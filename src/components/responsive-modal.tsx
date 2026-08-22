@@ -34,11 +34,13 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button className="shadow-sm  active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
-            <span>{props.triggerTitle}</span>
-          </Button>
-        </DialogTrigger>
+        <DialogTrigger
+          render={
+            <Button className="shadow-sm  active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
+              <span>{props.triggerTitle}</span>
+            </Button>
+          }
+        ></DialogTrigger>
         <DialogContent className="min-w-2xl">
           <DialogHeader>
             <DialogTitle>{props.title}</DialogTitle>
@@ -51,12 +53,14 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen} repositionInputs={false}>
-      <DrawerTrigger asChild>
-        <Button className="shadow-sm  active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
-          <span>{props.triggerTitle}</span>
-        </Button>
-      </DrawerTrigger>
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger
+        render={
+          <Button className="shadow-sm  active:scale-[0.98] active:shadow-inner duration-150 ease-in-out">
+            <span>{props.triggerTitle}</span>
+          </Button>
+        }
+      ></DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>{props.title}</DrawerTitle>
@@ -64,9 +68,9 @@ export function ResponsiveModal(props: ResponsiveModalProps) {
         </DrawerHeader>
         {props.children}
         <DrawerFooter className="pt-2">
-          <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose>
+          <DrawerClose
+            render={<Button variant="outline">Cancel</Button>}
+          ></DrawerClose>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

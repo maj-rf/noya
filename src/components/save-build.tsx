@@ -1,6 +1,6 @@
 import { useRef, useTransition } from 'react'
-import { LoaderCircle } from 'lucide-react'
-import { toast } from 'sonner'
+
+import { RiLoader2Fill } from '@remixicon/react'
 import { Button } from './ui/button'
 import { InputGroup, InputGroupAddon, InputGroupInput } from './ui/input-group'
 import { useBuildStore, useTrekkerStore } from '@/lib/store'
@@ -12,7 +12,7 @@ export const SaveBuild = () => {
 
   const handleSave = () => {
     if (!buildNameRef.current?.value || !main) {
-      toast.error('Missing Main Trekker or Build Name')
+      // toast.error('Missing Main Trekker or Build Name')
       return
     }
 
@@ -22,11 +22,11 @@ export const SaveBuild = () => {
           useBuildStore
             .getState()
             .save(crypto.randomUUID(), buildNameRef.current.value)
-          toast.success(`Saved build: ${buildNameRef.current.value}`)
+          // toast.success(`Saved build: ${buildNameRef.current.value}`)
           buildNameRef.current.value = ''
         }
       } catch (error) {
-        toast.error('Cannot properly save build')
+        // toast.error('Cannot properly save build')
       }
     })
   }
@@ -45,7 +45,7 @@ export const SaveBuild = () => {
           />
           {isPending && (
             <InputGroupAddon align="inline-end">
-              <LoaderCircle className="animate-spin" />
+              <RiLoader2Fill className="animate-spin" />
             </InputGroupAddon>
           )}
         </InputGroup>

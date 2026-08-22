@@ -1,6 +1,6 @@
 import { getRouteApi } from '@tanstack/react-router'
-import { Search } from 'lucide-react'
-import { useCallback, useMemo, useState } from 'react'
+import { Fragment, useCallback, useMemo, useState } from 'react'
+import { RiSearch2Line } from '@remixicon/react'
 import {
   Select,
   SelectContent,
@@ -23,6 +23,49 @@ import { useLangStore, usePotentialStore, useTrekkerStore } from '@/lib/store'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { searchAndFilter } from '@/utils/searchAndFilter'
 import { getSelectedPots } from '@/utils/getSelectedPots'
+
+const groups: Array<{
+  label: string
+  items: Array<{ value: string; label: string }>
+}> = [
+  {
+    label: 'Reset',
+    items: [{ value: 'all:all', label: 'All' }],
+  },
+  {
+    label: 'By Element',
+    items: [
+      { value: 'element:Ignis', label: 'Ignis' },
+      { value: 'element:Ventus', label: 'Ventus' },
+      { value: 'element:Terra', label: 'Terra' },
+      { value: 'element:Aqua', label: 'Aqua' },
+      { value: 'element:Lux', label: 'Lux' },
+      { value: 'element:Umbra', label: 'Umbra' },
+    ],
+  },
+  {
+    label: 'By Attack Type',
+    items: [
+      { value: 'attackType:Ranged', label: 'Ranged' },
+      { value: 'attackType:Melee', label: 'Melee' },
+    ],
+  },
+  {
+    label: 'By Rarity',
+    items: [
+      { value: 'star:4', label: '4⭐️' },
+      { value: 'star:5', label: '5⭐️' },
+    ],
+  },
+  {
+    label: 'By Class',
+    items: [
+      { value: 'class:Vanguard', label: 'Vanguard' },
+      { value: 'class:Versatile', label: 'Versatile' },
+      { value: 'class:Support', label: 'Support' },
+    ],
+  },
+]
 
 export const TrekkerSelection = () => {
   const routeApi = getRouteApi('__root__')
@@ -77,7 +120,7 @@ export const TrekkerSelection = () => {
   const [slot, setSlot] = useState<Slot>('main')
 
   return (
-    <section>
+    <section className="w-full">
       <ButtonGroup
         className="justify-center items-center w-full mb-2"
         aria-label="Trekker slot group"
@@ -104,58 +147,48 @@ export const TrekkerSelection = () => {
           Support 2
         </Button>
       </ButtonGroup>
-      <div className="w-full max-w-2xl grid grid-cols-[1fr_0.5fr] gap-2 mb-2 px-2">
+      <div className="w-full grid grid-cols-[1fr_0.5fr] gap-2 mb-2 px-2">
         <InputGroup>
           <InputGroupInput
             placeholder="Search..."
             onChange={(e) => setSearch(e.target.value)}
           />
           <InputGroupAddon>
-            <Search />
+            <RiSearch2Line />
           </InputGroupAddon>
           <InputGroupAddon align="inline-end">
             {filteredChars.length +
               `${filteredChars.length === 1 ? ' result' : ' results'}`}
           </InputGroupAddon>
         </InputGroup>
-        <Select value={filter} onValueChange={setFilter}>
+        <Select
+          items={groups}
+          value={filter}
+          onValueChange={(value) => {
+            if (value == null) return
+            setFilter(value)
+          }}
+        >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Filter" />
           </SelectTrigger>
           <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Reset</SelectLabel>
-              <SelectItem value={'all:all'}>All</SelectItem>
-            </SelectGroup>
-            <SelectGroup>
-              <SelectLabel>By Element</SelectLabel>
-              <SelectItem value="element:Ignis">Ignis</SelectItem>
-              <SelectItem value="element:Ventus">Ventus</SelectItem>
-              <SelectItem value="element:Terra">Terra</SelectItem>
-              <SelectItem value="element:Aqua">Aqua</SelectItem>
-              <SelectItem value="element:Lux">Lux</SelectItem>
-              <SelectItem value="element:Umbra">Umbra</SelectItem>
-            </SelectGroup>
-            <SelectGroup>
-              <SelectLabel>By Attack Type</SelectLabel>
-              <SelectItem value="attackType:Ranged">Ranged</SelectItem>
-              <SelectItem value="attackType:Melee">Melee</SelectItem>
-            </SelectGroup>
-            <SelectGroup>
-              <SelectLabel>By Rarity</SelectLabel>
-              <SelectItem value="star:4">4⭐️</SelectItem>
-              <SelectItem value="star:5">5⭐️</SelectItem>
-            </SelectGroup>
-            <SelectGroup>
-              <SelectLabel>By Class</SelectLabel>
-              <SelectItem value="class:Vanguard">Vanguard</SelectItem>
-              <SelectItem value="class:Versatile">Versatile</SelectItem>
-              <SelectItem value="class:Support">Support</SelectItem>
-            </SelectGroup>
+            {groups.map((group) => (
+              <Fragment key={group.label}>
+                <SelectGroup>
+                  <SelectLabel>{group.label}</SelectLabel>
+                  {group.items.map((item) => (
+                    <SelectItem key={item.label} value={item.value}>
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </Fragment>
+            ))}
           </SelectContent>
         </Select>
       </div>
-      <ScrollArea className="h-[300px] px-2">
+      <ScrollArea className="h-120 w-full px-2">
         <div className="flex flex-wrap justify-center gap-2 mt-2">
           {filteredChars.map((char) => (
             <div
@@ -164,7 +197,7 @@ export const TrekkerSelection = () => {
               data-disabled={trekkerIds.has(char.id)}
               data-selected={trekkers[slot] === char.id}
               data-slot={slot === 'main' ? 'Main' : 'Support'}
-              className="chosen-trekker group rounded-xs data-[selected=true]:outline-2 h-[125px] w-[100px] md:h-[150px] md:w-[120px] aspect-[0.8]"
+              className="chosen-trekker group rounded-xs data-[selected=true]:outline-2 h-31.25 w-25 md:h-37.5 md:w-30 aspect-[0.8]"
             >
               <SSTrekker id={char.id} />
             </div>

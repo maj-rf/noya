@@ -8,7 +8,6 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import Header from '../components/navbar/Header'
 import type { fetchData } from '@/utils/fetchData'
 import { Loading } from '@/components/loading'
-import { Toaster } from '@/components/ui/sonner'
 
 export const Route = createRootRouteWithContext<{
   fetchData: typeof fetchData
@@ -33,7 +32,6 @@ export const Route = createRootRouteWithContext<{
         <Header />
         <main className="flex-1">
           <Outlet />
-          <Toaster richColors />
         </main>
       </div>
       <TanStackDevtools

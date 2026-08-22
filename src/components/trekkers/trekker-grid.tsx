@@ -1,8 +1,8 @@
 import { getRouteApi } from '@tanstack/react-router'
-import { MinusIcon, ThumbsUpIcon } from 'lucide-react'
 import { DragDropProvider } from '@dnd-kit/react'
 import { useSortable } from '@dnd-kit/react/sortable'
 import { move } from '@dnd-kit/helpers'
+import { RiSubtractFill, RiThumbUpFill } from '@remixicon/react'
 import ResponsivePotential from '../potentials/responsive-potential'
 import {
   Select,
@@ -25,6 +25,13 @@ type SSPotentialsProps = {
   slot: Slot
   type: 'main' | 'support'
 }
+
+const priorities = [
+  { value: 'Core', label: 'Core' },
+  { value: 'Medium', label: 'Med' },
+  { value: 'Low', label: 'Low' },
+  { value: 'Optional', label: 'Opt' },
+]
 
 function SingleSelected({
   slot,
@@ -61,7 +68,7 @@ function SingleSelected({
           size="icon-xs"
           onClick={() => toggle(slot, p)}
         >
-          <MinusIcon />
+          <RiSubtractFill />
         </Button>
       ) : (
         <Button
@@ -70,7 +77,7 @@ function SingleSelected({
           onClick={() => toggle(slot, p)}
           disabled={p.rarity === 0 && coreCount === 2}
         >
-          <ThumbsUpIcon />
+          <RiThumbUpFill />
         </Button>
       )}
       <div
@@ -84,7 +91,10 @@ function SingleSelected({
           {sel?.picked && (
             <Select
               value={sel.level ? String(sel.level) : undefined}
-              onValueChange={(value) => updateLevel(slot, p.id, value)}
+              onValueChange={(value) => {
+                if (value == null) return
+                updateLevel(slot, p.id, value)
+              }}
               defaultValue={'6'}
             >
               <SelectTrigger
@@ -115,9 +125,14 @@ function SingleSelected({
           <div className="bg-white px-0.5">
             {sel?.picked && (
               <Select
+                items={priorities}
                 value={sel.priority}
                 onValueChange={(value) => {
-                  updatePriority(slot, sel.id, value as PotentialPriority)
+                  updatePriority(
+                    slot,
+                    sel.id,
+                    value ? (value as PotentialPriority) : 'Medium',
+                  )
                 }}
                 defaultValue="Medium"
               >
@@ -128,18 +143,15 @@ function SingleSelected({
                   <SelectValue placeholder="Priority" />
                 </SelectTrigger>
                 <SelectContent align="start">
-                  <SelectItem className="text-[10px]" value="Core">
-                    Core
-                  </SelectItem>
-                  <SelectItem className="text-[10px]" value="Medium">
-                    Med
-                  </SelectItem>
-                  <SelectItem className="text-[10px]" value="Low">
-                    Low
-                  </SelectItem>
-                  <SelectItem className="text-[10px]" value="Optional">
-                    Opt
-                  </SelectItem>
+                  {priorities.map((item) => (
+                    <SelectItem
+                      key={item.value}
+                      className="text-[10px]"
+                      value={item.value}
+                    >
+                      {item.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             )}
